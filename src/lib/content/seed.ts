@@ -318,17 +318,44 @@ export const seedContent: SiteContent = {
         number: "08",
         title: "Maintenance work — UN Head Office (Congo Building)",
         client: "UN Head Office",
-        typology: "Maintenance",
+        typology: "Maintenance / assessment support",
         location: "Kasanchis, Addis Ababa",
-        scope: "Institutional maintenance works",
+        scope:
+          "Selective demolition, foundation exposure, restoration, finishing, and HSE for building assessment works",
         group: "institutional",
         image: "/images/project-08.jpg",
         featured: true,
         testimonial: {
           quote:
-            "Reliable maintenance delivery in a sensitive institutional environment.",
-          attribution: "Project stakeholder",
+            "Taologos Construction demonstrated a high level of professionalism, cooperation, and commitment to safety.",
+          attribution: "ISSPL Limited — Certificate of Appreciation",
         },
+      },
+    ],
+  },
+  recognition: {
+    title: "Recognition",
+    intro:
+      "Independent appreciation for institutional work delivered to a high standard of professionalism and safety.",
+    items: [
+      {
+        id: "cert-isspl-un-congo",
+        title: "Certificate of Appreciation",
+        issuer: "ISSPL Limited",
+        recipient: "Taologos Construction",
+        projectLabel: "UN Office Congo Building Assessment — Addis Ababa",
+        summary:
+          "Presented for valuable contribution, professional support, and successful execution of works associated with the UN Office Congo Building Assessment Project in Addis Ababa, Ethiopia.",
+        highlights: [
+          "Selective demolition for structural assessment and testing",
+          "Technical support during building assessment and specialized testing",
+          "Foundation excavation and exposure at designated locations",
+          "Re-filling, leveling, and site restoration",
+          "Replastering and repainting after testing",
+          "HSE management, barricading, housekeeping, and debris removal",
+          "Skilled manpower, supervision, equipment, and safety protocols",
+        ],
+        image: "/images/certificate-isspl-un-congo.jpg",
       },
     ],
   },

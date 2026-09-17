@@ -1,9 +1,16 @@
-import { contactEntry, serviceItem, testimonial, valueItem } from "./objects";
+import {
+  certificateItem,
+  contactEntry,
+  serviceItem,
+  testimonial,
+  valueItem,
+} from "./objects";
 import {
   contactSection,
   heroSection,
   missionVisionSection,
   projectsSection,
+  recognitionSection,
   servicesSection,
   teamSection,
   valuesSection,
@@ -19,12 +26,14 @@ export const schemaTypes = [
   valueItem,
   serviceItem,
   testimonial,
+  certificateItem,
   heroSection,
   whoWeAreSection,
   missionVisionSection,
   valuesSection,
   servicesSection,
   projectsSection,
+  recognitionSection,
   contactSection,
   teamSection,
 ];

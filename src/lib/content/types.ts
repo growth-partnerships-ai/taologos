@@ -41,6 +41,17 @@ export type ProjectItem = {
   featured?: boolean;
 };
 
+export type CertificateItem = {
+  id: string;
+  title: string;
+  issuer: string;
+  recipient: string;
+  summary: string;
+  highlights: string[];
+  image: string;
+  projectLabel?: string;
+};
+
 export type SiteContent = {
   brand: {
     name: string;
@@ -85,6 +96,11 @@ export type SiteContent = {
     title: string;
     intro: string;
     items: ProjectItem[];
+  };
+  recognition: {
+    title: string;
+    intro: string;
+    items: CertificateItem[];
   };
   contact: {
     title: string;

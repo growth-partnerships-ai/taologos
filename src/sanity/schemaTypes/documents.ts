@@ -89,6 +89,7 @@ export const homePage = defineType({
         defineArrayMember({ type: "valuesSection" }),
         defineArrayMember({ type: "servicesSection" }),
         defineArrayMember({ type: "projectsSection" }),
+        defineArrayMember({ type: "recognitionSection" }),
         defineArrayMember({ type: "contactSection" }),
         defineArrayMember({ type: "teamSection" }),
       ],

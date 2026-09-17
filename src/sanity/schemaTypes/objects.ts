@@ -53,3 +53,25 @@ export const testimonial = defineType({
     defineField({ name: "attribution", type: "string" }),
   ],
 });
+
+export const certificateItem = defineType({
+  name: "certificateItem",
+  title: "Certificate",
+  type: "object",
+  fields: [
+    defineField({ name: "title", type: "string", validation: (r) => r.required() }),
+    defineField({ name: "issuer", type: "string" }),
+    defineField({ name: "recipient", type: "string" }),
+    defineField({ name: "projectLabel", type: "string" }),
+    defineField({ name: "summary", type: "text", rows: 4 }),
+    defineField({
+      name: "highlights",
+      type: "array",
+      of: [{ type: "string" }],
+    }),
+    defineField({ name: "image", type: "image", options: { hotspot: true } }),
+  ],
+  preview: {
+    select: { title: "title", subtitle: "issuer", media: "image" },
+  },
+});

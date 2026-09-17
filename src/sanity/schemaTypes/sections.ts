@@ -112,6 +112,22 @@ export const contactSection = defineType({
   ],
 });
 
+export const recognitionSection = defineType({
+  name: "recognitionSection",
+  title: "Recognition / certificates",
+  type: "object",
+  fields: [
+    ...sectionCommon,
+    defineField({ name: "title", type: "string" }),
+    defineField({ name: "intro", type: "text", rows: 3 }),
+    defineField({
+      name: "items",
+      type: "array",
+      of: [defineArrayMember({ type: "certificateItem" })],
+    }),
+  ],
+});
+
 /** Available for later — not used on the live page in v1. */
 export const teamSection = defineType({
   name: "teamSection",
