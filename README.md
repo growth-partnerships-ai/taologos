@@ -37,8 +37,9 @@ Invite **two admins** in the Sanity project members UI — no custom user system
 2. Message the bot, then get `chat_id` (e.g. via `getUpdates` or a helper bot).
 3. Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
 4. Optional: set `RESEND_API_KEY` for visitor thank-you emails.
+5. Optional fallback: `CONTACT_NOTIFY_EMAIL` + `RESEND_API_KEY` emails the company if Telegram is down/unset.
 
-In local `npm run dev` without those env vars, submissions are logged to the server console.
+In local `npm run dev` without those env vars, submissions are accepted and logged to the server console.
 
 ## Amharic later
 

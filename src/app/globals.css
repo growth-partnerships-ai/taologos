@@ -86,6 +86,25 @@ body {
   animation: drift 12s ease-out forwards;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .hero-image {
+    animation: none !important;
+  }
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 .group-apartment {
   --group-tint: #1b2435;
   --group-accent: #f07818;
@@ -104,4 +123,32 @@ body {
 .group-institutional {
   --group-tint: #121a2b;
   --group-accent: #7eb6ff;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only:focus {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 60;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  background: var(--accent);
+  color: var(--background);
+  padding: 0.5rem 0.75rem;
 }

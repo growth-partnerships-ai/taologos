@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
   const telegramToken = process.env.TELEGRAM_BOT_TOKEN;
   const telegramChatId = process.env.TELEGRAM_CHAT_ID;
   const resendKey = process.env.RESEND_API_KEY;
+  const notifyEmail = process.env.CONTACT_NOTIFY_EMAIL;
   const fromEmail =
     process.env.CONTACT_FROM_EMAIL || "Taologos <onboarding@resend.dev>";
 
@@ -54,9 +55,28 @@ export async function POST(request: NextRequest) {
     .filter(Boolean)
     .join("\n");
 
-  const errors: string[] = [];
+  const hasTelegram = Boolean(telegramToken && telegramChatId);
+  const canEmailCompany = Boolean(resendKey && notifyEmail);
+  const isProd = process.env.NODE_ENV === "production";
 
-  if (telegramToken && telegramChatId) {
+  if (!hasTelegram && !canEmailCompany) {
+    if (isProd) {
+      return NextResponse.json(
+        {
+          error:
+            "Contact delivery is not configured yet. Please call +251 91 012 7252.",
+        },
+        { status: 503 },
+      );
+    }
+    console.info("[contact] Dev fallback — message received:\n", text);
+    return NextResponse.json({ ok: true, warnings: ["dev-fallback"] });
+  }
+
+  const errors: string[] = [];
+  let companyNotified = false;
+
+  if (hasTelegram) {
     try {
       const tgRes = await fetch(
         `https://api.telegram.org/bot${telegramToken}/sendMessage`,
@@ -71,29 +91,33 @@ export async function POST(request: NextRequest) {
       );
       if (!tgRes.ok) {
         errors.push("Telegram notification failed");
+      } else {
+        companyNotified = true;
       }
     } catch {
       errors.push("Telegram notification failed");
     }
-  } else if (process.env.NODE_ENV === "production") {
-    // In production without Telegram, still allow thank-you email if configured;
-    // otherwise surface a setup error so leads aren't silently dropped.
-    if (!resendKey) {
-      return NextResponse.json(
-        {
-          error:
-            "Contact delivery is not configured yet. Please call +251 91 012 7252.",
-        },
-        { status: 503 },
-      );
-    }
-  } else {
-    console.info("[contact] Dev fallback — message received:\n", text);
   }
 
   if (resendKey) {
+    const resend = new Resend(resendKey);
+
+    if (canEmailCompany && (!hasTelegram || !companyNotified)) {
+      try {
+        await resend.emails.send({
+          from: fromEmail,
+          to: notifyEmail!,
+          replyTo: email,
+          subject: `New enquiry from ${name}`,
+          text,
+        });
+        companyNotified = true;
+      } catch {
+        errors.push("Company email notification failed");
+      }
+    }
+
     try {
-      const resend = new Resend(resendKey);
       await resend.emails.send({
         from: fromEmail,
         to: email,
@@ -105,11 +129,7 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  if (
-    errors.includes("Telegram notification failed") &&
-    !resendKey &&
-    process.env.NODE_ENV === "production"
-  ) {
+  if (!companyNotified && isProd) {
     return NextResponse.json(
       { error: "Could not deliver your message. Please call us." },
       { status: 502 },

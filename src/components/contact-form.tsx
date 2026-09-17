@@ -72,34 +72,42 @@ export function ContactForm({ contacts }: { contacts: ContactEntry[] }) {
         className="space-y-4 border border-line bg-surface/50 p-6 md:p-8"
       >
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="block text-sm">
+          <label className="block text-sm" htmlFor="contact-name">
             <span className="text-muted">Name</span>
             <input
+              id="contact-name"
               required
               name="name"
+              autoComplete="name"
               className="mt-2 w-full border border-line bg-background px-3 py-3 outline-none transition focus:border-accent"
             />
           </label>
-          <label className="block text-sm">
+          <label className="block text-sm" htmlFor="contact-phone">
             <span className="text-muted">Phone</span>
             <input
+              id="contact-phone"
               name="phone"
+              type="tel"
+              autoComplete="tel"
               className="mt-2 w-full border border-line bg-background px-3 py-3 outline-none transition focus:border-accent"
             />
           </label>
         </div>
-        <label className="block text-sm">
+        <label className="block text-sm" htmlFor="contact-email">
           <span className="text-muted">Email</span>
           <input
+            id="contact-email"
             required
             type="email"
             name="email"
+            autoComplete="email"
             className="mt-2 w-full border border-line bg-background px-3 py-3 outline-none transition focus:border-accent"
           />
         </label>
-        <label className="block text-sm">
+        <label className="block text-sm" htmlFor="contact-message">
           <span className="text-muted">Message</span>
           <textarea
+            id="contact-message"
             required
             name="message"
             rows={5}

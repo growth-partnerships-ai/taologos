@@ -16,7 +16,11 @@ export default async function HomePage() {
     <>
       <SiteHeader brandName={content.brand.name} />
       <main>
-        <Hero content={content.hero} tagline={content.brand.tagline} />
+        <Hero
+          content={content.hero}
+          tagline={content.brand.tagline}
+          brandName={content.brand.name}
+        />
         <WhoWeAre content={content.whoWeAre} />
         <MissionVision mission={content.mission} vision={content.vision} />
         <Values content={content.values} />

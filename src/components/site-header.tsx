@@ -11,6 +11,7 @@ const links = [
 
 export function SiteHeader({ brandName }: { brandName: string }) {
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -19,10 +20,17 @@ export function SiteHeader({ brandName }: { brandName: string }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled
+        scrolled || open
           ? "border-b border-line bg-background/90 backdrop-blur-md"
           : "bg-transparent"
       }`}
@@ -47,30 +55,57 @@ export function SiteHeader({ brandName }: { brandName: string }) {
             </span>
           </span>
         </a>
-        <nav className="hidden items-center gap-7 md:flex">
+
+        <nav className="hidden items-center gap-7 md:flex" aria-label="Primary">
           {links.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm text-muted transition-colors hover:text-foreground"
+              className="text-sm text-muted transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
             >
               {link.label}
             </a>
           ))}
           <a
             href="#contact"
-            className="rounded-sm bg-accent px-4 py-2 text-sm font-semibold text-background transition hover:bg-accent-deep"
+            className="rounded-sm bg-accent px-4 py-2 text-sm font-semibold text-background transition hover:bg-accent-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
           >
             Contact us
           </a>
         </nav>
-        <a
-          href="#contact"
-          className="rounded-sm bg-accent px-3 py-2 text-xs font-semibold text-background md:hidden"
+
+        <button
+          type="button"
+          className="inline-flex items-center justify-center rounded-sm border border-line px-3 py-2 text-xs font-semibold text-foreground md:hidden"
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+          onClick={() => setOpen((value) => !value)}
         >
-          Contact
-        </a>
+          {open ? "Close" : "Menu"}
+        </button>
       </div>
+
+      {open ? (
+        <nav
+          id="mobile-nav"
+          aria-label="Mobile"
+          className="border-t border-line bg-background px-5 py-4 md:hidden"
+        >
+          <ul className="space-y-3">
+            {links.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  className="block py-2 text-base text-cream"
+                  onClick={() => setOpen(false)}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ) : null}
     </header>
   );
 }

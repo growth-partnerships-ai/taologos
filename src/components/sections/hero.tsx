@@ -3,9 +3,11 @@ import type { SiteContent } from "@/lib/content/types";
 export function Hero({
   content,
   tagline,
+  brandName,
 }: {
   content: SiteContent["hero"];
   tagline: string;
+  brandName: string;
 }) {
   return (
     <section
@@ -25,8 +27,11 @@ export function Hero({
 
       <div className="mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pb-16 pt-28 md:px-8 md:pb-24">
         <p className="eyebrow reveal">{content.eyebrow}</p>
-        <h1 className="reveal mt-5 max-w-4xl font-[family-name:var(--font-display)] text-5xl leading-[0.95] tracking-tight text-cream sm:text-6xl md:text-7xl lg:text-8xl">
-          {tagline}
+        <p className="reveal mt-4 font-[family-name:var(--font-display)] text-sm tracking-[0.28em] text-cream/80 md:text-base">
+          {brandName} GENERAL CONTRACTOR
+        </p>
+        <h1 className="reveal mt-4 max-w-4xl font-[family-name:var(--font-display)] text-5xl leading-[0.95] tracking-tight text-cream sm:text-6xl md:text-7xl lg:text-8xl">
+          {content.headline || tagline}
         </h1>
         <p className="reveal mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
           {content.supporting}

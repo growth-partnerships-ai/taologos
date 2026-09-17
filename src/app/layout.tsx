@@ -24,6 +24,22 @@ const ethiopic = Noto_Sans_Ethiopic({
 export const metadata: Metadata = {
   title: seedContent.seo.title,
   description: seedContent.seo.description,
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  ),
+  openGraph: {
+    title: seedContent.seo.title,
+    description: seedContent.seo.description,
+    type: "website",
+    locale: "en_US",
+    images: [{ url: "/images/hero-cover.jpg", alt: "Taologos General Contractor" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: seedContent.seo.title,
+    description: seedContent.seo.description,
+    images: ["/images/hero-cover.jpg"],
+  },
 };
 
 export default function RootLayout({
@@ -36,7 +52,15 @@ export default function RootLayout({
       lang="en"
       className={`${display.variable} ${body.variable} ${ethiopic.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <a
+          href="#who-we-are"
+          className="sr-only"
+        >
+          Skip to content
+        </a>
+        {children}
+      </body>
     </html>
   );
 }
