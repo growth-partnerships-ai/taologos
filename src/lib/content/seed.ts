@@ -1,0 +1,343 @@
+import type { SiteContent } from "./types";
+
+export const seedContent: SiteContent = {
+  brand: {
+    name: "TAOLOGOS",
+    legalName: "Taologos General Contractor",
+    tagline: "Your Vision Our Construction!",
+  },
+  seo: {
+    title: "Taologos General Contractor | Addis Ababa",
+    description:
+      "Grade Six general contractor delivering residential, apartment, interior, and institutional building works across Addis Ababa and Oromia.",
+  },
+  contacts: [
+    {
+      id: "phone",
+      label: "Phone",
+      value: "+251 91 012 7252",
+      href: "tel:+251910127252",
+      kind: "phone",
+    },
+    {
+      id: "email",
+      label: "Email",
+      value: "info@taologos.com",
+      href: "mailto:info@taologos.com",
+      kind: "email",
+    },
+    {
+      id: "address",
+      label: "Office",
+      value: "Addis Ababa, Ethiopia",
+      kind: "address",
+    },
+  ],
+  hero: {
+    eyebrow: "Company profile 2026",
+    headline: "Your Vision Our Construction!",
+    supporting:
+      "Grade Six building and road works contractor serving private clients, housing cooperatives, and institutions across Addis Ababa and Oromia.",
+    image: "/images/hero-cover.jpg",
+  },
+  whoWeAre: {
+    title: "Who we are",
+    body: "Taologos General Contractor (Taologos Construction) is an Addis Ababa–based building and road works contractor. Formally licensed and registered in 2022, the company holds a Certificate of Competence as a Grade Six General Contractor from Ethiopia’s Construction Works Regulatory Authority. Since then, Taologos has delivered residential apartment buildings, cooperative housing blocks, and interior renovation and finishing works for private clients, housing cooperatives, and institutional clients across Addis Ababa and Oromia.",
+    credentials: [
+      "Grade Six General Contractor",
+      "Licensed & registered 2022",
+      "Addis Ababa & Oromia",
+      "Building & road works",
+    ],
+  },
+  mission: {
+    title: "Mission",
+    body: "To deliver durable buildings and finishing works with clear communication, disciplined site practice, and respect for client timelines and budgets—so every project stands as lasting proof of trust.",
+  },
+  vision: {
+    title: "Vision",
+    body: "To be a trusted Ethiopian contractor known for quality structures, safer sites, and spaces communities are proud to live and work in—growing in grade through consistent delivery.",
+  },
+  values: {
+    title: "Values",
+    intro:
+      "These principles guide how we plan, build, and finish every project—from excavation to handover.",
+    items: [
+      {
+        id: "creativity",
+        title: "Creativity",
+        description:
+          "Practical solutions on complex sites—adapting methods without compromising the brief.",
+      },
+      {
+        id: "quality",
+        title: "Quality",
+        description:
+          "Sound structural work and careful finishing that hold up under daily use.",
+      },
+      {
+        id: "collaboration",
+        title: "Collaboration",
+        description:
+          "Close coordination with clients, consultants, and trades from first setting-out to completion.",
+      },
+      {
+        id: "integrity",
+        title: "Integrity",
+        description:
+          "Honest scopes, transparent progress, and commitments we stand behind.",
+      },
+      {
+        id: "innovation",
+        title: "Innovation",
+        description:
+          "Better sequencing, materials, and methods that improve speed, safety, and outcome.",
+      },
+      {
+        id: "passion",
+        title: "Passion",
+        description:
+          "Pride in craftsmanship—treating every building as a lasting part of the city.",
+      },
+    ],
+  },
+  services: {
+    title: "Services",
+    image: "/images/services-bg.jpg",
+    items: [
+      {
+        id: "construction",
+        title: "Construction",
+        description:
+          "Full building works including excavation, foundation, RCC, masonry, plastering, and finishing for apartments and residential structures.",
+      },
+      {
+        id: "interior",
+        title: "Interior design & finishing",
+        description:
+          "Interior renovation, finishing, and fit-out for homes, studios, and commercial interiors—detail-led and schedule-aware.",
+      },
+    ],
+  },
+  projects: {
+    title: "Selected projects",
+    intro:
+      "A sample of delivered works across apartment, residential, interior, and institutional groups—each with its own character on site.",
+    items: [
+      {
+        id: "p01",
+        number: "01",
+        title: "Apartment Building B+G+4+T (800 m²)",
+        client: "Zemen I Housing Cooperative Ltd.",
+        typology: "B+G+4+T · 800 m²",
+        location: "Ayat, Addis Ababa",
+        scope: "Excavation, foundation, RCC works, masonry, plastering & finishing",
+        group: "apartment",
+        image: "/images/project-01.jpg",
+        featured: true,
+        testimonial: {
+          quote:
+            "Taologos kept the cooperative informed at every stage and delivered a solid frame we could finish with confidence.",
+          attribution: "Zemen I Housing Cooperative",
+        },
+      },
+      {
+        id: "p02",
+        number: "02",
+        title: "Apartment Building B+G+6",
+        client: "Ato Sishawe Gelay",
+        typology: "B+G+6",
+        location: "Summit, Addis Ababa",
+        scope: "Excavation, foundation, RCC works, masonry, plastering & finishing",
+        group: "apartment",
+        image: "/images/project-01.jpg",
+      },
+      {
+        id: "p05",
+        number: "05",
+        title: "Apartment Building B+G+6",
+        client: "Ato Dawit",
+        typology: "B+G+6",
+        location: "Arabsa, Addis Ababa",
+        scope: "Excavation, foundation, RCC works, masonry, plastering & finishing",
+        group: "apartment",
+        image: "/images/project-01.jpg",
+      },
+      {
+        id: "p03",
+        number: "03",
+        title: "Residential G+2 Building",
+        client: "Ato Merawi",
+        typology: "G+2",
+        location: "Gelan, Sheger City",
+        scope: "Excavation, foundation, RCC works, masonry, plastering & finishing",
+        group: "residential",
+        image: "/images/project-03.jpg",
+        featured: true,
+      },
+      {
+        id: "p04",
+        number: "04",
+        title: "Residential G+2 Building",
+        client: "Ato Nuru Jemal",
+        typology: "G+2",
+        location: "German Square, Addis Ababa",
+        scope: "Excavation, foundation, RCC works, masonry, plastering & finishing",
+        group: "residential",
+        image: "/images/project-03.jpg",
+      },
+      {
+        id: "p06",
+        number: "06",
+        title: "Residential G+3 Building",
+        client: "Ato Fuad",
+        typology: "G+3",
+        location: "Arabsa, Addis Ababa",
+        scope: "Excavation, foundation, RCC works, masonry, plastering & finishing",
+        group: "residential",
+        image: "/images/project-03.jpg",
+      },
+      {
+        id: "p07",
+        number: "07",
+        title: "Residential G+3 Building",
+        client: "Ato Samuele",
+        typology: "G+3",
+        location: "Arabsa, Addis Ababa",
+        scope: "Excavation, foundation, RCC works, masonry, plastering & finishing",
+        group: "residential",
+        image: "/images/project-03.jpg",
+      },
+      {
+        id: "p09",
+        number: "09",
+        title: "Residential G+3 Building",
+        client: "Ato Amanuel Aberha",
+        typology: "G+3",
+        location: "Weybela Maryam, Sheger City",
+        scope: "Excavation, foundation, RCC works, masonry, plastering & finishing",
+        group: "residential",
+        image: "/images/project-03.jpg",
+      },
+      {
+        id: "p11",
+        number: "11",
+        title: "Residential G+3 Building",
+        client: "Ato Bantgize",
+        typology: "G+3",
+        location: "Ayat, Addis Ababa",
+        scope: "Excavation, foundation, RCC works, masonry, plastering & finishing",
+        group: "residential",
+        image: "/images/project-03.jpg",
+      },
+      {
+        id: "p13",
+        number: "13",
+        title: "Residential G+4 Building",
+        client: "Ato Kaleab",
+        typology: "G+4",
+        location: "Lebu, Addis Ababa",
+        scope: "Excavation, foundation, RCC works, masonry, plastering & finishing",
+        group: "residential",
+        image: "/images/project-03.jpg",
+      },
+      {
+        id: "p14",
+        number: "14",
+        title: "Residential G+3 Building",
+        client: "Weyzero Meseret Bira",
+        typology: "G+3",
+        location: "Kality, Addis Ababa",
+        scope: "Excavation, foundation, RCC works, masonry, plastering & finishing",
+        group: "residential",
+        image: "/images/project-03.jpg",
+      },
+      {
+        id: "p15",
+        number: "15",
+        title: "Residential G+3 Building",
+        client: "Weyzero Mistereselase",
+        typology: "G+3",
+        location: "Ferensay, Addis Ababa",
+        scope: "Excavation, foundation, RCC works, masonry, plastering & finishing",
+        group: "residential",
+        image: "/images/project-03.jpg",
+      },
+      {
+        id: "p16b",
+        number: "16",
+        title: "Residential G+3 Building",
+        client: "Ato Matios",
+        typology: "G+3",
+        location: "Bole, Addis Ababa",
+        scope: "Excavation, foundation, RCC works, masonry, plastering & finishing",
+        group: "residential",
+        image: "/images/project-03.jpg",
+      },
+      {
+        id: "p10",
+        number: "10",
+        title: "Office renovation",
+        client: "Hymedcare",
+        typology: "Office renovation",
+        location: "Bole, Addis Ababa",
+        scope: "Interior renovation and finishing",
+        group: "interior",
+        image: "/images/project-10.jpg",
+        featured: true,
+        testimonial: {
+          quote:
+            "The renovation was handled cleanly around our operations—professional and on schedule.",
+          attribution: "Hymedcare",
+        },
+      },
+      {
+        id: "p12",
+        number: "12",
+        title: "Residential renovation (interior)",
+        client: "Ato Biruk Asefa",
+        typology: "Interior renovation",
+        location: "Ayat, Addis Ababa",
+        scope: "Residential interior renovation",
+        group: "interior",
+        image: "/images/project-10.jpg",
+      },
+      {
+        id: "p16a",
+        number: "16",
+        title: "Interior finishing",
+        client: "Ato Robel Studio",
+        typology: "Interior finishing",
+        location: "Bole, Addis Ababa",
+        scope: "Interior finishing",
+        group: "interior",
+        image: "/images/project-10.jpg",
+      },
+      {
+        id: "p08",
+        number: "08",
+        title: "Maintenance work — UN Head Office (Congo Building)",
+        client: "UN Head Office",
+        typology: "Maintenance",
+        location: "Kasanchis, Addis Ababa",
+        scope: "Institutional maintenance works",
+        group: "institutional",
+        image: "/images/project-08.jpg",
+        featured: true,
+        testimonial: {
+          quote:
+            "Reliable maintenance delivery in a sensitive institutional environment.",
+          attribution: "Project stakeholder",
+        },
+      },
+    ],
+  },
+  contact: {
+    title: "Contact",
+    intro:
+      "Tell us about your site or renovation. We respond by phone or email—your message also reaches our team instantly.",
+  },
+  footer: {
+    note: "Taologos General Contractor · Addis Ababa, Ethiopia",
+  },
+};

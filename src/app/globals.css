@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+:root {
+  --background: #070b12;
+  --foreground: #f4f1ea;
+  --muted: #9aa3b2;
+  --accent: #f07818;
+  --accent-deep: #c45a0a;
+  --surface: #101826;
+  --surface-2: #162033;
+  --line: rgba(244, 241, 234, 0.12);
+  --cream: #efe8dc;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-cream: var(--cream);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 70%, white);
+  color: #111;
+}
+
+.section-pad {
+  padding-inline: clamp(1.25rem, 4vw, 4rem);
+  padding-block: clamp(4rem, 10vw, 7.5rem);
+}
+
+.eyebrow {
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.reveal {
+  animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.hero-image {
+  animation: drift 12s ease-out forwards;
+}
+
+.group-apartment {
+  --group-tint: #1b2435;
+  --group-accent: #f07818;
+}
+
+.group-residential {
+  --group-tint: #14261c;
+  --group-accent: #d8b36a;
+}
+
+.group-interior {
+  --group-tint: #241910;
+  --group-accent: #e8d5bf;
+}
+
+.group-institutional {
+  --group-tint: #121a2b;
+  --group-accent: #7eb6ff;
+}
