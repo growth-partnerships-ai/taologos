@@ -12,6 +12,32 @@ function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+function getTelegramChatIds() {
+  const multi = process.env.TELEGRAM_CHAT_IDS || "";
+  const single = process.env.TELEGRAM_CHAT_ID || "";
+  return [...multi.split(","), single]
+    .map((id) => id.trim())
+    .filter(Boolean);
+}
+
+async function sendTelegram(token: string, chatId: string, text: string) {
+  const tgRes = await fetch(
+    `https://api.telegram.org/bot${token}/sendMessage`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text,
+      }),
+    },
+  );
+  if (!tgRes.ok) {
+    const body = await tgRes.text();
+    throw new Error(`Telegram ${chatId}: ${body}`);
+  }
+}
+
 export async function POST(request: NextRequest) {
   let body: ContactPayload;
 
@@ -38,7 +64,7 @@ export async function POST(request: NextRequest) {
   }
 
   const telegramToken = process.env.TELEGRAM_BOT_TOKEN;
-  const telegramChatId = process.env.TELEGRAM_CHAT_ID;
+  const telegramChatIds = getTelegramChatIds();
   const resendKey = process.env.RESEND_API_KEY;
   const notifyEmail = process.env.CONTACT_NOTIFY_EMAIL;
   const fromEmail =
@@ -55,7 +81,7 @@ export async function POST(request: NextRequest) {
     .filter(Boolean)
     .join("\n");
 
-  const hasTelegram = Boolean(telegramToken && telegramChatId);
+  const hasTelegram = Boolean(telegramToken && telegramChatIds.length);
   const canEmailCompany = Boolean(resendKey && notifyEmail);
   const isProd = process.env.NODE_ENV === "production";
 
@@ -76,27 +102,18 @@ export async function POST(request: NextRequest) {
   const errors: string[] = [];
   let companyNotified = false;
 
-  if (hasTelegram) {
-    try {
-      const tgRes = await fetch(
-        `https://api.telegram.org/bot${telegramToken}/sendMessage`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: telegramChatId,
-            text,
-          }),
-        },
-      );
-      if (!tgRes.ok) {
-        errors.push("Telegram notification failed");
-      } else {
-        companyNotified = true;
+  if (hasTelegram && telegramToken) {
+    const results = await Promise.allSettled(
+      telegramChatIds.map((chatId) => sendTelegram(telegramToken, chatId, text)),
+    );
+    const okCount = results.filter((r) => r.status === "fulfilled").length;
+    if (okCount > 0) companyNotified = true;
+    results.forEach((r, i) => {
+      if (r.status === "rejected") {
+        errors.push(`Telegram notify failed for ${telegramChatIds[i]}`);
+        console.error(r.reason);
       }
-    } catch {
-      errors.push("Telegram notification failed");
-    }
+    });
   }
 
   if (resendKey) {
