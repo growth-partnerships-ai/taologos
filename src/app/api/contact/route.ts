@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error:
-            "Contact delivery is not configured yet. Please call +251 91 012 7252.",
+            "Contact delivery is not configured yet. Please call +251 910 12 7252.",
         },
         { status: 503 },
       );
@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
         from: fromEmail,
         to: email,
         subject: "We received your message — Taologos",
-        text: `Hi ${name},\n\nThank you for contacting Taologos General Contractor. We received your message and will follow up soon.\n\nIf it's urgent, call +251 91 012 7252.\n\n— Taologos`,
+        text: `Hi ${name},\n\nThank you for contacting Taologos General Contractor. We received your message and will follow up soon.\n\nIf it's urgent, call +251 910 12 7252 or +251 946 61 6172.\n\n— Taologos`,
       });
     } catch {
       errors.push("Thank-you email failed");

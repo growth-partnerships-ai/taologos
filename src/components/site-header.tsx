@@ -38,21 +38,16 @@ export function SiteHeader({ brandName }: { brandName: string }) {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
         <a href="#top" className="group flex items-center gap-3">
-          <span
-            aria-hidden
-            className="grid h-10 w-10 place-items-center rounded-md bg-accent text-[0.65rem] font-bold leading-none text-background"
-          >
-            <span className="block w-5 space-y-0.5">
-              <span className="block h-0.5 bg-current" />
-              <span className="block h-0.5 bg-current" />
-              <span className="block h-0.5 bg-current" />
-              <span className="block h-0.5 bg-current" />
-            </span>
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/logo-mark-official.png"
+            alt=""
+            className="h-10 w-10 object-contain"
+          />
           <span className="font-[family-name:var(--font-display)] text-sm tracking-[0.2em] text-foreground md:text-base">
             {brandName}
             <span className="mt-0.5 block text-[0.65rem] tracking-[0.28em] text-muted">
-              GENERAL CONTRACTOR
+              CONSTRUCTION
             </span>
           </span>
         </a>

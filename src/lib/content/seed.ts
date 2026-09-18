@@ -3,51 +3,66 @@ import type { SiteContent } from "./types";
 export const seedContent: SiteContent = {
   brand: {
     name: "TAOLOGOS",
-    legalName: "Taologos General Contractor",
-    tagline: "Your Vision Our Construction!",
+    legalName: "Taologos Construction",
+    tagline: "Your Vision, Our Construction",
   },
   seo: {
-    title: "Taologos General Contractor | Addis Ababa",
+    title: "Taologos Construction | Grade Six General Contractor — Addis Ababa",
     description:
-      "Grade Six general contractor delivering residential, apartment, interior, and institutional building works across Addis Ababa and Oromia.",
+      "Taologos Construction is a Grade Six general contractor delivering residential, apartment, interior, and institutional building works across Addis Ababa and Oromia.",
   },
   contacts: [
     {
-      id: "phone",
+      id: "phone-1",
       label: "Phone",
-      value: "+251 91 012 7252",
+      value: "+251 910 12 7252",
       href: "tel:+251910127252",
       kind: "phone",
     },
     {
-      id: "email",
+      id: "phone-2",
+      label: "Phone",
+      value: "+251 946 61 6172",
+      href: "tel:+251946616172",
+      kind: "phone",
+    },
+    {
+      id: "email-company",
       label: "Email",
-      value: "info@taologos.com",
-      href: "mailto:info@taologos.com",
+      value: "taologos04@gmail.com",
+      href: "mailto:taologos04@gmail.com",
+      kind: "email",
+    },
+    {
+      id: "email-gm",
+      label: "General Manager",
+      value: "binyamt3@gmail.com",
+      href: "mailto:binyamt3@gmail.com",
       kind: "email",
     },
     {
       id: "address",
       label: "Office",
-      value: "Addis Ababa, Ethiopia",
+      value:
+        "Bole on the way to Bole Micheal, Biselex Building 1st Floor, Office No. B1-G-02-1, Addis Ababa",
       kind: "address",
     },
   ],
   hero: {
     eyebrow: "Company profile 2026",
-    headline: "Your Vision Our Construction!",
+    headline: "Your Vision, Our Construction",
     supporting:
       "Grade Six building and road works contractor serving private clients, housing cooperatives, and institutions across Addis Ababa and Oromia.",
     image: "/images/hero-cover.jpg",
   },
   whoWeAre: {
     title: "Who we are",
-    body: "Taologos General Contractor (Taologos Construction) is an Addis Ababa–based building and road works contractor. Formally licensed and registered in 2022, the company holds a Certificate of Competence as a Grade Six General Contractor from Ethiopia’s Construction Works Regulatory Authority. Since then, Taologos has delivered residential apartment buildings, cooperative housing blocks, and interior renovation and finishing works for private clients, housing cooperatives, and institutional clients across Addis Ababa and Oromia.",
+    body: "Taologos Construction (Taologos General Contractor) is an Addis Ababa–based building and road works contractor led by General Manager Binyam Tadesse. Formally licensed and registered in 2022, the company holds a Certificate of Competence as a Grade Six General Contractor from Ethiopia’s Construction Works Regulatory Authority. Since then, Taologos has delivered residential apartment buildings, cooperative housing blocks, and interior renovation and finishing works for private clients, housing cooperatives, and institutional clients across Addis Ababa and Oromia.",
     credentials: [
       "Grade Six General Contractor",
       "Licensed & registered 2022",
-      "Addis Ababa & Oromia",
-      "Building & road works",
+      "General Manager: Binyam Tadesse",
+      "Office: Bole · Biselex Building",
     ],
   },
   mission: {
@@ -365,6 +380,6 @@ export const seedContent: SiteContent = {
       "Tell us about your site or renovation. We respond by phone or email—your message also reaches our team instantly.",
   },
   footer: {
-    note: "Taologos General Contractor · Addis Ababa, Ethiopia",
+    note: "Taologos Construction · Bole, Addis Ababa, Ethiopia",
   },
 };
