@@ -1,9 +1,13 @@
 /**
  * Seeds Sanity with the full current website content so every field is editable in Studio.
  *
+ * Requires Node 18+ (File polyfill included) or Node 20+.
+ *
  * 1. In sanity.io/manage → API → Tokens → Add API token (Editor permissions)
  * 2. Put it in .env.local as SANITY_API_WRITE_TOKEN=...
  * 3. Run: npm run seed:sanity
+ *
+ * Or from Vercel only: set env vars, redeploy, open /api/seed?secret=YOUR_SEED_SECRET
  */
 import { createClient } from "@sanity/client";
 import { config as loadEnv } from "dotenv";
