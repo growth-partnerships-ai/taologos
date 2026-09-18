@@ -6,6 +6,19 @@ export const seedContent: SiteContent = {
     name: "TAOLOGOS",
     legalName: "Taologos Construction",
     tagline: "Your Vision, Our Construction",
+    subtitle: "CONSTRUCTION",
+    logo: "/images/logo-mark-official.png",
+  },
+  nav: {
+    links: [
+      { id: "about", label: "About", href: "#who-we-are" },
+      { id: "services", label: "Services", href: "#services" },
+      { id: "projects", label: "Projects", href: "#projects" },
+      { id: "recognition", label: "Recognition", href: "#recognition" },
+      { id: "contact", label: "Contact", href: "#contact" },
+    ],
+    ctaLabel: "Contact us",
+    ctaHref: "#contact",
   },
   seo: {
     title: "Taologos Construction | Grade Six General Contractor — Addis Ababa",
@@ -55,6 +68,10 @@ export const seedContent: SiteContent = {
     supporting:
       "Grade Six building and road works contractor serving private clients, housing cooperatives, and institutions across Addis Ababa and Oromia.",
     image: "/images/hero-cover.jpg",
+    primaryCtaLabel: "View projects",
+    primaryCtaHref: "#projects",
+    secondaryCtaLabel: "Contact us",
+    secondaryCtaHref: "#contact",
   },
   whoWeAre: {
     title: "Who we are",
@@ -372,6 +389,19 @@ export const seedContent: SiteContent = {
           "Skilled manpower, supervision, equipment, and safety protocols",
         ],
         image: "/images/certificate-isspl-un-congo.jpg",
+      },
+    ],
+  },
+  team: {
+    title: "Team",
+    intro: "Leadership behind Taologos Construction.",
+    members: [
+      {
+        id: "binyam",
+        name: "Binyam Tadesse",
+        role: "General Manager",
+        bio: "Leads Taologos Construction operations and client delivery across Addis Ababa and Oromia.",
+        photo: "/images/card-binyam.jpg",
       },
     ],
   },

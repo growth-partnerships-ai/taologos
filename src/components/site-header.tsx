@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { SiteContent } from "@/lib/content/types";
 
-const links = [
-  { href: "#who-we-are", label: "About" },
-  { href: "#services", label: "Services" },
-  { href: "#projects", label: "Projects" },
-  { href: "#recognition", label: "Recognition" },
-  { href: "#contact", label: "Contact" },
-];
-
-export function SiteHeader({ brandName }: { brandName: string }) {
+export function SiteHeader({
+  brandName,
+  brandSubtitle,
+  logo,
+  nav,
+}: {
+  brandName: string;
+  brandSubtitle: string;
+  logo: string;
+  nav: SiteContent["nav"];
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -39,23 +42,19 @@ export function SiteHeader({ brandName }: { brandName: string }) {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
         <a href="#top" className="group flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/logo-mark-official.png"
-            alt=""
-            className="h-10 w-10 object-contain"
-          />
+          <img src={logo} alt="" className="h-10 w-10 object-contain" />
           <span className="font-[family-name:var(--font-display)] text-sm tracking-[0.2em] text-foreground md:text-base">
             {brandName}
             <span className="mt-0.5 block text-[0.65rem] tracking-[0.28em] text-muted">
-              CONSTRUCTION
+              {brandSubtitle}
             </span>
           </span>
         </a>
 
         <nav className="hidden items-center gap-7 md:flex" aria-label="Primary">
-          {links.map((link) => (
+          {nav.links.map((link) => (
             <a
-              key={link.href}
+              key={link.id}
               href={link.href}
               className="text-sm text-muted transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
             >
@@ -63,10 +62,10 @@ export function SiteHeader({ brandName }: { brandName: string }) {
             </a>
           ))}
           <a
-            href="#contact"
+            href={nav.ctaHref}
             className="rounded-sm bg-accent px-4 py-2 text-sm font-semibold text-background transition hover:bg-accent-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
           >
-            Contact us
+            {nav.ctaLabel}
           </a>
         </nav>
 
@@ -88,8 +87,8 @@ export function SiteHeader({ brandName }: { brandName: string }) {
           className="border-t border-line bg-background px-5 py-4 md:hidden"
         >
           <ul className="space-y-3">
-            {links.map((link) => (
-              <li key={link.href}>
+            {nav.links.map((link) => (
+              <li key={link.id}>
                 <a
                   href={link.href}
                   className="block py-2 text-base text-cream"
@@ -99,6 +98,15 @@ export function SiteHeader({ brandName }: { brandName: string }) {
                 </a>
               </li>
             ))}
+            <li>
+              <a
+                href={nav.ctaHref}
+                className="block py-2 text-base text-accent"
+                onClick={() => setOpen(false)}
+              >
+                {nav.ctaLabel}
+              </a>
+            </li>
           </ul>
         </nav>
       ) : null}

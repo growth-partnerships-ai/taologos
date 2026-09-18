@@ -14,16 +14,23 @@ import {
 import type {
   CertificateItem,
   ContactEntry,
+  NavLink,
   ProjectGroup,
   ProjectItem,
   SiteContent,
+  TeamMember,
   ValueItem,
 } from "./types";
 
 type SanitySettings = {
   brandName?: string;
+  brandSubtitle?: string;
   legalName?: string;
   tagline?: string;
+  logoUrl?: string | null;
+  navLinks?: Array<{ label?: string; href?: string }>;
+  navCtaLabel?: string;
+  navCtaHref?: string;
   contacts?: Array<{
     label?: string;
     value?: string;
@@ -52,6 +59,15 @@ type SanityProject = {
 type SanitySection = {
   _type?: string;
   enabled?: boolean;
+  imageUrl?: string | null;
+  projectRefs?: SanityProject[] | null;
+  members?: Array<{
+    name?: string;
+    role?: string;
+    bio?: string;
+    photoUrl?: string | null;
+  }>;
+  items?: unknown;
   [key: string]: unknown;
 };
 
@@ -59,8 +75,8 @@ type SanityHomePage = {
   sections?: SanitySection[] | null;
 };
 
-function mapProjects(rows: SanityProject[] | null): ProjectItem[] | null {
-  if (!rows?.length) return null;
+function mapProjects(rows: SanityProject[] | null | undefined): ProjectItem[] {
+  if (!rows?.length) return [];
   return rows
     .filter((row) => row.title && row.group)
     .map((row, index) => ({
@@ -84,17 +100,38 @@ function mapProjects(rows: SanityProject[] | null): ProjectItem[] | null {
     }));
 }
 
+function str(value: unknown, fallback: string) {
+  return typeof value === "string" && value.trim() ? value : fallback;
+}
+
 function applySettings(
   content: SiteContent,
   settings: SanitySettings | null,
 ): SiteContent {
   if (!settings) return content;
+
+  const navLinks: NavLink[] =
+    settings.navLinks
+      ?.filter((l) => l.label && l.href)
+      .map((l, i) => ({
+        id: `nav-${i}`,
+        label: l.label!,
+        href: l.href!,
+      })) || content.nav.links;
+
   return {
     ...content,
     brand: {
       name: settings.brandName || content.brand.name,
       legalName: settings.legalName || content.brand.legalName,
       tagline: settings.tagline || content.brand.tagline,
+      subtitle: settings.brandSubtitle || content.brand.subtitle,
+      logo: settings.logoUrl || content.brand.logo,
+    },
+    nav: {
+      links: navLinks,
+      ctaLabel: settings.navCtaLabel || content.nav.ctaLabel,
+      ctaHref: settings.navCtaHref || content.nav.ctaHref,
     },
     seo: {
       title: settings.seoTitle || content.seo.title,
@@ -116,17 +153,21 @@ function applySettings(
   };
 }
 
-function str(value: unknown, fallback: string) {
-  return typeof value === "string" && value.trim() ? value : fallback;
-}
-
 function applyHomeSections(
   content: SiteContent,
   home: SanityHomePage | null,
+  allProjects: ProjectItem[],
 ): SiteContent {
   const sections = home?.sections;
   if (!sections?.length) {
-    return { ...content, sectionOrder: DEFAULT_SECTION_ORDER };
+    return {
+      ...content,
+      sectionOrder: DEFAULT_SECTION_ORDER,
+      projects: {
+        ...content.projects,
+        items: allProjects.length ? allProjects : content.projects.items,
+      },
+    };
   }
 
   const order: SectionId[] = [];
@@ -147,6 +188,23 @@ function applyHomeSections(
             eyebrow: str(section.eyebrow, next.hero.eyebrow),
             headline: str(section.headline, next.hero.headline),
             supporting: str(section.supporting, next.hero.supporting),
+            image: str(section.imageUrl, next.hero.image),
+            primaryCtaLabel: str(
+              section.primaryCtaLabel,
+              next.hero.primaryCtaLabel,
+            ),
+            primaryCtaHref: str(
+              section.primaryCtaHref,
+              next.hero.primaryCtaHref,
+            ),
+            secondaryCtaLabel: str(
+              section.secondaryCtaLabel,
+              next.hero.secondaryCtaLabel,
+            ),
+            secondaryCtaHref: str(
+              section.secondaryCtaHref,
+              next.hero.secondaryCtaHref,
+            ),
           },
         };
         break;
@@ -154,7 +212,6 @@ function applyHomeSections(
         next = {
           ...next,
           whoWeAre: {
-            ...next.whoWeAre,
             title: str(section.title, next.whoWeAre.title),
             body: str(section.body, next.whoWeAre.body),
             credentials: Array.isArray(section.credentials)
@@ -196,8 +253,8 @@ function applyHomeSections(
         next = {
           ...next,
           services: {
-            ...next.services,
             title: str(section.title, next.services.title),
+            image: str(section.imageUrl, next.services.image),
             items: Array.isArray(section.items)
               ? (
                   section.items as Array<{
@@ -213,16 +270,22 @@ function applyHomeSections(
           },
         };
         break;
-      case "projectsSection":
+      case "projectsSection": {
+        const selected = mapProjects(section.projectRefs);
         next = {
           ...next,
           projects: {
-            ...next.projects,
             title: str(section.title, next.projects.title),
             intro: str(section.intro, next.projects.intro),
+            items: selected.length
+              ? selected
+              : allProjects.length
+                ? allProjects
+                : next.projects.items,
           },
         };
         break;
+      }
       case "recognitionSection":
         next = {
           ...next,
@@ -230,21 +293,52 @@ function applyHomeSections(
             title: str(section.title, next.recognition.title),
             intro: str(section.intro, next.recognition.intro),
             items: Array.isArray(section.items)
-              ? (section.items as CertificateItem[]).map((item, i) => ({
-                  id: item.id || `cert-${i}`,
+              ? (
+                  section.items as Array<{
+                    title?: string;
+                    issuer?: string;
+                    recipient?: string;
+                    summary?: string;
+                    highlights?: string[];
+                    projectLabel?: string;
+                    imageUrl?: string;
+                  }>
+                ).map((item, i) => ({
+                  id: `cert-${i}`,
                   title: item.title || "",
                   issuer: item.issuer || "",
                   recipient: item.recipient || "",
                   summary: item.summary || "",
                   highlights: item.highlights || [],
                   image:
-                    typeof item.image === "string"
-                      ? item.image
-                      : next.recognition.items[0]?.image ||
-                        "/images/certificate-isspl-un-congo.jpg",
+                    item.imageUrl ||
+                    next.recognition.items[0]?.image ||
+                    "/images/certificate-isspl-un-congo.jpg",
                   projectLabel: item.projectLabel,
                 }))
               : next.recognition.items,
+          },
+        };
+        break;
+      case "teamSection":
+        next = {
+          ...next,
+          team: {
+            title: str(section.title, next.team.title),
+            intro: str(section.intro, next.team.intro),
+            members: Array.isArray(section.members)
+              ? section.members
+                  .filter((m) => m.name)
+                  .map(
+                    (m, i): TeamMember => ({
+                      id: `member-${i}`,
+                      name: m.name!,
+                      role: m.role || "",
+                      bio: m.bio,
+                      photo: m.photoUrl || undefined,
+                    }),
+                  )
+              : next.team.members,
           },
         };
         break;
@@ -268,32 +362,20 @@ function applyHomeSections(
   };
 }
 
-/**
- * Prefer live Sanity content when documents exist; otherwise use seed.
- */
 export async function getPageContent(language = "en"): Promise<SiteContent> {
+  void language;
   if (!hasSanityConfig()) return seedContent;
 
   try {
     const [settings, projects, home] = await Promise.all([
-      client.fetch<SanitySettings | null>(siteSettingsQuery, { language }),
+      client.fetch<SanitySettings | null>(siteSettingsQuery),
       client.fetch<SanityProject[] | null>(projectsQuery),
-      client.fetch<SanityHomePage | null>(homePageQuery, { language }),
+      client.fetch<SanityHomePage | null>(homePageQuery),
     ]);
 
+    const mappedProjects = mapProjects(projects);
     let content = applySettings(seedContent, settings);
-    content = applyHomeSections(content, home);
-
-    const mapped = mapProjects(projects);
-    if (mapped?.length) {
-      content = {
-        ...content,
-        projects: {
-          ...content.projects,
-          items: mapped,
-        },
-      };
-    }
+    content = applyHomeSections(content, home, mappedProjects);
     return content;
   } catch (error) {
     console.error("[content] Sanity fetch failed, using seed", error);

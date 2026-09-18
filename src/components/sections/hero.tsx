@@ -4,10 +4,12 @@ export function Hero({
   content,
   tagline,
   brandName,
+  brandSubtitle,
 }: {
   content: SiteContent["hero"];
   tagline: string;
   brandName: string;
+  brandSubtitle: string;
 }) {
   return (
     <section
@@ -28,7 +30,7 @@ export function Hero({
       <div className="mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pb-16 pt-28 md:px-8 md:pb-24">
         <p className="eyebrow reveal">{content.eyebrow}</p>
         <p className="reveal mt-4 font-[family-name:var(--font-display)] text-sm tracking-[0.28em] text-cream/80 md:text-base">
-          {brandName} CONSTRUCTION
+          {brandName} {brandSubtitle}
         </p>
         <h1 className="reveal mt-4 max-w-4xl font-[family-name:var(--font-display)] text-5xl leading-[0.95] tracking-tight text-cream sm:text-6xl md:text-7xl lg:text-8xl">
           {content.headline || tagline}
@@ -38,16 +40,16 @@ export function Hero({
         </p>
         <div className="reveal mt-10 flex flex-wrap gap-3">
           <a
-            href="#projects"
+            href={content.primaryCtaHref}
             className="rounded-sm bg-accent px-6 py-3 text-sm font-semibold text-background transition hover:bg-accent-deep"
           >
-            View projects
+            {content.primaryCtaLabel}
           </a>
           <a
-            href="#contact"
+            href={content.secondaryCtaHref}
             className="rounded-sm border border-line px-6 py-3 text-sm font-semibold text-foreground transition hover:border-accent hover:text-accent"
           >
-            Contact us
+            {content.secondaryCtaLabel}
           </a>
         </div>
       </div>

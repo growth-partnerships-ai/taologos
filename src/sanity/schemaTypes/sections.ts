@@ -19,8 +19,15 @@ export const heroSection = defineType({
     defineField({ name: "headline", type: "string" }),
     defineField({ name: "supporting", type: "text", rows: 3 }),
     defineField({ name: "image", type: "image", options: { hotspot: true } }),
+    defineField({ name: "primaryCtaLabel", type: "string" }),
+    defineField({ name: "primaryCtaHref", type: "string" }),
+    defineField({ name: "secondaryCtaLabel", type: "string" }),
+    defineField({ name: "secondaryCtaHref", type: "string" }),
   ],
-  preview: { select: { title: "headline" }, prepare: ({ title }) => ({ title: title || "Hero" }) },
+  preview: {
+    select: { title: "headline" },
+    prepare: ({ title }) => ({ title: title || "Hero" }),
+  },
 });
 
 export const whoWeAreSection = defineType({
@@ -45,9 +52,9 @@ export const missionVisionSection = defineType({
   type: "object",
   fields: [
     ...sectionCommon,
-    defineField({ name: "missionTitle", type: "string", initialValue: "Mission" }),
+    defineField({ name: "missionTitle", type: "string" }),
     defineField({ name: "missionBody", type: "text", rows: 4 }),
-    defineField({ name: "visionTitle", type: "string", initialValue: "Vision" }),
+    defineField({ name: "visionTitle", type: "string" }),
     defineField({ name: "visionBody", type: "text", rows: 4 }),
   ],
 });
@@ -94,7 +101,7 @@ export const projectsSection = defineType({
     defineField({ name: "intro", type: "text", rows: 3 }),
     defineField({
       name: "projectRefs",
-      title: "Projects to show",
+      title: "Projects to show (leave empty = all projects)",
       type: "array",
       of: [defineArrayMember({ type: "reference", to: [{ type: "project" }] })],
     }),
@@ -128,10 +135,9 @@ export const recognitionSection = defineType({
   ],
 });
 
-/** Available for later — not used on the live page in v1. */
 export const teamSection = defineType({
   name: "teamSection",
-  title: "Team (unused on page until enabled)",
+  title: "Team",
   type: "object",
   fields: [
     ...sectionCommon,
@@ -146,11 +152,15 @@ export const teamSection = defineType({
           fields: [
             defineField({ name: "name", type: "string" }),
             defineField({ name: "role", type: "string" }),
-            defineField({ name: "photo", type: "image", options: { hotspot: true } }),
+            defineField({
+              name: "photo",
+              type: "image",
+              options: { hotspot: true },
+            }),
             defineField({ name: "bio", type: "text", rows: 3 }),
           ],
           preview: {
-            select: { title: "name", subtitle: "role" },
+            select: { title: "name", subtitle: "role", media: "photo" },
           },
         }),
       ],

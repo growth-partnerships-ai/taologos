@@ -5,12 +5,16 @@ import { Projects } from "@/components/sections/projects";
 import { Recognition } from "@/components/sections/recognition";
 import { Services } from "@/components/sections/services";
 import { SiteFooter } from "@/components/sections/footer";
+import { Team } from "@/components/sections/team";
 import { Values } from "@/components/sections/values";
 import { WhoWeAre } from "@/components/sections/who-we-are";
 import { SiteHeader } from "@/components/site-header";
 import { getPageContent } from "@/lib/content/get-page-content";
 import type { SectionId } from "@/lib/content/sections";
 import type { SiteContent } from "@/lib/content/types";
+
+/** Refresh CMS content periodically */
+export const revalidate = 30;
 
 function renderSection(id: SectionId, content: SiteContent) {
   switch (id) {
@@ -21,6 +25,7 @@ function renderSection(id: SectionId, content: SiteContent) {
           content={content.hero}
           tagline={content.brand.tagline}
           brandName={content.brand.name}
+          brandSubtitle={content.brand.subtitle}
         />
       );
     case "whoWeAre":
@@ -41,6 +46,8 @@ function renderSection(id: SectionId, content: SiteContent) {
       return <Projects key={id} content={content.projects} />;
     case "recognition":
       return <Recognition key={id} content={content.recognition} />;
+    case "team":
+      return <Team key={id} content={content.team} />;
     case "contact":
       return (
         <Contact
@@ -49,8 +56,6 @@ function renderSection(id: SectionId, content: SiteContent) {
           contacts={content.contacts}
         />
       );
-    case "team":
-      return null;
     default:
       return null;
   }
@@ -61,7 +66,12 @@ export default async function HomePage() {
 
   return (
     <>
-      <SiteHeader brandName={content.brand.name} />
+      <SiteHeader
+        brandName={content.brand.name}
+        brandSubtitle={content.brand.subtitle}
+        logo={content.brand.logo}
+        nav={content.nav}
+      />
       <main>
         {content.sectionOrder.map((id) => renderSection(id, content))}
       </main>

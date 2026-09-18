@@ -1,7 +1,15 @@
+const imageUrl = `"imageUrl": image.asset->url`;
+const photoUrl = `"photoUrl": photo.asset->url`;
+
 export const siteSettingsQuery = `*[_id == "siteSettings"][0]{
   brandName,
+  brandSubtitle,
   legalName,
   tagline,
+  "logoUrl": logo.asset->url,
+  navLinks[]{label, href},
+  navCtaLabel,
+  navCtaHref,
   contacts[]{label, value, href, kind},
   seoTitle,
   seoDescription,
@@ -29,6 +37,11 @@ export const homePageQuery = `*[_id == "homePage"][0]{
     eyebrow,
     headline,
     supporting,
+    ${imageUrl},
+    primaryCtaLabel,
+    primaryCtaHref,
+    secondaryCtaLabel,
+    secondaryCtaHref,
     title,
     body,
     credentials,
@@ -37,11 +50,30 @@ export const homePageQuery = `*[_id == "homePage"][0]{
     visionTitle,
     visionBody,
     intro,
-    items,
-    projectLabel,
-    issuer,
-    recipient,
-    summary,
-    highlights
+    items[]{
+      ...,
+      ${imageUrl},
+      ${photoUrl},
+      "imageUrl": image.asset->url
+    },
+    members[]{
+      name,
+      role,
+      bio,
+      ${photoUrl}
+    },
+    projectRefs[]->{
+      _id,
+      number,
+      title,
+      client,
+      typology,
+      location,
+      scope,
+      group,
+      featured,
+      "image": images[0].asset->url,
+      testimonial
+    }
   }
 }`;

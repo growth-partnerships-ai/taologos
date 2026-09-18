@@ -1,53 +1,50 @@
-# How to edit the Taologos website (CMS)
+# How to edit EVERY part of the Taologos website
 
-## Where is the CMS?
+## Open the CMS (Studio)
 
-Not on [sanity.io/manage](https://www.sanity.io/manage) alone — that page is project billing/members.
-
-**Content editing is in Studio:**
-
-| Where | URL |
+| | URL |
 |---|---|
-| On your live site | `https://YOUR-DOMAIN/studio` |
-| Shortcut | `https://YOUR-DOMAIN/cms` |
-| Locally | `http://localhost:3000/studio` |
+| Live | `https://YOUR-DOMAIN/studio` or `/cms` |
+| Local | `http://localhost:3000/studio` |
 
-Log in with the Sanity account that was invited (binyam / matshimelis).
+Use [sanity.io/manage](https://www.sanity.io/manage) only for invites, CORS, and API tokens — **not** for page editing.
 
-## Why does it look empty?
+## Make everything editable (one-time seed)
 
-Schemas were set up, but **no documents were created yet**.  
-Until you create & publish documents, the public site uses built-in seed content.
+Studio starts empty until documents exist. Seed the full page from our content:
 
-## What to click (left sidebar)
+1. Manage → **API** → **Tokens** → create token with **Editor** rights  
+2. Add to `.env.local`:
+   ```bash
+   SANITY_API_WRITE_TOKEN=your_token_here
+   ```
+3. Run:
+   ```bash
+   npm run seed:sanity
+   ```
+4. Open `/studio` — you will see **Site settings**, **Home page**, and **Projects** filled in.
 
-1. **Site settings (contacts, SEO)**  
-   Phones, emails, address, brand name, footer, SEO.
+Then every visible block is editable. Upload images (logo, hero, projects, certificates) in Studio where marked.
 
-2. **Home page — add / remove sections** ← **this is the important one**  
-   - Open it  
-   - Find **Page sections**  
-   - Click **Add item**  
-   - Choose: Hero, Who we are, Mission & vision, Values, Services, Projects, Recognition, Contact, or Team  
-   - Fill the fields  
-   - Drag rows to **reorder**  
-   - Set **Enabled** off to hide without deleting  
-   - Click **Publish**
+## What edits what
 
-3. **Projects**  
-   Create one document per project (title, client, group, photos, etc.).
+| Studio item | Controls |
+|---|---|
+| **Site settings** | Brand name, subtitle, tagline, logo, **nav links**, header CTA, **all contacts**, SEO, footer |
+| **Home page → Page sections** | **Add / remove / reorder / disable** every section; all section copy & images |
+| **Projects** | Each portfolio project (title, client, group, photos, testimonial…) |
 
-## First-time setup (5 minutes)
+### Section types you can add on Home page
 
-1. Open `/studio`  
-2. Click **Site settings** → fill contacts → **Publish**  
-3. Click **Home page** → **Add item** for each section you want → **Publish**  
-4. Click **Projects** → **Create** → add a few → **Publish**  
-5. Refresh the public homepage
+Hero · Who we are · Mission & vision · Values · Services · Projects · Recognition · Team · Contact  
 
-## Sanity Manage vs Studio
+Drag to reorder. Set **Enabled = off** to hide without deleting. Always **Publish**.
 
-- **Manage** = invite users, CORS, plan, API tokens  
-- **Studio** (`/studio`) = edit website content  
+## After seeding
 
-If Studio won’t load: in Manage → API → CORS, add your site URL with **Allow credentials**.
+- Change phone/email → Site settings → Publish  
+- Hide Team → Home page → Team section → Enabled off → Publish  
+- New project → Projects → Create → then link it under Home → Projects section (or leave refs empty to show all)  
+- New certificate → Home → Recognition section → add item + upload image  
+
+The public site reads **published** Sanity content (with a short cache). Hard-refresh after publish if you do not see changes immediately.

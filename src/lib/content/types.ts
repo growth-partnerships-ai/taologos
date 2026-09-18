@@ -1,3 +1,5 @@
+import { DEFAULT_SECTION_ORDER, type SectionId } from "./sections";
+
 export type ProjectGroup =
   | "apartment"
   | "residential"
@@ -12,6 +14,12 @@ export type ContactEntry = {
   kind: "phone" | "email" | "address" | "other";
 };
 
+export type NavLink = {
+  id: string;
+  label: string;
+  href: string;
+};
+
 export type ValueItem = {
   id: string;
   title: string;
@@ -22,6 +30,14 @@ export type ServiceItem = {
   id: string;
   title: string;
   description: string;
+};
+
+export type TeamMember = {
+  id: string;
+  name: string;
+  role: string;
+  bio?: string;
+  photo?: string;
 };
 
 export type ProjectItem = {
@@ -57,10 +73,17 @@ export type SiteContent = {
     name: string;
     legalName: string;
     tagline: string;
+    subtitle: string;
+    logo: string;
   };
   seo: {
     title: string;
     description: string;
+  };
+  nav: {
+    links: NavLink[];
+    ctaLabel: string;
+    ctaHref: string;
   };
   contacts: ContactEntry[];
   hero: {
@@ -68,6 +91,10 @@ export type SiteContent = {
     headline: string;
     supporting: string;
     image: string;
+    primaryCtaLabel: string;
+    primaryCtaHref: string;
+    secondaryCtaLabel: string;
+    secondaryCtaHref: string;
   };
   whoWeAre: {
     title: string;
@@ -102,6 +129,11 @@ export type SiteContent = {
     intro: string;
     items: CertificateItem[];
   };
+  team: {
+    title: string;
+    intro: string;
+    members: TeamMember[];
+  };
   contact: {
     title: string;
     intro: string;
@@ -109,8 +141,7 @@ export type SiteContent = {
   footer: {
     note: string;
   };
-  /** Which sections to render, in order. Controlled from Sanity Home page. */
-  sectionOrder: import("./sections").SectionId[];
+  sectionOrder: SectionId[];
 };
 
 export const PROJECT_GROUP_META: Record<
@@ -134,3 +165,5 @@ export const PROJECT_GROUP_META: Record<
     blurb: "Maintenance and works for trusted institutional clients.",
   },
 };
+
+export { DEFAULT_SECTION_ORDER };

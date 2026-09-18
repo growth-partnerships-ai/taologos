@@ -9,13 +9,56 @@ export const siteSettings = defineType({
       name: "language",
       type: "string",
       initialValue: "en",
-      description: "Primary language. Add Amharic (am) documents later for i18n.",
-      options: { list: [{ title: "English", value: "en" }, { title: "Amharic", value: "am" }] },
+      options: {
+        list: [
+          { title: "English", value: "en" },
+          { title: "Amharic", value: "am" },
+        ],
+      },
     }),
     defineField({ name: "brandName", type: "string", initialValue: "TAOLOGOS" }),
-    defineField({ name: "legalName", type: "string" }),
-    defineField({ name: "tagline", type: "string" }),
+    defineField({
+      name: "brandSubtitle",
+      title: "Brand subtitle under name",
+      type: "string",
+      initialValue: "CONSTRUCTION",
+    }),
+    defineField({
+      name: "legalName",
+      type: "string",
+      initialValue: "Taologos Construction",
+    }),
+    defineField({
+      name: "tagline",
+      type: "string",
+      initialValue: "Your Vision, Our Construction",
+    }),
     defineField({ name: "logo", type: "image", options: { hotspot: true } }),
+    defineField({
+      name: "navLinks",
+      title: "Header navigation",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "object",
+          fields: [
+            defineField({ name: "label", type: "string" }),
+            defineField({ name: "href", type: "string" }),
+          ],
+          preview: { select: { title: "label", subtitle: "href" } },
+        }),
+      ],
+    }),
+    defineField({
+      name: "navCtaLabel",
+      type: "string",
+      initialValue: "Contact us",
+    }),
+    defineField({
+      name: "navCtaHref",
+      type: "string",
+      initialValue: "#contact",
+    }),
     defineField({
       name: "contacts",
       type: "array",
@@ -36,7 +79,11 @@ export const project = defineType({
   type: "document",
   fields: [
     defineField({ name: "number", type: "string" }),
-    defineField({ name: "title", type: "string", validation: (r) => r.required() }),
+    defineField({
+      name: "title",
+      type: "string",
+      validation: (r) => r.required(),
+    }),
     defineField({ name: "client", type: "string" }),
     defineField({ name: "typology", type: "string" }),
     defineField({ name: "location", type: "string" }),
@@ -76,14 +123,19 @@ export const homePage = defineType({
       name: "language",
       type: "string",
       initialValue: "en",
-      options: { list: [{ title: "English", value: "en" }, { title: "Amharic", value: "am" }] },
+      options: {
+        list: [
+          { title: "English", value: "en" },
+          { title: "Amharic", value: "am" },
+        ],
+      },
     }),
     defineField({ name: "title", type: "string", initialValue: "Home" }),
     defineField({
       name: "sections",
-      title: "Page sections",
+      title: "Page sections (everything on the homepage)",
       description:
-        "Add, remove, or drag to reorder sections on the public homepage. Toggle Enabled off to hide a section without deleting it.",
+        "Every visible block on the site. Add, remove, reorder, or disable. Edit all text/images inside each section. Publish to update the live page.",
       type: "array",
       of: [
         defineArrayMember({ type: "heroSection" }),
@@ -93,8 +145,8 @@ export const homePage = defineType({
         defineArrayMember({ type: "servicesSection" }),
         defineArrayMember({ type: "projectsSection" }),
         defineArrayMember({ type: "recognitionSection" }),
-        defineArrayMember({ type: "contactSection" }),
         defineArrayMember({ type: "teamSection" }),
+        defineArrayMember({ type: "contactSection" }),
       ],
     }),
   ],
