@@ -1,16 +1,13 @@
 /**
- * Seeds Sanity with the full current website content so every field is editable in Studio.
+ * Seeds Sanity with full website content INCLUDING images from /public.
  *
- * Requires Node 18+ (File polyfill included) or Node 20+.
- *
- * 1. In sanity.io/manage → API → Tokens → Add API token (Editor permissions)
- * 2. Put it in .env.local as SANITY_API_WRITE_TOKEN=...
- * 3. Run: npm run seed:sanity
- *
- * Or from Vercel only: set env vars, redeploy, open /api/seed?secret=YOUR_SEED_SECRET
+ * 1. SANITY_API_WRITE_TOKEN in .env.local (Editor token)
+ * 2. npm run seed:sanity
  */
 import { createClient } from "@sanity/client";
 import { config as loadEnv } from "dotenv";
+import { createReadStream, existsSync } from "node:fs";
+import path from "node:path";
 import { seedContent } from "../src/lib/content/seed";
 
 loadEnv({ path: ".env.local" });
@@ -35,8 +32,41 @@ const client = createClient({
   useCdn: false,
 });
 
+function publicPath(urlPath: string) {
+  const rel = urlPath.replace(/^\//, "");
+  return path.join(process.cwd(), "public", rel);
+}
+
+async function uploadImage(urlPath: string, filename: string) {
+  const filePath = publicPath(urlPath);
+  if (!existsSync(filePath)) {
+    console.warn(`  skip missing image: ${urlPath}`);
+    return undefined;
+  }
+  const asset = await client.assets.upload("image", createReadStream(filePath), {
+    filename,
+  });
+  return {
+    _type: "image" as const,
+    asset: { _type: "reference" as const, _ref: asset._id },
+  };
+}
+
 async function main() {
   const s = seedContent;
+
+  console.log("Uploading shared images…");
+  const logo = await uploadImage(s.brand.logo, "logo-mark.png");
+  const heroImage = await uploadImage(s.hero.image, "hero-cover.jpg");
+  const servicesImage = await uploadImage(s.services.image, "services-bg.jpg");
+  const certImage = await uploadImage(
+    s.recognition.items[0]?.image || "/images/certificate-isspl-un-congo.jpg",
+    "certificate-isspl.jpg",
+  );
+  const teamPhoto = await uploadImage(
+    s.team.members[0]?.photo || "/images/card-binyam.jpg",
+    "binyam-card.jpg",
+  );
 
   await client.createOrReplace({
     _id: "siteSettings",
@@ -46,6 +76,7 @@ async function main() {
     brandSubtitle: s.brand.subtitle,
     legalName: s.brand.legalName,
     tagline: s.brand.tagline,
+    logo,
     navLinks: s.nav.links.map(({ label, href }) => ({ label, href })),
     navCtaLabel: s.nav.ctaLabel,
     navCtaHref: s.nav.ctaHref,
@@ -59,11 +90,28 @@ async function main() {
     seoDescription: s.seo.description,
     footerNote: s.footer.note,
   });
-  console.log("✓ Site settings");
+  console.log("✓ Site settings (incl. logo)");
 
   const projectIds: string[] = [];
+  const imageCache = new Map<string, Awaited<ReturnType<typeof uploadImage>>>();
+
   for (const project of s.projects.items) {
     const id = `project-${project.id}`;
+    let images: NonNullable<Awaited<ReturnType<typeof uploadImage>>>[] = [];
+    if (project.image) {
+      if (!imageCache.has(project.image)) {
+        imageCache.set(
+          project.image,
+          await uploadImage(
+            project.image,
+            path.basename(project.image) || `project-${project.id}.jpg`,
+          ),
+        );
+      }
+      const img = imageCache.get(project.image);
+      if (img) images = [img];
+    }
+
     await client.createOrReplace({
       _id: id,
       _type: "project",
@@ -76,10 +124,11 @@ async function main() {
       group: project.group,
       featured: Boolean(project.featured),
       testimonial: project.testimonial || undefined,
+      images,
     });
     projectIds.push(id);
   }
-  console.log(`✓ ${projectIds.length} projects`);
+  console.log(`✓ ${projectIds.length} projects (with images)`);
 
   await client.createOrReplace({
     _id: "homePage",
@@ -94,6 +143,7 @@ async function main() {
         eyebrow: s.hero.eyebrow,
         headline: s.hero.headline,
         supporting: s.hero.supporting,
+        image: heroImage,
         primaryCtaLabel: s.hero.primaryCtaLabel,
         primaryCtaHref: s.hero.primaryCtaHref,
         secondaryCtaLabel: s.hero.secondaryCtaLabel,
@@ -132,6 +182,7 @@ async function main() {
         _key: "services",
         enabled: true,
         title: s.services.title,
+        image: servicesImage,
         items: s.services.items.map(({ title, description }) => ({
           title,
           description,
@@ -161,6 +212,7 @@ async function main() {
           summary: item.summary,
           highlights: item.highlights,
           projectLabel: item.projectLabel,
+          image: certImage,
         })),
       },
       {
@@ -173,6 +225,7 @@ async function main() {
           name,
           role,
           bio,
+          photo: teamPhoto,
         })),
       },
       {
@@ -184,11 +237,8 @@ async function main() {
       },
     ],
   });
-  console.log("✓ Home page with all sections");
-  console.log("\nDone. Open /studio — every part of the page is now editable.");
-  console.log(
-    "Note: upload images (hero, logo, certificates, project photos) in Studio — text/structure is seeded.",
-  );
+  console.log("✓ Home page with sections + images");
+  console.log("\nDone. In /studio you can replace any image (click the image → Upload / Select).");
 }
 
 main().catch((err) => {
