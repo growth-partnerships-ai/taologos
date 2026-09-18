@@ -81,6 +81,9 @@ export const homePage = defineType({
     defineField({ name: "title", type: "string", initialValue: "Home" }),
     defineField({
       name: "sections",
+      title: "Page sections",
+      description:
+        "Add, remove, or drag to reorder sections on the public homepage. Toggle Enabled off to hide a section without deleting it.",
       type: "array",
       of: [
         defineArrayMember({ type: "heroSection" }),

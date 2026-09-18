@@ -1,4 +1,4 @@
-export const siteSettingsQuery = `*[_type == "siteSettings" && language == $language][0]{
+export const siteSettingsQuery = `*[_id == "siteSettings"][0]{
   brandName,
   legalName,
   tagline,
@@ -22,10 +22,26 @@ export const projectsQuery = `*[_type == "project"] | order(number asc){
   testimonial
 }`;
 
-export const homePageQuery = `*[_type == "homePage" && language == $language][0]{
+export const homePageQuery = `*[_id == "homePage"][0]{
   sections[]{
     _type,
     enabled,
-    ...,
+    eyebrow,
+    headline,
+    supporting,
+    title,
+    body,
+    credentials,
+    missionTitle,
+    missionBody,
+    visionTitle,
+    visionBody,
+    intro,
+    items,
+    projectLabel,
+    issuer,
+    recipient,
+    summary,
+    highlights
   }
 }`;

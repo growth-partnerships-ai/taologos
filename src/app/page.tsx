@@ -9,6 +9,52 @@ import { Values } from "@/components/sections/values";
 import { WhoWeAre } from "@/components/sections/who-we-are";
 import { SiteHeader } from "@/components/site-header";
 import { getPageContent } from "@/lib/content/get-page-content";
+import type { SectionId } from "@/lib/content/sections";
+import type { SiteContent } from "@/lib/content/types";
+
+function renderSection(id: SectionId, content: SiteContent) {
+  switch (id) {
+    case "hero":
+      return (
+        <Hero
+          key={id}
+          content={content.hero}
+          tagline={content.brand.tagline}
+          brandName={content.brand.name}
+        />
+      );
+    case "whoWeAre":
+      return <WhoWeAre key={id} content={content.whoWeAre} />;
+    case "missionVision":
+      return (
+        <MissionVision
+          key={id}
+          mission={content.mission}
+          vision={content.vision}
+        />
+      );
+    case "values":
+      return <Values key={id} content={content.values} />;
+    case "services":
+      return <Services key={id} content={content.services} />;
+    case "projects":
+      return <Projects key={id} content={content.projects} />;
+    case "recognition":
+      return <Recognition key={id} content={content.recognition} />;
+    case "contact":
+      return (
+        <Contact
+          key={id}
+          content={content.contact}
+          contacts={content.contacts}
+        />
+      );
+    case "team":
+      return null;
+    default:
+      return null;
+  }
+}
 
 export default async function HomePage() {
   const content = await getPageContent();
@@ -17,18 +63,7 @@ export default async function HomePage() {
     <>
       <SiteHeader brandName={content.brand.name} />
       <main>
-        <Hero
-          content={content.hero}
-          tagline={content.brand.tagline}
-          brandName={content.brand.name}
-        />
-        <WhoWeAre content={content.whoWeAre} />
-        <MissionVision mission={content.mission} vision={content.vision} />
-        <Values content={content.values} />
-        <Services content={content.services} />
-        <Projects content={content.projects} />
-        <Recognition content={content.recognition} />
-        <Contact content={content.contact} contacts={content.contacts} />
+        {content.sectionOrder.map((id) => renderSection(id, content))}
       </main>
       <SiteFooter note={content.footer.note} tagline={content.brand.tagline} />
     </>

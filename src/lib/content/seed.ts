@@ -1,3 +1,4 @@
+import { DEFAULT_SECTION_ORDER } from "./sections";
 import type { SiteContent } from "./types";
 
 export const seedContent: SiteContent = {
@@ -382,4 +383,5 @@ export const seedContent: SiteContent = {
   footer: {
     note: "Taologos Construction · Bole, Addis Ababa, Ethiopia",
   },
+  sectionOrder: DEFAULT_SECTION_ORDER,
 };

@@ -109,6 +109,8 @@ export type SiteContent = {
   footer: {
     note: string;
   };
+  /** Which sections to render, in order. Controlled from Sanity Home page. */
+  sectionOrder: import("./sections").SectionId[];
 };
 
 export const PROJECT_GROUP_META: Record<
