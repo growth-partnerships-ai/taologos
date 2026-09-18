@@ -66,11 +66,15 @@ export default async function HomePage() {
 
   return (
     <>
+      <a href="#who-we-are" className="sr-only">
+        {content.a11y.skipToContent}
+      </a>
       <SiteHeader
         brandName={content.brand.name}
         brandSubtitle={content.brand.subtitle}
         logo={content.brand.logo}
         nav={content.nav}
+        a11y={content.a11y}
       />
       <main>
         {content.sectionOrder.map((id) => renderSection(id, content))}

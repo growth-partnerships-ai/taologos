@@ -80,6 +80,8 @@ async function main() {
     navLinks: s.nav.links.map(({ label, href }) => ({ label, href })),
     navCtaLabel: s.nav.ctaLabel,
     navCtaHref: s.nav.ctaHref,
+    menuOpenLabel: s.nav.menuOpenLabel,
+    menuCloseLabel: s.nav.menuCloseLabel,
     contacts: s.contacts.map(({ label, value, href, kind }) => ({
       label,
       value,
@@ -89,6 +91,9 @@ async function main() {
     seoTitle: s.seo.title,
     seoDescription: s.seo.description,
     footerNote: s.footer.note,
+    skipToContent: s.a11y.skipToContent,
+    primaryNavLabel: s.a11y.primaryNavLabel,
+    mobileNavLabel: s.a11y.mobileNavLabel,
   });
   console.log("✓ Site settings (incl. logo)");
 
@@ -170,6 +175,7 @@ async function main() {
         _type: "whoWeAreSection",
         _key: "who",
         enabled: true,
+        eyebrow: s.whoWeAre.eyebrow,
         title: s.whoWeAre.title,
         body: s.whoWeAre.body,
         credentials: s.whoWeAre.credentials,
@@ -187,6 +193,7 @@ async function main() {
         _type: "valuesSection",
         _key: "values",
         enabled: true,
+        eyebrow: s.values.eyebrow,
         title: s.values.title,
         intro: s.values.intro,
         items: s.values.items.map(({ title, description }) => ({
@@ -198,6 +205,7 @@ async function main() {
         _type: "servicesSection",
         _key: "services",
         enabled: true,
+        eyebrow: s.services.eyebrow,
         title: s.services.title,
         image: servicesImage,
         items: s.services.items.map(({ title, description }) => ({
@@ -209,8 +217,19 @@ async function main() {
         _type: "projectsSection",
         _key: "projects",
         enabled: true,
+        eyebrow: s.projects.eyebrow,
         title: s.projects.title,
         intro: s.projects.intro,
+        locationLabel: s.projects.locationLabel,
+        typeLabel: s.projects.typeLabel,
+        scopeLabel: s.projects.scopeLabel,
+        projectSingular: s.projects.projectSingular,
+        projectPlural: s.projects.projectPlural,
+        groups: s.projects.groups.map(({ id, label, blurb }) => ({
+          id,
+          label,
+          blurb,
+        })),
         projectRefs: projectIds.map((id) => ({
           _type: "reference",
           _ref: id,
@@ -220,8 +239,10 @@ async function main() {
         _type: "recognitionSection",
         _key: "recognition",
         enabled: true,
+        eyebrow: s.recognition.eyebrow,
         title: s.recognition.title,
         intro: s.recognition.intro,
+        presentedToLabel: s.recognition.presentedToLabel,
         items: s.recognition.items.map((item) => ({
           title: item.title,
           issuer: item.issuer,
@@ -236,6 +257,7 @@ async function main() {
         _type: "teamSection",
         _key: "team",
         enabled: false,
+        eyebrow: s.team.eyebrow,
         title: s.team.title,
         intro: s.team.intro,
         members: s.team.members.map(({ name, role, bio }) => ({
@@ -249,8 +271,17 @@ async function main() {
         _type: "contactSection",
         _key: "contact",
         enabled: true,
+        eyebrow: s.contact.eyebrow,
         title: s.contact.title,
         intro: s.contact.intro,
+        formNameLabel: s.contact.formNameLabel,
+        formPhoneLabel: s.contact.formPhoneLabel,
+        formEmailLabel: s.contact.formEmailLabel,
+        formMessageLabel: s.contact.formMessageLabel,
+        formSubmitLabel: s.contact.formSubmitLabel,
+        formSendingLabel: s.contact.formSendingLabel,
+        formSuccessMessage: s.contact.formSuccessMessage,
+        formErrorMessage: s.contact.formErrorMessage,
       },
     ],
   });

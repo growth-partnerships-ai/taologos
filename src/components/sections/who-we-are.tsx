@@ -5,7 +5,7 @@ export function WhoWeAre({ content }: { content: SiteContent["whoWeAre"] }) {
     <section id="who-we-are" className="section-pad border-t border-line">
       <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div>
-          <p className="eyebrow">Company</p>
+          <p className="eyebrow">{content.eyebrow}</p>
           <h2 className="mt-4 font-[family-name:var(--font-display)] text-4xl tracking-tight text-cream md:text-5xl">
             {content.title}
           </h2>

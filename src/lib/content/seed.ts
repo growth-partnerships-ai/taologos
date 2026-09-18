@@ -19,6 +19,8 @@ export const seedContent: SiteContent = {
     ],
     ctaLabel: "Contact us",
     ctaHref: "#contact",
+    menuOpenLabel: "Menu",
+    menuCloseLabel: "Close",
   },
   seo: {
     title: "Taologos Construction | Grade Six General Contractor — Addis Ababa",
@@ -74,6 +76,7 @@ export const seedContent: SiteContent = {
     secondaryCtaHref: "#contact",
   },
   whoWeAre: {
+    eyebrow: "Company",
     title: "Who we are",
     body: "Taologos Construction (Taologos General Contractor) is an Addis Ababa–based building and road works contractor led by General Manager Binyam Tadesse. Formally licensed and registered in 2022, the company holds a Certificate of Competence as a Grade Six General Contractor from Ethiopia’s Construction Works Regulatory Authority. Since then, Taologos has delivered residential apartment buildings, cooperative housing blocks, and interior renovation and finishing works for private clients, housing cooperatives, and institutional clients across Addis Ababa and Oromia.",
     credentials: [
@@ -92,6 +95,7 @@ export const seedContent: SiteContent = {
     body: "To be a trusted Ethiopian contractor known for quality structures, safer sites, and spaces communities are proud to live and work in—growing in grade through consistent delivery.",
   },
   values: {
+    eyebrow: "How we work",
     title: "Values",
     intro:
       "These principles guide how we plan, build, and finish every project—from excavation to handover.",
@@ -135,6 +139,7 @@ export const seedContent: SiteContent = {
     ],
   },
   services: {
+    eyebrow: "What we deliver",
     title: "Services",
     image: "/images/services-bg.jpg",
     items: [
@@ -153,9 +158,37 @@ export const seedContent: SiteContent = {
     ],
   },
   projects: {
+    eyebrow: "Portfolio",
     title: "Selected projects",
     intro:
       "A sample of delivered works across apartment, residential, interior, and institutional groups—each with its own character on site.",
+    locationLabel: "Location",
+    typeLabel: "Type",
+    scopeLabel: "Scope",
+    projectSingular: "project",
+    projectPlural: "projects",
+    groups: [
+      {
+        id: "apartment",
+        label: "Apartment & cooperative",
+        blurb: "Multi-storey apartment and housing cooperative buildings.",
+      },
+      {
+        id: "residential",
+        label: "Residential",
+        blurb: "Private residential buildings from G+2 through G+4.",
+      },
+      {
+        id: "interior",
+        label: "Interior & renovation",
+        blurb: "Office and residential interior renovation and finishing.",
+      },
+      {
+        id: "institutional",
+        label: "Institutional",
+        blurb: "Institutional maintenance and assessment support works.",
+      },
+    ],
     items: [
       {
         id: "p01",
@@ -367,9 +400,11 @@ export const seedContent: SiteContent = {
     ],
   },
   recognition: {
+    eyebrow: "Trust",
     title: "Recognition",
     intro:
       "Independent appreciation for institutional work delivered to a high standard of professionalism and safety.",
+    presentedToLabel: "Presented to",
     items: [
       {
         id: "cert-isspl-un-congo",
@@ -393,6 +428,7 @@ export const seedContent: SiteContent = {
     ],
   },
   team: {
+    eyebrow: "People",
     title: "Team",
     intro: "Leadership behind Taologos Construction.",
     members: [
@@ -406,12 +442,27 @@ export const seedContent: SiteContent = {
     ],
   },
   contact: {
+    eyebrow: "Get in touch",
     title: "Contact",
     intro:
       "Tell us about your site or renovation. We respond by phone or email—your message also reaches our team instantly.",
+    formNameLabel: "Name",
+    formPhoneLabel: "Phone",
+    formEmailLabel: "Email",
+    formMessageLabel: "Message",
+    formSubmitLabel: "Send message",
+    formSendingLabel: "Sending…",
+    formSuccessMessage:
+      "Thank you — we received your message and will follow up soon.",
+    formErrorMessage: "Could not send message. Please call us instead.",
   },
   footer: {
     note: "Taologos Construction · Bole, Addis Ababa, Ethiopia",
+  },
+  a11y: {
+    skipToContent: "Skip to content",
+    primaryNavLabel: "Primary",
+    mobileNavLabel: "Mobile",
   },
   sectionOrder: DEFAULT_SECTION_ORDER,
 };

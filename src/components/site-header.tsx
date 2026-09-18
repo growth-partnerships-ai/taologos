@@ -8,11 +8,13 @@ export function SiteHeader({
   brandSubtitle,
   logo,
   nav,
+  a11y,
 }: {
   brandName: string;
   brandSubtitle: string;
   logo: string;
   nav: SiteContent["nav"];
+  a11y: SiteContent["a11y"];
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -51,7 +53,10 @@ export function SiteHeader({
           </span>
         </a>
 
-        <nav className="hidden items-center gap-7 md:flex" aria-label="Primary">
+        <nav
+          className="hidden items-center gap-7 md:flex"
+          aria-label={a11y.primaryNavLabel}
+        >
           {nav.links.map((link) => (
             <a
               key={link.id}
@@ -76,14 +81,14 @@ export function SiteHeader({
           aria-controls="mobile-nav"
           onClick={() => setOpen((value) => !value)}
         >
-          {open ? "Close" : "Menu"}
+          {open ? nav.menuCloseLabel : nav.menuOpenLabel}
         </button>
       </div>
 
       {open ? (
         <nav
           id="mobile-nav"
-          aria-label="Mobile"
+          aria-label={a11y.mobileNavLabel}
           className="border-t border-line bg-background px-5 py-4 md:hidden"
         >
           <ul className="space-y-3">

@@ -11,7 +11,7 @@ export function Recognition({
     <section id="recognition" className="section-pad border-t border-line">
       <div className="mx-auto max-w-7xl">
         <div className="max-w-2xl">
-          <p className="eyebrow">Trust</p>
+          <p className="eyebrow">{content.eyebrow}</p>
           <h2 className="mt-4 font-[family-name:var(--font-display)] text-4xl tracking-tight text-cream md:text-5xl">
             {content.title}
           </h2>
@@ -45,7 +45,8 @@ export function Recognition({
                   {cert.title}
                 </h3>
                 <p className="mt-2 text-sm text-muted">
-                  Presented to <span className="text-cream">{cert.recipient}</span>
+                  {content.presentedToLabel}{" "}
+                  <span className="text-cream">{cert.recipient}</span>
                 </p>
                 {cert.projectLabel ? (
                   <p className="mt-4 border-l-2 border-accent pl-4 text-sm text-cream/90">

@@ -1,9 +1,15 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import type { ContactEntry } from "@/lib/content/types";
+import type { ContactEntry, SiteContent } from "@/lib/content/types";
 
-export function ContactForm({ contacts }: { contacts: ContactEntry[] }) {
+export function ContactForm({
+  contacts,
+  labels,
+}: {
+  contacts: ContactEntry[];
+  labels: SiteContent["contact"];
+}) {
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">(
     "idle",
   );
@@ -29,16 +35,14 @@ export function ContactForm({ contacts }: { contacts: ContactEntry[] }) {
         }),
       });
       const json = (await res.json()) as { error?: string };
-      if (!res.ok) throw new Error(json.error || "Something went wrong");
+      if (!res.ok) throw new Error(json.error || labels.formErrorMessage);
       setStatus("ok");
-      setMessage("Thank you — we received your message and will follow up soon.");
+      setMessage(labels.formSuccessMessage);
       form.reset();
     } catch (error) {
       setStatus("error");
       setMessage(
-        error instanceof Error
-          ? error.message
-          : "Could not send message. Please call us instead.",
+        error instanceof Error ? error.message : labels.formErrorMessage,
       );
     }
   }
@@ -73,7 +77,7 @@ export function ContactForm({ contacts }: { contacts: ContactEntry[] }) {
       >
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm" htmlFor="contact-name">
-            <span className="text-muted">Name</span>
+            <span className="text-muted">{labels.formNameLabel}</span>
             <input
               id="contact-name"
               required
@@ -83,7 +87,7 @@ export function ContactForm({ contacts }: { contacts: ContactEntry[] }) {
             />
           </label>
           <label className="block text-sm" htmlFor="contact-phone">
-            <span className="text-muted">Phone</span>
+            <span className="text-muted">{labels.formPhoneLabel}</span>
             <input
               id="contact-phone"
               name="phone"
@@ -94,7 +98,7 @@ export function ContactForm({ contacts }: { contacts: ContactEntry[] }) {
           </label>
         </div>
         <label className="block text-sm" htmlFor="contact-email">
-          <span className="text-muted">Email</span>
+          <span className="text-muted">{labels.formEmailLabel}</span>
           <input
             id="contact-email"
             required
@@ -105,7 +109,7 @@ export function ContactForm({ contacts }: { contacts: ContactEntry[] }) {
           />
         </label>
         <label className="block text-sm" htmlFor="contact-message">
-          <span className="text-muted">Message</span>
+          <span className="text-muted">{labels.formMessageLabel}</span>
           <textarea
             id="contact-message"
             required
@@ -119,7 +123,9 @@ export function ContactForm({ contacts }: { contacts: ContactEntry[] }) {
           disabled={status === "loading"}
           className="rounded-sm bg-accent px-6 py-3 text-sm font-semibold text-background transition hover:bg-accent-deep disabled:opacity-60"
         >
-          {status === "loading" ? "Sending…" : "Send message"}
+          {status === "loading"
+            ? labels.formSendingLabel
+            : labels.formSubmitLabel}
         </button>
         {message ? (
           <p

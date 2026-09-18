@@ -12,10 +12,10 @@ import {
   type SectionId,
 } from "./sections";
 import type {
-  CertificateItem,
   ContactEntry,
   NavLink,
   ProjectGroup,
+  ProjectGroupMeta,
   ProjectItem,
   SiteContent,
   TeamMember,
@@ -31,6 +31,8 @@ type SanitySettings = {
   navLinks?: Array<{ label?: string; href?: string }>;
   navCtaLabel?: string;
   navCtaHref?: string;
+  menuOpenLabel?: string;
+  menuCloseLabel?: string;
   contacts?: Array<{
     label?: string;
     value?: string;
@@ -40,6 +42,9 @@ type SanitySettings = {
   seoTitle?: string;
   seoDescription?: string;
   footerNote?: string;
+  skipToContent?: string;
+  primaryNavLabel?: string;
+  mobileNavLabel?: string;
 };
 
 type SanityProject = {
@@ -68,6 +73,7 @@ type SanitySection = {
     photoUrl?: string | null;
   }>;
   items?: unknown;
+  groups?: Array<{ id?: string; label?: string; blurb?: string }>;
   [key: string]: unknown;
 };
 
@@ -104,6 +110,27 @@ function str(value: unknown, fallback: string) {
   return typeof value === "string" && value.trim() ? value : fallback;
 }
 
+function mapGroups(
+  groups: SanitySection["groups"],
+  fallback: ProjectGroupMeta[],
+): ProjectGroupMeta[] {
+  if (!groups?.length) return fallback;
+  const mapped = groups
+    .filter(
+      (g): g is { id: ProjectGroup; label: string; blurb?: string } =>
+        Boolean(g.id && g.label) &&
+        ["apartment", "residential", "interior", "institutional"].includes(
+          g.id as string,
+        ),
+    )
+    .map((g) => ({
+      id: g.id,
+      label: g.label,
+      blurb: g.blurb || "",
+    }));
+  return mapped.length ? mapped : fallback;
+}
+
 function applySettings(
   content: SiteContent,
   settings: SanitySettings | null,
@@ -132,6 +159,8 @@ function applySettings(
       links: navLinks,
       ctaLabel: settings.navCtaLabel || content.nav.ctaLabel,
       ctaHref: settings.navCtaHref || content.nav.ctaHref,
+      menuOpenLabel: settings.menuOpenLabel || content.nav.menuOpenLabel,
+      menuCloseLabel: settings.menuCloseLabel || content.nav.menuCloseLabel,
     },
     seo: {
       title: settings.seoTitle || content.seo.title,
@@ -149,6 +178,12 @@ function applySettings(
         })) || content.contacts,
     footer: {
       note: settings.footerNote || content.footer.note,
+    },
+    a11y: {
+      skipToContent: settings.skipToContent || content.a11y.skipToContent,
+      primaryNavLabel:
+        settings.primaryNavLabel || content.a11y.primaryNavLabel,
+      mobileNavLabel: settings.mobileNavLabel || content.a11y.mobileNavLabel,
     },
   };
 }
@@ -212,6 +247,7 @@ function applyHomeSections(
         next = {
           ...next,
           whoWeAre: {
+            eyebrow: str(section.eyebrow, next.whoWeAre.eyebrow),
             title: str(section.title, next.whoWeAre.title),
             body: str(section.body, next.whoWeAre.body),
             credentials: Array.isArray(section.credentials)
@@ -237,6 +273,7 @@ function applyHomeSections(
         next = {
           ...next,
           values: {
+            eyebrow: str(section.eyebrow, next.values.eyebrow),
             title: str(section.title, next.values.title),
             intro: str(section.intro, next.values.intro),
             items: Array.isArray(section.items)
@@ -253,6 +290,7 @@ function applyHomeSections(
         next = {
           ...next,
           services: {
+            eyebrow: str(section.eyebrow, next.services.eyebrow),
             title: str(section.title, next.services.title),
             image: str(section.imageUrl, next.services.image),
             items: Array.isArray(section.items)
@@ -275,8 +313,24 @@ function applyHomeSections(
         next = {
           ...next,
           projects: {
+            eyebrow: str(section.eyebrow, next.projects.eyebrow),
             title: str(section.title, next.projects.title),
             intro: str(section.intro, next.projects.intro),
+            locationLabel: str(
+              section.locationLabel,
+              next.projects.locationLabel,
+            ),
+            typeLabel: str(section.typeLabel, next.projects.typeLabel),
+            scopeLabel: str(section.scopeLabel, next.projects.scopeLabel),
+            projectSingular: str(
+              section.projectSingular,
+              next.projects.projectSingular,
+            ),
+            projectPlural: str(
+              section.projectPlural,
+              next.projects.projectPlural,
+            ),
+            groups: mapGroups(section.groups, next.projects.groups),
             items: selected.length
               ? selected
               : allProjects.length
@@ -290,8 +344,13 @@ function applyHomeSections(
         next = {
           ...next,
           recognition: {
+            eyebrow: str(section.eyebrow, next.recognition.eyebrow),
             title: str(section.title, next.recognition.title),
             intro: str(section.intro, next.recognition.intro),
+            presentedToLabel: str(
+              section.presentedToLabel,
+              next.recognition.presentedToLabel,
+            ),
             items: Array.isArray(section.items)
               ? (
                   section.items as Array<{
@@ -324,6 +383,7 @@ function applyHomeSections(
         next = {
           ...next,
           team: {
+            eyebrow: str(section.eyebrow, next.team.eyebrow),
             title: str(section.title, next.team.title),
             intro: str(section.intro, next.team.intro),
             members: Array.isArray(section.members)
@@ -346,8 +406,41 @@ function applyHomeSections(
         next = {
           ...next,
           contact: {
+            eyebrow: str(section.eyebrow, next.contact.eyebrow),
             title: str(section.title, next.contact.title),
             intro: str(section.intro, next.contact.intro),
+            formNameLabel: str(
+              section.formNameLabel,
+              next.contact.formNameLabel,
+            ),
+            formPhoneLabel: str(
+              section.formPhoneLabel,
+              next.contact.formPhoneLabel,
+            ),
+            formEmailLabel: str(
+              section.formEmailLabel,
+              next.contact.formEmailLabel,
+            ),
+            formMessageLabel: str(
+              section.formMessageLabel,
+              next.contact.formMessageLabel,
+            ),
+            formSubmitLabel: str(
+              section.formSubmitLabel,
+              next.contact.formSubmitLabel,
+            ),
+            formSendingLabel: str(
+              section.formSendingLabel,
+              next.contact.formSendingLabel,
+            ),
+            formSuccessMessage: str(
+              section.formSuccessMessage,
+              next.contact.formSuccessMessage,
+            ),
+            formErrorMessage: str(
+              section.formErrorMessage,
+              next.contact.formErrorMessage,
+            ),
           },
         };
         break;

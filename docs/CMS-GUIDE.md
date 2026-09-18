@@ -32,10 +32,13 @@ Do **not** put `npm run seed:sanity` in the Vercel Build Command.
 
 | Studio item | Controls |
 |---|---|
-| **Site settings** | Brand name, subtitle, tagline, logo, **nav links**, header CTA, **all contacts**, SEO, footer |
-| **Home page → Page sections** | **Add / remove / reorder / disable** every section; all section copy & images |
+| **Site settings** | Brand name, subtitle, tagline, logo, **nav links**, header CTA, **Menu/Close** labels, **all contacts**, SEO, footer, skip-link & nav aria labels |
+| **Home page → Page sections** | **Add / remove / reorder / disable** every section; all section copy, **eyebrows**, images, form labels, project field labels & group headings |
 | **Projects** | Each portfolio project: details, **photos** (one or many), **client testimonial** |
 
+### Labels that used to look “fixed” (now editable)
+
+Every small label on the page is a CMS field — including section eyebrows (Company, Portfolio, Trust…), Location/Type/Scope, “Presented to”, contact form Name/Phone/Email/Message/Submit, and Menu/Close.
 ### Per project (Projects → open one)
 
 - **Project photos** — upload/replace as many images as you want (first = main card)

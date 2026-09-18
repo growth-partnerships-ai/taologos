@@ -10,10 +10,15 @@ export const siteSettingsQuery = `*[_id == "siteSettings"][0]{
   navLinks[]{label, href},
   navCtaLabel,
   navCtaHref,
+  menuOpenLabel,
+  menuCloseLabel,
   contacts[]{label, value, href, kind},
   seoTitle,
   seoDescription,
-  footerNote
+  footerNote,
+  skipToContent,
+  primaryNavLabel,
+  mobileNavLabel
 }`;
 
 export const projectsQuery = `*[_type == "project"] | order(number asc){
@@ -50,6 +55,21 @@ export const homePageQuery = `*[_id == "homePage"][0]{
     visionTitle,
     visionBody,
     intro,
+    locationLabel,
+    typeLabel,
+    scopeLabel,
+    projectSingular,
+    projectPlural,
+    groups[]{id, label, blurb},
+    presentedToLabel,
+    formNameLabel,
+    formPhoneLabel,
+    formEmailLabel,
+    formMessageLabel,
+    formSubmitLabel,
+    formSendingLabel,
+    formSuccessMessage,
+    formErrorMessage,
     items[]{
       ...,
       ${imageUrl},

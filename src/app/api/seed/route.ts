@@ -61,6 +61,8 @@ export async function GET(request: NextRequest) {
       navLinks: s.nav.links.map(({ label, href }) => ({ label, href })),
       navCtaLabel: s.nav.ctaLabel,
       navCtaHref: s.nav.ctaHref,
+      menuOpenLabel: s.nav.menuOpenLabel,
+      menuCloseLabel: s.nav.menuCloseLabel,
       contacts: s.contacts.map(({ label, value, href, kind }) => ({
         label,
         value,
@@ -70,6 +72,9 @@ export async function GET(request: NextRequest) {
       seoTitle: s.seo.title,
       seoDescription: s.seo.description,
       footerNote: s.footer.note,
+      skipToContent: s.a11y.skipToContent,
+      primaryNavLabel: s.a11y.primaryNavLabel,
+      mobileNavLabel: s.a11y.mobileNavLabel,
     });
 
     const projectIds: string[] = [];
@@ -113,6 +118,7 @@ export async function GET(request: NextRequest) {
           _type: "whoWeAreSection",
           _key: "who",
           enabled: true,
+          eyebrow: s.whoWeAre.eyebrow,
           title: s.whoWeAre.title,
           body: s.whoWeAre.body,
           credentials: s.whoWeAre.credentials,
@@ -130,6 +136,7 @@ export async function GET(request: NextRequest) {
           _type: "valuesSection",
           _key: "values",
           enabled: true,
+          eyebrow: s.values.eyebrow,
           title: s.values.title,
           intro: s.values.intro,
           items: s.values.items.map(({ title, description }) => ({
@@ -141,6 +148,7 @@ export async function GET(request: NextRequest) {
           _type: "servicesSection",
           _key: "services",
           enabled: true,
+          eyebrow: s.services.eyebrow,
           title: s.services.title,
           items: s.services.items.map(({ title, description }) => ({
             title,
@@ -151,8 +159,19 @@ export async function GET(request: NextRequest) {
           _type: "projectsSection",
           _key: "projects",
           enabled: true,
+          eyebrow: s.projects.eyebrow,
           title: s.projects.title,
           intro: s.projects.intro,
+          locationLabel: s.projects.locationLabel,
+          typeLabel: s.projects.typeLabel,
+          scopeLabel: s.projects.scopeLabel,
+          projectSingular: s.projects.projectSingular,
+          projectPlural: s.projects.projectPlural,
+          groups: s.projects.groups.map(({ id, label, blurb }) => ({
+            id,
+            label,
+            blurb,
+          })),
           projectRefs: projectIds.map((id) => ({
             _type: "reference",
             _ref: id,
@@ -162,8 +181,10 @@ export async function GET(request: NextRequest) {
           _type: "recognitionSection",
           _key: "recognition",
           enabled: true,
+          eyebrow: s.recognition.eyebrow,
           title: s.recognition.title,
           intro: s.recognition.intro,
+          presentedToLabel: s.recognition.presentedToLabel,
           items: s.recognition.items.map((item) => ({
             title: item.title,
             issuer: item.issuer,
@@ -177,6 +198,7 @@ export async function GET(request: NextRequest) {
           _type: "teamSection",
           _key: "team",
           enabled: false,
+          eyebrow: s.team.eyebrow,
           title: s.team.title,
           intro: s.team.intro,
           members: s.team.members.map(({ name, role, bio }) => ({
@@ -189,8 +211,17 @@ export async function GET(request: NextRequest) {
           _type: "contactSection",
           _key: "contact",
           enabled: true,
+          eyebrow: s.contact.eyebrow,
           title: s.contact.title,
           intro: s.contact.intro,
+          formNameLabel: s.contact.formNameLabel,
+          formPhoneLabel: s.contact.formPhoneLabel,
+          formEmailLabel: s.contact.formEmailLabel,
+          formMessageLabel: s.contact.formMessageLabel,
+          formSubmitLabel: s.contact.formSubmitLabel,
+          formSendingLabel: s.contact.formSendingLabel,
+          formSuccessMessage: s.contact.formSuccessMessage,
+          formErrorMessage: s.contact.formErrorMessage,
         },
       ],
     });

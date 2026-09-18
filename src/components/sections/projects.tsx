@@ -1,22 +1,16 @@
-import {
-  PROJECT_GROUP_META,
-  type ProjectGroup,
-  type SiteContent,
-} from "@/lib/content/types";
-
-const GROUP_ORDER: ProjectGroup[] = [
-  "apartment",
-  "residential",
-  "interior",
-  "institutional",
-];
+import type { ProjectGroup, SiteContent } from "@/lib/content/types";
 
 export function Projects({ content }: { content: SiteContent["projects"] }) {
+  const groupOrder = content.groups.map((g) => g.id);
+  const metaById = Object.fromEntries(
+    content.groups.map((g) => [g.id, g]),
+  ) as Record<ProjectGroup, (typeof content.groups)[number]>;
+
   return (
     <section id="projects" className="section-pad border-t border-line">
       <div className="mx-auto max-w-7xl">
         <div className="max-w-2xl">
-          <p className="eyebrow">Portfolio</p>
+          <p className="eyebrow">{content.eyebrow}</p>
           <h2 className="mt-4 font-[family-name:var(--font-display)] text-4xl tracking-tight text-cream md:text-5xl">
             {content.title}
           </h2>
@@ -24,10 +18,11 @@ export function Projects({ content }: { content: SiteContent["projects"] }) {
         </div>
 
         <div className="mt-16 space-y-20">
-          {GROUP_ORDER.map((group) => {
+          {groupOrder.map((group) => {
             const items = content.items.filter((p) => p.group === group);
             if (!items.length) return null;
-            const meta = PROJECT_GROUP_META[group];
+            const meta = metaById[group];
+            if (!meta) return null;
 
             return (
               <div key={group} className={`group-${group}`}>
@@ -41,7 +36,10 @@ export function Projects({ content }: { content: SiteContent["projects"] }) {
                     </p>
                   </div>
                   <span className="text-sm text-muted">
-                    {items.length} project{items.length === 1 ? "" : "s"}
+                    {items.length}{" "}
+                    {items.length === 1
+                      ? content.projectSingular
+                      : content.projectPlural}
                   </span>
                 </div>
 
@@ -75,7 +73,9 @@ export function Projects({ content }: { content: SiteContent["projects"] }) {
                       >
                         <div
                           className={`relative overflow-hidden ${
-                            group === "residential" ? "aspect-[4/3]" : "aspect-[16/11]"
+                            group === "residential"
+                              ? "aspect-[4/3]"
+                              : "aspect-[16/11]"
                           }`}
                         >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -99,19 +99,19 @@ export function Projects({ content }: { content: SiteContent["projects"] }) {
                             <dl className="mt-5 space-y-2 text-sm text-muted">
                               <div>
                                 <dt className="inline text-foreground/70">
-                                  Location:{" "}
+                                  {content.locationLabel}:{" "}
                                 </dt>
                                 <dd className="inline">{project.location}</dd>
                               </div>
                               <div>
                                 <dt className="inline text-foreground/70">
-                                  Type:{" "}
+                                  {content.typeLabel}:{" "}
                                 </dt>
                                 <dd className="inline">{project.typology}</dd>
                               </div>
                               <div>
                                 <dt className="inline text-foreground/70">
-                                  Scope:{" "}
+                                  {content.scopeLabel}:{" "}
                                 </dt>
                                 <dd className="inline">{project.scope}</dd>
                               </div>

@@ -60,6 +60,18 @@ export const siteSettings = defineType({
       initialValue: "#contact",
     }),
     defineField({
+      name: "menuOpenLabel",
+      title: "Mobile menu open label",
+      type: "string",
+      initialValue: "Menu",
+    }),
+    defineField({
+      name: "menuCloseLabel",
+      title: "Mobile menu close label",
+      type: "string",
+      initialValue: "Close",
+    }),
+    defineField({
       name: "contacts",
       type: "array",
       of: [defineArrayMember({ type: "contactEntry" })],
@@ -67,6 +79,24 @@ export const siteSettings = defineType({
     defineField({ name: "seoTitle", type: "string" }),
     defineField({ name: "seoDescription", type: "text", rows: 3 }),
     defineField({ name: "footerNote", type: "string" }),
+    defineField({
+      name: "skipToContent",
+      title: "Skip to content link text",
+      type: "string",
+      initialValue: "Skip to content",
+    }),
+    defineField({
+      name: "primaryNavLabel",
+      title: "Primary nav aria label",
+      type: "string",
+      initialValue: "Primary",
+    }),
+    defineField({
+      name: "mobileNavLabel",
+      title: "Mobile nav aria label",
+      type: "string",
+      initialValue: "Mobile",
+    }),
   ],
   preview: {
     select: { title: "brandName", subtitle: "tagline" },

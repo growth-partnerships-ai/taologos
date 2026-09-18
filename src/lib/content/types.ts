@@ -68,6 +68,12 @@ export type CertificateItem = {
   projectLabel?: string;
 };
 
+export type ProjectGroupMeta = {
+  id: ProjectGroup;
+  label: string;
+  blurb: string;
+};
+
 export type SiteContent = {
   brand: {
     name: string;
@@ -84,6 +90,8 @@ export type SiteContent = {
     links: NavLink[];
     ctaLabel: string;
     ctaHref: string;
+    menuOpenLabel: string;
+    menuCloseLabel: string;
   };
   contacts: ContactEntry[];
   hero: {
@@ -97,6 +105,7 @@ export type SiteContent = {
     secondaryCtaHref: string;
   };
   whoWeAre: {
+    eyebrow: string;
     title: string;
     body: string;
     credentials: string[];
@@ -110,60 +119,65 @@ export type SiteContent = {
     body: string;
   };
   values: {
+    eyebrow: string;
     title: string;
     intro: string;
     items: ValueItem[];
   };
   services: {
+    eyebrow: string;
     title: string;
     image: string;
     items: ServiceItem[];
   };
   projects: {
+    eyebrow: string;
     title: string;
     intro: string;
+    locationLabel: string;
+    typeLabel: string;
+    scopeLabel: string;
+    projectSingular: string;
+    projectPlural: string;
+    groups: ProjectGroupMeta[];
     items: ProjectItem[];
   };
   recognition: {
+    eyebrow: string;
     title: string;
     intro: string;
+    presentedToLabel: string;
     items: CertificateItem[];
   };
   team: {
+    eyebrow: string;
     title: string;
     intro: string;
     members: TeamMember[];
   };
   contact: {
+    eyebrow: string;
     title: string;
     intro: string;
+    formNameLabel: string;
+    formPhoneLabel: string;
+    formEmailLabel: string;
+    formMessageLabel: string;
+    formSubmitLabel: string;
+    formSendingLabel: string;
+    formSuccessMessage: string;
+    formErrorMessage: string;
   };
   footer: {
     note: string;
   };
+  a11y: {
+    skipToContent: string;
+    primaryNavLabel: string;
+    mobileNavLabel: string;
+  };
   sectionOrder: SectionId[];
 };
 
-export const PROJECT_GROUP_META: Record<
-  ProjectGroup,
-  { label: string; blurb: string }
-> = {
-  apartment: {
-    label: "Apartment & cooperative",
-    blurb: "Multi-storey frames delivered from excavation through finishing.",
-  },
-  residential: {
-    label: "Residential builds",
-    blurb: "Private G+ homes across Addis Ababa and Sheger City.",
-  },
-  interior: {
-    label: "Interior & renovation",
-    blurb: "Fit-out, finishing, and office renewal with precise craft.",
-  },
-  institutional: {
-    label: "Institutional & special works",
-    blurb: "Maintenance and works for trusted institutional clients.",
-  },
-};
-
 export { DEFAULT_SECTION_ORDER };
+export type { SectionId };

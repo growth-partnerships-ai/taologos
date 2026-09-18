@@ -7,7 +7,7 @@ export function Team({ content }: { content: SiteContent["team"] }) {
     <section id="team" className="section-pad border-t border-line">
       <div className="mx-auto max-w-7xl">
         <div className="max-w-2xl">
-          <p className="eyebrow">People</p>
+          <p className="eyebrow">{content.eyebrow}</p>
           <h2 className="mt-4 font-[family-name:var(--font-display)] text-4xl tracking-tight text-cream md:text-5xl">
             {content.title}
           </h2>

@@ -1,6 +1,7 @@
 import {
   certificateItem,
   contactEntry,
+  projectGroupMeta,
   serviceItem,
   testimonial,
   valueItem,
@@ -27,6 +28,7 @@ export const schemaTypes = [
   serviceItem,
   testimonial,
   certificateItem,
+  projectGroupMeta,
   heroSection,
   whoWeAreSection,
   missionVisionSection,

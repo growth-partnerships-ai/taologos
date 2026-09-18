@@ -36,6 +36,7 @@ export const whoWeAreSection = defineType({
   type: "object",
   fields: [
     ...sectionCommon,
+    defineField({ name: "eyebrow", type: "string", initialValue: "Company" }),
     defineField({ name: "title", type: "string" }),
     defineField({ name: "body", type: "text", rows: 8 }),
     defineField({
@@ -65,6 +66,11 @@ export const valuesSection = defineType({
   type: "object",
   fields: [
     ...sectionCommon,
+    defineField({
+      name: "eyebrow",
+      type: "string",
+      initialValue: "How we work",
+    }),
     defineField({ name: "title", type: "string" }),
     defineField({ name: "intro", type: "text", rows: 3 }),
     defineField({
@@ -81,6 +87,11 @@ export const servicesSection = defineType({
   type: "object",
   fields: [
     ...sectionCommon,
+    defineField({
+      name: "eyebrow",
+      type: "string",
+      initialValue: "What we deliver",
+    }),
     defineField({ name: "title", type: "string" }),
     defineField({ name: "image", type: "image", options: { hotspot: true } }),
     defineField({
@@ -97,8 +108,51 @@ export const projectsSection = defineType({
   type: "object",
   fields: [
     ...sectionCommon,
+    defineField({
+      name: "eyebrow",
+      type: "string",
+      initialValue: "Portfolio",
+    }),
     defineField({ name: "title", type: "string" }),
     defineField({ name: "intro", type: "text", rows: 3 }),
+    defineField({
+      name: "locationLabel",
+      title: "Location field label",
+      type: "string",
+      initialValue: "Location",
+    }),
+    defineField({
+      name: "typeLabel",
+      title: "Type field label",
+      type: "string",
+      initialValue: "Type",
+    }),
+    defineField({
+      name: "scopeLabel",
+      title: "Scope field label",
+      type: "string",
+      initialValue: "Scope",
+    }),
+    defineField({
+      name: "projectSingular",
+      title: "Singular project count word",
+      type: "string",
+      initialValue: "project",
+    }),
+    defineField({
+      name: "projectPlural",
+      title: "Plural project count word",
+      type: "string",
+      initialValue: "projects",
+    }),
+    defineField({
+      name: "groups",
+      title: "Project group headings",
+      description:
+        "Labels and blurbs for each portfolio group shown on the page.",
+      type: "array",
+      of: [defineArrayMember({ type: "projectGroupMeta" })],
+    }),
     defineField({
       name: "projectRefs",
       title: "Projects to show (leave empty = all projects)",
@@ -114,8 +168,61 @@ export const contactSection = defineType({
   type: "object",
   fields: [
     ...sectionCommon,
+    defineField({
+      name: "eyebrow",
+      type: "string",
+      initialValue: "Get in touch",
+    }),
     defineField({ name: "title", type: "string" }),
     defineField({ name: "intro", type: "text", rows: 3 }),
+    defineField({
+      name: "formNameLabel",
+      title: "Form — Name label",
+      type: "string",
+      initialValue: "Name",
+    }),
+    defineField({
+      name: "formPhoneLabel",
+      title: "Form — Phone label",
+      type: "string",
+      initialValue: "Phone",
+    }),
+    defineField({
+      name: "formEmailLabel",
+      title: "Form — Email label",
+      type: "string",
+      initialValue: "Email",
+    }),
+    defineField({
+      name: "formMessageLabel",
+      title: "Form — Message label",
+      type: "string",
+      initialValue: "Message",
+    }),
+    defineField({
+      name: "formSubmitLabel",
+      title: "Form — Submit button",
+      type: "string",
+      initialValue: "Send message",
+    }),
+    defineField({
+      name: "formSendingLabel",
+      title: "Form — Sending state",
+      type: "string",
+      initialValue: "Sending…",
+    }),
+    defineField({
+      name: "formSuccessMessage",
+      title: "Form — Success message",
+      type: "text",
+      rows: 2,
+    }),
+    defineField({
+      name: "formErrorMessage",
+      title: "Form — Error message",
+      type: "text",
+      rows: 2,
+    }),
   ],
 });
 
@@ -125,8 +232,15 @@ export const recognitionSection = defineType({
   type: "object",
   fields: [
     ...sectionCommon,
+    defineField({ name: "eyebrow", type: "string", initialValue: "Trust" }),
     defineField({ name: "title", type: "string" }),
     defineField({ name: "intro", type: "text", rows: 3 }),
+    defineField({
+      name: "presentedToLabel",
+      title: "“Presented to” label",
+      type: "string",
+      initialValue: "Presented to",
+    }),
     defineField({
       name: "items",
       type: "array",
@@ -141,6 +255,7 @@ export const teamSection = defineType({
   type: "object",
   fields: [
     ...sectionCommon,
+    defineField({ name: "eyebrow", type: "string", initialValue: "People" }),
     defineField({ name: "title", type: "string" }),
     defineField({ name: "intro", type: "text", rows: 3 }),
     defineField({

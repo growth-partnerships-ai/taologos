@@ -86,3 +86,30 @@ export const certificateItem = defineType({
     select: { title: "title", subtitle: "issuer", media: "image" },
   },
 });
+
+export const projectGroupMeta = defineType({
+  name: "projectGroupMeta",
+  title: "Project group",
+  type: "object",
+  fields: [
+    defineField({
+      name: "id",
+      title: "Group id",
+      type: "string",
+      options: {
+        list: [
+          { title: "Apartment & cooperative", value: "apartment" },
+          { title: "Residential", value: "residential" },
+          { title: "Interior & renovation", value: "interior" },
+          { title: "Institutional", value: "institutional" },
+        ],
+      },
+      validation: (r) => r.required(),
+    }),
+    defineField({ name: "label", type: "string", validation: (r) => r.required() }),
+    defineField({ name: "blurb", type: "text", rows: 2 }),
+  ],
+  preview: {
+    select: { title: "label", subtitle: "id" },
+  },
+});

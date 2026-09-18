@@ -13,7 +13,7 @@ export function Services({ content }: { content: SiteContent["services"] }) {
         <div className="absolute inset-0 bg-background/80" />
       </div>
       <div className="section-pad mx-auto max-w-7xl">
-        <p className="eyebrow">What we deliver</p>
+        <p className="eyebrow">{content.eyebrow}</p>
         <h2 className="mt-4 font-[family-name:var(--font-display)] text-4xl tracking-tight text-cream md:text-6xl">
           {content.title}
         </h2>
