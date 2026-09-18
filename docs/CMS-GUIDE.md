@@ -9,22 +9,24 @@
 
 Use [sanity.io/manage](https://www.sanity.io/manage) only for invites, CORS, and API tokens — **not** for page editing.
 
-## Make everything editable (one-time seed)
+## Seed from Vercel (no VS Code / no terminal)
 
-Studio starts empty until documents exist. Seed the full page from our content:
+Vercel has **no “run npm script” button**. Env vars go here:
 
-1. Manage → **API** → **Tokens** → create token with **Editor** rights  
-2. Add to `.env.local`:
-   ```bash
-   SANITY_API_WRITE_TOKEN=your_token_here
-   ```
-3. Run:
-   ```bash
-   npm run seed:sanity
-   ```
-4. Open `/studio` — you will see **Site settings**, **Home page**, and **Projects** filled in.
+1. Vercel dashboard → your project → **Settings** → **Environment Variables**
+2. Add:
+   - `NEXT_PUBLIC_SANITY_PROJECT_ID` = `k8clerei`
+   - `NEXT_PUBLIC_SANITY_DATASET` = `production`
+   - `SANITY_API_WRITE_TOKEN` = Editor token from Sanity Manage → API → Tokens
+   - `SEED_SECRET` = any long password you invent (example: `taologos-seed-2026`)
+3. **Redeploy** the project (Deployments → … → Redeploy) so env vars apply
+4. In your browser open once:
+   `https://YOUR-VERCEL-URL/api/seed?secret=taologos-seed-2026`
+5. You should see `{"ok":true,...}`
+6. Open `https://YOUR-VERCEL-URL/studio` to edit
+7. Delete `SEED_SECRET` (and optionally the write token) from Vercel env when finished
 
-Then every visible block is editable. Upload images (logo, hero, projects, certificates) in Studio where marked.
+Do **not** put `npm run seed:sanity` in the Vercel Build Command.
 
 ## What edits what
 
