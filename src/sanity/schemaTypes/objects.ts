@@ -49,8 +49,19 @@ export const testimonial = defineType({
   title: "Testimonial",
   type: "object",
   fields: [
-    defineField({ name: "quote", type: "text", rows: 3 }),
-    defineField({ name: "attribution", type: "string" }),
+    defineField({
+      name: "quote",
+      title: "Quote",
+      type: "text",
+      rows: 3,
+      description: "What the client said about this project.",
+    }),
+    defineField({
+      name: "attribution",
+      title: "Attribution",
+      type: "string",
+      description: "Client or company name shown under the quote.",
+    }),
   ],
 });
 

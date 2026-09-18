@@ -34,7 +34,12 @@ Do **not** put `npm run seed:sanity` in the Vercel Build Command.
 |---|---|
 | **Site settings** | Brand name, subtitle, tagline, logo, **nav links**, header CTA, **all contacts**, SEO, footer |
 | **Home page → Page sections** | **Add / remove / reorder / disable** every section; all section copy & images |
-| **Projects** | Each portfolio project (title, client, group, photos, testimonial…) |
+| **Projects** | Each portfolio project: details, **photos** (one or many), **client testimonial** |
+
+### Per project (Projects → open one)
+
+- **Project photos** — upload/replace as many images as you want (first = main card)
+- **Client testimonial** — Quote + Attribution (optional; leave blank until you have a real quote)
 
 ### Section types you can add on Home page
 

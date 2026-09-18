@@ -103,11 +103,26 @@ export const project = defineType({
     }),
     defineField({
       name: "images",
+      title: "Project photos",
+      description:
+        "Add one or more photos. The first image is used as the main card image on the site.",
       type: "array",
       of: [defineArrayMember({ type: "image", options: { hotspot: true } })],
+      options: { layout: "grid" },
     }),
-    defineField({ name: "testimonial", type: "testimonial" }),
-    defineField({ name: "featured", type: "boolean", initialValue: false }),
+    defineField({
+      name: "testimonial",
+      title: "Client testimonial",
+      description:
+        "Optional quote from the client for this project. Leave blank if you have none yet.",
+      type: "testimonial",
+    }),
+    defineField({
+      name: "featured",
+      title: "Featured project",
+      type: "boolean",
+      initialValue: false,
+    }),
   ],
   preview: {
     select: { title: "title", subtitle: "client", media: "images.0" },

@@ -97,7 +97,11 @@ async function main() {
 
   for (const project of s.projects.items) {
     const id = `project-${project.id}`;
-    let images: NonNullable<Awaited<ReturnType<typeof uploadImage>>>[] = [];
+    let images: Array<{
+      _type: "image";
+      _key: string;
+      asset: { _type: "reference"; _ref: string };
+    }> = [];
     if (project.image) {
       if (!imageCache.has(project.image)) {
         imageCache.set(
@@ -109,7 +113,15 @@ async function main() {
         );
       }
       const img = imageCache.get(project.image);
-      if (img) images = [img];
+      if (img?.asset?._ref) {
+        images = [
+          {
+            _type: "image",
+            _key: `img-${project.id}`,
+            asset: img.asset,
+          },
+        ];
+      }
     }
 
     await client.createOrReplace({
@@ -123,12 +135,17 @@ async function main() {
       scope: project.scope,
       group: project.group,
       featured: Boolean(project.featured),
-      testimonial: project.testimonial || undefined,
+      // Always set so every project has editable photo + testimonial fields
       images,
+      testimonial: {
+        _type: "testimonial",
+        quote: project.testimonial?.quote || "",
+        attribution: project.testimonial?.attribution || "",
+      },
     });
     projectIds.push(id);
   }
-  console.log(`✓ ${projectIds.length} projects (with images)`);
+  console.log(`✓ ${projectIds.length} projects (photos + testimonials)`);
 
   await client.createOrReplace({
     _id: "homePage",
