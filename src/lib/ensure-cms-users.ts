@@ -17,10 +17,18 @@ const DEFAULT_USERS = [
     email: "admin@taologos.com",
     role: "admin" as const,
   },
+  {
+    email: "binyamt3@gmail.com",
+    role: "admin" as const,
+  },
+  {
+    email: "taologos04@gmail.com",
+    role: "admin" as const,
+  },
 ];
 
 /**
- * Creates the two default /edit accounts if they do not exist.
+ * Creates the default /edit accounts if they do not exist.
  * Does not overwrite an existing password hash (so changed passwords stay).
  */
 export async function ensureDefaultCmsUsers() {

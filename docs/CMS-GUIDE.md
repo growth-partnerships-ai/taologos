@@ -10,6 +10,8 @@ Default accounts (change password on first login):
 
 - `superadmin@taologos.com` / `admin1234`
 - `admin@taologos.com` / `admin1234`
+- `binyamt3@gmail.com` / `admin1234`
+- `taologos04@gmail.com` / `admin1234`
 
 Passwords are stored in Sanity as **bcrypt hashes** on `cmsUser` documents (never plain text).
 

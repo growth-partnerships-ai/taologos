@@ -203,7 +203,7 @@ export function EditWorkspace({
               rel="noreferrer"
               className="rounded-sm border border-line px-3 py-2 text-xs font-semibold text-cream"
             >
-              Preview live site
+              Preview
             </a>
             <button
               type="button"
