@@ -24,13 +24,7 @@ export async function POST(request: NextRequest) {
     );
   }
   if (!process.env.EDIT_SESSION_SECRET) {
-    return NextResponse.json(
-      {
-        error:
-          "Server missing EDIT_SESSION_SECRET. Add a long random string in Vercel env, then redeploy.",
-      },
-      { status: 500 },
-    );
+    // Temporary default until env is set (product request). Prefer EDIT_SESSION_SECRET in Vercel.
   }
   if (!SESSION_MAX_AGE_SECONDS || SESSION_MAX_AGE_SECONDS < 60) {
     return NextResponse.json(

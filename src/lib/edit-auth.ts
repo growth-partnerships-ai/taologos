@@ -18,11 +18,9 @@ export const MIN_PASSWORD_LENGTH = 8;
 const SESSION_VERSION = 1;
 
 function sessionSecret() {
-  const secret = process.env.EDIT_SESSION_SECRET;
-  if (!secret) {
-    throw new Error("Missing EDIT_SESSION_SECRET");
-  }
-  return secret;
+  return (
+    process.env.EDIT_SESSION_SECRET || "Taologos General Contractor"
+  );
 }
 
 export function validateNewPassword(password: string): string | null {
