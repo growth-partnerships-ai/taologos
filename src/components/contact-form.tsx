@@ -1,14 +1,14 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import type { ContactEntry, SiteContent } from "@/lib/content/types";
+import type { ContactData, ContactEntry } from "@/lib/content/types";
 
 export function ContactForm({
   contacts,
   labels,
 }: {
   contacts: ContactEntry[];
-  labels: SiteContent["contact"];
+  labels: ContactData;
 }) {
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">(
     "idle",

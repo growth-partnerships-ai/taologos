@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Barlow_Condensed, Manrope, Noto_Sans_Ethiopic } from "next/font/google";
+import { findHeroImage } from "@/lib/content/section-defaults";
 import { getPageContent } from "@/lib/content/get-page-content";
 import "./globals.css";
 
@@ -23,6 +24,7 @@ const ethiopic = Noto_Sans_Ethiopic({
 
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getPageContent();
+  const heroImage = findHeroImage(content.sections);
   return {
     title: content.seo.title,
     description: content.seo.description,
@@ -44,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: "en_US",
       images: [
         {
-          url: content.hero.image || "/images/hero-cover.jpg",
+          url: heroImage,
           alt: content.brand.legalName,
         },
       ],
@@ -53,7 +55,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: content.seo.title,
       description: content.seo.description,
-      images: [content.hero.image || "/images/hero-cover.jpg"],
+      images: [heroImage],
     },
   };
 }

@@ -1,4 +1,4 @@
-import type { SiteContent } from "@/lib/content/types";
+import type { HeroData } from "@/lib/content/types";
 
 export function Hero({
   content,
@@ -6,7 +6,7 @@ export function Hero({
   brandName,
   brandSubtitle,
 }: {
-  content: SiteContent["hero"];
+  content: HeroData;
   tagline: string;
   brandName: string;
   brandSubtitle: string;

@@ -121,14 +121,7 @@ export const project = defineType({
     defineField({
       name: "group",
       type: "string",
-      options: {
-        list: [
-          { title: "Apartment & cooperative", value: "apartment" },
-          { title: "Residential", value: "residential" },
-          { title: "Interior & renovation", value: "interior" },
-          { title: "Institutional", value: "institutional" },
-        ],
-      },
+      description: "Category id matching a Projects section group (free-form).",
       validation: (r) => r.required(),
     }),
     defineField({
@@ -192,6 +185,12 @@ export const homePage = defineType({
         defineArrayMember({ type: "recognitionSection" }),
         defineArrayMember({ type: "teamSection" }),
         defineArrayMember({ type: "contactSection" }),
+        defineArrayMember({ type: "gallerySection" }),
+        defineArrayMember({ type: "clientsMarqueeSection" }),
+        defineArrayMember({ type: "testimonialsSection" }),
+        defineArrayMember({ type: "statsSection" }),
+        defineArrayMember({ type: "simpleTextSection" }),
+        defineArrayMember({ type: "imageTextSection" }),
       ],
     }),
   ],

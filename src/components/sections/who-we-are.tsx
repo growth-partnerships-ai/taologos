@@ -1,6 +1,6 @@
-import type { SiteContent } from "@/lib/content/types";
+import type { WhoWeAreData } from "@/lib/content/types";
 
-export function WhoWeAre({ content }: { content: SiteContent["whoWeAre"] }) {
+export function WhoWeAre({ content }: { content: WhoWeAreData }) {
   return (
     <section id="who-we-are" className="section-pad border-t border-line">
       <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">

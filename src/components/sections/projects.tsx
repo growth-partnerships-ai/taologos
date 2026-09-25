@@ -1,39 +1,44 @@
-import type { ProjectGroup, SiteContent } from "@/lib/content/types";
+import type { ProjectsData } from "@/lib/content/types";
 
-export function Projects({ content }: { content: SiteContent["projects"] }) {
-  const groupOrder = content.groups.map((g) => g.id);
-  const metaById = Object.fromEntries(
-    content.groups.map((g) => [g.id, g]),
-  ) as Record<ProjectGroup, (typeof content.groups)[number]>;
+const KNOWN_GROUP_CLASS: Record<string, string> = {
+  apartment: "group-apartment",
+  residential: "group-residential",
+  interior: "group-interior",
+  institutional: "group-institutional",
+};
+
+export function Projects({ content }: { content: ProjectsData }) {
+  const visibleGroups = content.groups.filter((group) =>
+    content.items.some((p) => p.group === group.id),
+  );
 
   return (
     <section id="projects" className="section-pad border-t border-line">
       <div className="mx-auto max-w-7xl">
         <div className="max-w-2xl">
-          <p className="eyebrow">{content.eyebrow}</p>
-          <h2 className="mt-4 font-[family-name:var(--font-display)] text-4xl tracking-tight text-cream md:text-5xl">
+          <h2 className="font-[family-name:var(--font-display)] text-4xl tracking-tight text-cream md:text-5xl">
             {content.title}
           </h2>
-          <p className="mt-4 text-muted">{content.intro}</p>
         </div>
 
         <div className="mt-16 space-y-20">
-          {groupOrder.map((group) => {
-            const items = content.items.filter((p) => p.group === group);
-            if (!items.length) return null;
-            const meta = metaById[group];
-            if (!meta) return null;
+          {visibleGroups.map((meta) => {
+            const items = content.items.filter((p) => p.group === meta.id);
+            const groupClass =
+              KNOWN_GROUP_CLASS[meta.id] || "group-apartment";
 
             return (
-              <div key={group} className={`group-${group}`}>
+              <div key={meta.id} className={groupClass}>
                 <div className="mb-8 flex flex-col gap-2 border-b border-line pb-6 md:flex-row md:items-end md:justify-between">
                   <div>
                     <h3 className="font-[family-name:var(--font-display)] text-2xl text-[color:var(--group-accent)] md:text-3xl">
                       {meta.label}
                     </h3>
-                    <p className="mt-2 max-w-xl text-sm text-muted">
-                      {meta.blurb}
-                    </p>
+                    {meta.blurb?.trim() ? (
+                      <p className="mt-2 max-w-xl text-sm text-muted">
+                        {meta.blurb}
+                      </p>
+                    ) : null}
                   </div>
                   <span className="text-sm text-muted">
                     {items.length}{" "}
@@ -45,11 +50,11 @@ export function Projects({ content }: { content: SiteContent["projects"] }) {
 
                 <div
                   className={
-                    group === "apartment"
+                    meta.id === "apartment"
                       ? "grid gap-5 md:grid-cols-2"
-                      : group === "residential"
+                      : meta.id === "residential"
                         ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-                        : group === "interior"
+                        : meta.id === "interior"
                           ? "grid gap-6 md:grid-cols-[1.2fr_0.8fr]"
                           : "grid gap-6"
                   }
@@ -57,23 +62,23 @@ export function Projects({ content }: { content: SiteContent["projects"] }) {
                   {items.map((project, index) => {
                     const featured =
                       project.featured ||
-                      (group === "institutional" && index === 0);
+                      (meta.id === "institutional" && index === 0);
                     return (
                       <article
                         key={project.id}
                         className={`overflow-hidden border border-line bg-[color:var(--group-tint)] ${
-                          featured && group === "apartment"
+                          featured && meta.id === "apartment"
                             ? "md:col-span-2 md:grid md:grid-cols-2"
                             : ""
                         } ${
-                          featured && group === "institutional"
+                          featured && meta.id === "institutional"
                             ? "md:grid md:grid-cols-[1.1fr_0.9fr]"
                             : ""
                         }`}
                       >
                         <div
                           className={`relative overflow-hidden ${
-                            group === "residential"
+                            meta.id === "residential"
                               ? "aspect-[4/3]"
                               : "aspect-[16/11]"
                           }`}

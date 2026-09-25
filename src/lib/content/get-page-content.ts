@@ -6,20 +6,13 @@ import {
   siteSettingsQuery,
 } from "@/lib/sanity/queries";
 import { seedContent } from "./seed";
-import {
-  DEFAULT_SECTION_ORDER,
-  SECTION_TYPE_TO_ID,
-  type SectionId,
-} from "./sections";
+import { SECTION_TYPE_TO_ID } from "./sections";
 import type {
   ContactEntry,
   NavLink,
-  ProjectGroup,
-  ProjectGroupMeta,
+  PageSection,
   ProjectItem,
   SiteContent,
-  TeamMember,
-  ValueItem,
 } from "./types";
 
 type SanitySettings = {
@@ -55,7 +48,7 @@ type SanityProject = {
   typology?: string;
   location?: string;
   scope?: string;
-  group?: ProjectGroup;
+  group?: string;
   featured?: boolean;
   image?: string | null;
   testimonial?: { quote?: string; attribution?: string } | null;
@@ -63,6 +56,7 @@ type SanityProject = {
 
 type SanitySection = {
   _type?: string;
+  _key?: string;
   enabled?: boolean;
   imageUrl?: string | null;
   projectRefs?: SanityProject[] | null;
@@ -74,12 +68,14 @@ type SanitySection = {
   }>;
   items?: unknown;
   groups?: Array<{ id?: string; label?: string; blurb?: string }>;
+  images?: Array<{ _key?: string; imageUrl?: string; alt?: string }>;
+  logos?: Array<{ _key?: string; imageUrl?: string }>;
   [key: string]: unknown;
 };
 
-type SanityHomePage = {
-  sections?: SanitySection[] | null;
-};
+function str(value: unknown, fallback: string) {
+  return typeof value === "string" && value.trim() ? value : fallback;
+}
 
 function mapProjects(rows: SanityProject[] | null | undefined): ProjectItem[] {
   if (!rows?.length) return [];
@@ -104,31 +100,6 @@ function mapProjects(rows: SanityProject[] | null | undefined): ProjectItem[] {
             }
           : undefined,
     }));
-}
-
-function str(value: unknown, fallback: string) {
-  return typeof value === "string" && value.trim() ? value : fallback;
-}
-
-function mapGroups(
-  groups: SanitySection["groups"],
-  fallback: ProjectGroupMeta[],
-): ProjectGroupMeta[] {
-  if (!groups?.length) return fallback;
-  const mapped = groups
-    .filter(
-      (g): g is { id: ProjectGroup; label: string; blurb?: string } =>
-        Boolean(g.id && g.label) &&
-        ["apartment", "residential", "interior", "institutional"].includes(
-          g.id as string,
-        ),
-    )
-    .map((g) => ({
-      id: g.id,
-      label: g.label,
-      blurb: g.blurb || "",
-    }));
-  return mapped.length ? mapped : fallback;
 }
 
 function applySettings(
@@ -188,271 +159,470 @@ function applySettings(
   };
 }
 
+function mapSanitySection(
+  section: SanitySection,
+  allProjects: ProjectItem[],
+  seedFallback: PageSection | undefined,
+): PageSection | null {
+  const type = section._type
+    ? SECTION_TYPE_TO_ID[section._type]
+    : undefined;
+  if (!type) return null;
+  const key = section._key || `${type}-${Math.random().toString(36).slice(2, 7)}`;
+  const enabled = section.enabled !== false;
+  const seedData = seedFallback?.type === type ? seedFallback.data : undefined;
+
+  switch (type) {
+    case "hero": {
+      const fallback = (seedData || seedContent.sections.find((s) => s.type === "hero")?.data) as
+        | Extract<PageSection, { type: "hero" }>["data"]
+        | undefined;
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          eyebrow: str(section.eyebrow, fallback?.eyebrow || ""),
+          headline: str(section.headline, fallback?.headline || ""),
+          supporting: str(section.supporting, fallback?.supporting || ""),
+          image: str(section.imageUrl, fallback?.image || "/images/hero-cover.jpg"),
+          primaryCtaLabel: str(
+            section.primaryCtaLabel,
+            fallback?.primaryCtaLabel || "",
+          ),
+          primaryCtaHref: str(
+            section.primaryCtaHref,
+            fallback?.primaryCtaHref || "#projects",
+          ),
+          secondaryCtaLabel: str(
+            section.secondaryCtaLabel,
+            fallback?.secondaryCtaLabel || "",
+          ),
+          secondaryCtaHref: str(
+            section.secondaryCtaHref,
+            fallback?.secondaryCtaHref || "#contact",
+          ),
+        },
+      };
+    }
+    case "whoWeAre": {
+      const fallback = seedContent.sections.find((s) => s.type === "whoWeAre");
+      const fb = fallback?.type === "whoWeAre" ? fallback.data : undefined;
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          eyebrow: str(section.eyebrow, fb?.eyebrow || ""),
+          title: str(section.title, fb?.title || ""),
+          body: str(section.body, fb?.body || ""),
+          credentials: Array.isArray(section.credentials)
+            ? (section.credentials as string[]).filter(Boolean)
+            : fb?.credentials || [],
+        },
+      };
+    }
+    case "missionVision": {
+      const fallback = seedContent.sections.find((s) => s.type === "missionVision");
+      const fb = fallback?.type === "missionVision" ? fallback.data : undefined;
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          missionTitle: str(section.missionTitle, fb?.missionTitle || ""),
+          missionBody: str(section.missionBody, fb?.missionBody || ""),
+          visionTitle: str(section.visionTitle, fb?.visionTitle || ""),
+          visionBody: str(section.visionBody, fb?.visionBody || ""),
+        },
+      };
+    }
+    case "values": {
+      const fallback = seedContent.sections.find((s) => s.type === "values");
+      const fb = fallback?.type === "values" ? fallback.data : undefined;
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          eyebrow: str(section.eyebrow, fb?.eyebrow || ""),
+          title: str(section.title, fb?.title || ""),
+          intro: str(section.intro, fb?.intro || ""),
+          items: Array.isArray(section.items)
+            ? (
+                section.items as Array<{
+                  title?: string;
+                  description?: string;
+                }>
+              ).map((item, i) => ({
+                id: `value-${i}`,
+                title: item.title || "",
+                description: item.description || "",
+              }))
+            : fb?.items || [],
+        },
+      };
+    }
+    case "services": {
+      const fallback = seedContent.sections.find((s) => s.type === "services");
+      const fb = fallback?.type === "services" ? fallback.data : undefined;
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          eyebrow: str(section.eyebrow, fb?.eyebrow || ""),
+          title: str(section.title, fb?.title || ""),
+          image: str(section.imageUrl, fb?.image || "/images/services-bg.jpg"),
+          items: Array.isArray(section.items)
+            ? (
+                section.items as Array<{
+                  title?: string;
+                  description?: string;
+                }>
+              ).map((item, i) => ({
+                id: `service-${i}`,
+                title: item.title || "",
+                description: item.description || "",
+              }))
+            : fb?.items || [],
+        },
+      };
+    }
+    case "projects": {
+      const fallback = seedContent.sections.find((s) => s.type === "projects");
+      const fb = fallback?.type === "projects" ? fallback.data : undefined;
+      const selected = mapProjects(section.projectRefs);
+      const items = selected.length
+        ? selected
+        : allProjects.length
+          ? allProjects
+          : fb?.items || [];
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          title: str(section.title, fb?.title || "Selected Projects"),
+          locationLabel: str(section.locationLabel, fb?.locationLabel || "Location"),
+          typeLabel: str(section.typeLabel, fb?.typeLabel || "Type"),
+          scopeLabel: str(section.scopeLabel, fb?.scopeLabel || "Scope"),
+          projectSingular: str(
+            section.projectSingular,
+            fb?.projectSingular || "project",
+          ),
+          projectPlural: str(
+            section.projectPlural,
+            fb?.projectPlural || "projects",
+          ),
+          groups:
+            Array.isArray(section.groups) && section.groups.length
+              ? section.groups
+                  .filter((g) => g.id && g.label)
+                  .map((g) => ({
+                    id: g.id!,
+                    label: g.label!,
+                    blurb: g.blurb || "",
+                  }))
+              : fb?.groups || [],
+          projectIds: items.map((p) => p.id),
+          items,
+        },
+      };
+    }
+    case "recognition": {
+      const fallback = seedContent.sections.find((s) => s.type === "recognition");
+      const fb = fallback?.type === "recognition" ? fallback.data : undefined;
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          eyebrow: str(section.eyebrow, fb?.eyebrow || ""),
+          title: str(section.title, fb?.title || ""),
+          intro: str(section.intro, fb?.intro || ""),
+          presentedToLabel: str(
+            section.presentedToLabel,
+            fb?.presentedToLabel || "Presented to",
+          ),
+          items: Array.isArray(section.items)
+            ? (
+                section.items as Array<{
+                  title?: string;
+                  issuer?: string;
+                  recipient?: string;
+                  summary?: string;
+                  highlights?: string[];
+                  projectLabel?: string;
+                  imageUrl?: string;
+                }>
+              ).map((item, i) => ({
+                id: `cert-${i}`,
+                title: item.title || "",
+                issuer: item.issuer || "",
+                recipient: item.recipient || "",
+                summary: item.summary || "",
+                highlights: item.highlights || [],
+                image:
+                  item.imageUrl ||
+                  fb?.items[0]?.image ||
+                  "/images/certificate-isspl-un-congo.jpg",
+                projectLabel: item.projectLabel,
+              }))
+            : fb?.items || [],
+        },
+      };
+    }
+    case "team": {
+      const fallback = seedContent.sections.find((s) => s.type === "team");
+      const fb = fallback?.type === "team" ? fallback.data : undefined;
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          eyebrow: str(section.eyebrow, fb?.eyebrow || ""),
+          title: str(section.title, fb?.title || ""),
+          intro: str(section.intro, fb?.intro || ""),
+          members: Array.isArray(section.members)
+            ? section.members
+                .filter((m) => m.name)
+                .map((m, i) => ({
+                  id: `member-${i}`,
+                  name: m.name!,
+                  role: m.role || "",
+                  bio: m.bio,
+                  photo: m.photoUrl || undefined,
+                }))
+            : fb?.members || [],
+        },
+      };
+    }
+    case "contact": {
+      const fallback = seedContent.sections.find((s) => s.type === "contact");
+      const fb = fallback?.type === "contact" ? fallback.data : undefined;
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          eyebrow: str(section.eyebrow, fb?.eyebrow || ""),
+          title: str(section.title, fb?.title || ""),
+          intro: str(section.intro, fb?.intro || ""),
+          formNameLabel: str(section.formNameLabel, fb?.formNameLabel || "Name"),
+          formPhoneLabel: str(
+            section.formPhoneLabel,
+            fb?.formPhoneLabel || "Phone",
+          ),
+          formEmailLabel: str(
+            section.formEmailLabel,
+            fb?.formEmailLabel || "Email",
+          ),
+          formMessageLabel: str(
+            section.formMessageLabel,
+            fb?.formMessageLabel || "Message",
+          ),
+          formSubmitLabel: str(
+            section.formSubmitLabel,
+            fb?.formSubmitLabel || "Send message",
+          ),
+          formSendingLabel: str(
+            section.formSendingLabel,
+            fb?.formSendingLabel || "Sending…",
+          ),
+          formSuccessMessage: str(
+            section.formSuccessMessage,
+            fb?.formSuccessMessage || "",
+          ),
+          formErrorMessage: str(
+            section.formErrorMessage,
+            fb?.formErrorMessage || "",
+          ),
+        },
+      };
+    }
+    case "gallery": {
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          eyebrow: str(section.eyebrow, "Gallery"),
+          title: str(section.title, "Project photos"),
+          autoplay: section.autoplay !== false,
+          images: Array.isArray(section.images)
+            ? section.images
+                .filter((img) => img.imageUrl)
+                .map((img, i) => ({
+                  id: img._key || `img-${i}`,
+                  src: img.imageUrl!,
+                  alt: img.alt || "",
+                }))
+            : [],
+        },
+      };
+    }
+    case "clientsMarquee": {
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          eyebrow: str(section.eyebrow, "Clients"),
+          title: str(section.title, "Companies we’ve worked with"),
+          direction: section.direction === "ltr" ? "ltr" : "rtl",
+          logos: Array.isArray(section.logos)
+            ? section.logos
+                .filter((logo) => logo.imageUrl)
+                .map((logo, i) => ({
+                  id: logo._key || `logo-${i}`,
+                  image: logo.imageUrl!,
+                }))
+            : [],
+        },
+      };
+    }
+    case "testimonials": {
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          eyebrow: str(section.eyebrow, "Voices"),
+          title: str(section.title, "Testimonials"),
+          intro: str(section.intro, ""),
+          items: Array.isArray(section.items)
+            ? (
+                section.items as Array<{
+                  quote?: string;
+                  name?: string;
+                  role?: string;
+                  company?: string;
+                  photoUrl?: string;
+                  _key?: string;
+                }>
+              )
+                .filter((item) => item.quote && item.name)
+                .map((item, i) => ({
+                  id: item._key || `t-${i}`,
+                  quote: item.quote!,
+                  name: item.name!,
+                  role: item.role,
+                  company: item.company,
+                  photo: item.photoUrl,
+                }))
+            : [],
+        },
+      };
+    }
+    case "stats": {
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          eyebrow: str(section.eyebrow, ""),
+          title: str(section.title, "At a glance"),
+          items: Array.isArray(section.items)
+            ? (
+                section.items as Array<{
+                  number?: string;
+                  label?: string;
+                  detail?: string;
+                  _key?: string;
+                }>
+              )
+                .filter((item) => item.number && item.label)
+                .map((item, i) => ({
+                  id: item._key || `stat-${i}`,
+                  number: item.number!,
+                  label: item.label!,
+                  detail: item.detail,
+                }))
+            : [],
+        },
+      };
+    }
+    case "simpleText": {
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          eyebrow: str(section.eyebrow, ""),
+          title: str(section.title, ""),
+          body: str(section.body, ""),
+        },
+      };
+    }
+    case "imageText": {
+      return {
+        key,
+        type,
+        enabled,
+        data: {
+          eyebrow: str(section.eyebrow, ""),
+          title: str(section.title, ""),
+          body: str(section.body, ""),
+          image: str(section.imageUrl, "/images/hero-cover.jpg"),
+          imagePosition: section.imagePosition === "right" ? "right" : "left",
+        },
+      };
+    }
+    default:
+      return null;
+  }
+}
+
 function applyHomeSections(
   content: SiteContent,
-  home: SanityHomePage | null,
+  home: { sections?: SanitySection[] | null } | null,
   allProjects: ProjectItem[],
 ): SiteContent {
-  const sections = home?.sections;
-  if (!sections?.length) {
+  const rows = home?.sections;
+  if (!rows?.length) {
     return {
       ...content,
-      sectionOrder: DEFAULT_SECTION_ORDER,
-      projects: {
-        ...content.projects,
-        items: allProjects.length ? allProjects : content.projects.items,
-      },
+      sections: content.sections.map((section) => {
+        if (section.type !== "projects") return section;
+        return {
+          ...section,
+          data: {
+            ...section.data,
+            items: allProjects.length ? allProjects : section.data.items,
+            projectIds: (allProjects.length ? allProjects : section.data.items).map(
+              (p) => p.id,
+            ),
+          },
+        };
+      }),
     };
   }
 
-  const order: SectionId[] = [];
-  let next = { ...content };
-
-  for (const section of sections) {
-    if (section.enabled === false) continue;
-    const id = section._type ? SECTION_TYPE_TO_ID[section._type] : undefined;
-    if (!id) continue;
-    order.push(id);
-
-    switch (section._type) {
-      case "heroSection":
-        next = {
-          ...next,
-          hero: {
-            ...next.hero,
-            eyebrow: str(section.eyebrow, next.hero.eyebrow),
-            headline: str(section.headline, next.hero.headline),
-            supporting: str(section.supporting, next.hero.supporting),
-            image: str(section.imageUrl, next.hero.image),
-            primaryCtaLabel: str(
-              section.primaryCtaLabel,
-              next.hero.primaryCtaLabel,
-            ),
-            primaryCtaHref: str(
-              section.primaryCtaHref,
-              next.hero.primaryCtaHref,
-            ),
-            secondaryCtaLabel: str(
-              section.secondaryCtaLabel,
-              next.hero.secondaryCtaLabel,
-            ),
-            secondaryCtaHref: str(
-              section.secondaryCtaHref,
-              next.hero.secondaryCtaHref,
-            ),
-          },
-        };
-        break;
-      case "whoWeAreSection":
-        next = {
-          ...next,
-          whoWeAre: {
-            eyebrow: str(section.eyebrow, next.whoWeAre.eyebrow),
-            title: str(section.title, next.whoWeAre.title),
-            body: str(section.body, next.whoWeAre.body),
-            credentials: Array.isArray(section.credentials)
-              ? (section.credentials as string[]).filter(Boolean)
-              : next.whoWeAre.credentials,
-          },
-        };
-        break;
-      case "missionVisionSection":
-        next = {
-          ...next,
-          mission: {
-            title: str(section.missionTitle, next.mission.title),
-            body: str(section.missionBody, next.mission.body),
-          },
-          vision: {
-            title: str(section.visionTitle, next.vision.title),
-            body: str(section.visionBody, next.vision.body),
-          },
-        };
-        break;
-      case "valuesSection":
-        next = {
-          ...next,
-          values: {
-            eyebrow: str(section.eyebrow, next.values.eyebrow),
-            title: str(section.title, next.values.title),
-            intro: str(section.intro, next.values.intro),
-            items: Array.isArray(section.items)
-              ? (section.items as ValueItem[]).map((item, i) => ({
-                  id: `value-${i}`,
-                  title: item.title || "",
-                  description: item.description || "",
-                }))
-              : next.values.items,
-          },
-        };
-        break;
-      case "servicesSection":
-        next = {
-          ...next,
-          services: {
-            eyebrow: str(section.eyebrow, next.services.eyebrow),
-            title: str(section.title, next.services.title),
-            image: str(section.imageUrl, next.services.image),
-            items: Array.isArray(section.items)
-              ? (
-                  section.items as Array<{
-                    title?: string;
-                    description?: string;
-                  }>
-                ).map((item, i) => ({
-                  id: `service-${i}`,
-                  title: item.title || "",
-                  description: item.description || "",
-                }))
-              : next.services.items,
-          },
-        };
-        break;
-      case "projectsSection": {
-        const selected = mapProjects(section.projectRefs);
-        next = {
-          ...next,
-          projects: {
-            eyebrow: str(section.eyebrow, next.projects.eyebrow),
-            title: str(section.title, next.projects.title),
-            intro: str(section.intro, next.projects.intro),
-            locationLabel: str(
-              section.locationLabel,
-              next.projects.locationLabel,
-            ),
-            typeLabel: str(section.typeLabel, next.projects.typeLabel),
-            scopeLabel: str(section.scopeLabel, next.projects.scopeLabel),
-            projectSingular: str(
-              section.projectSingular,
-              next.projects.projectSingular,
-            ),
-            projectPlural: str(
-              section.projectPlural,
-              next.projects.projectPlural,
-            ),
-            groups: mapGroups(section.groups, next.projects.groups),
-            items: selected.length
-              ? selected
-              : allProjects.length
-                ? allProjects
-                : next.projects.items,
-          },
-        };
-        break;
-      }
-      case "recognitionSection":
-        next = {
-          ...next,
-          recognition: {
-            eyebrow: str(section.eyebrow, next.recognition.eyebrow),
-            title: str(section.title, next.recognition.title),
-            intro: str(section.intro, next.recognition.intro),
-            presentedToLabel: str(
-              section.presentedToLabel,
-              next.recognition.presentedToLabel,
-            ),
-            items: Array.isArray(section.items)
-              ? (
-                  section.items as Array<{
-                    title?: string;
-                    issuer?: string;
-                    recipient?: string;
-                    summary?: string;
-                    highlights?: string[];
-                    projectLabel?: string;
-                    imageUrl?: string;
-                  }>
-                ).map((item, i) => ({
-                  id: `cert-${i}`,
-                  title: item.title || "",
-                  issuer: item.issuer || "",
-                  recipient: item.recipient || "",
-                  summary: item.summary || "",
-                  highlights: item.highlights || [],
-                  image:
-                    item.imageUrl ||
-                    next.recognition.items[0]?.image ||
-                    "/images/certificate-isspl-un-congo.jpg",
-                  projectLabel: item.projectLabel,
-                }))
-              : next.recognition.items,
-          },
-        };
-        break;
-      case "teamSection":
-        next = {
-          ...next,
-          team: {
-            eyebrow: str(section.eyebrow, next.team.eyebrow),
-            title: str(section.title, next.team.title),
-            intro: str(section.intro, next.team.intro),
-            members: Array.isArray(section.members)
-              ? section.members
-                  .filter((m) => m.name)
-                  .map(
-                    (m, i): TeamMember => ({
-                      id: `member-${i}`,
-                      name: m.name!,
-                      role: m.role || "",
-                      bio: m.bio,
-                      photo: m.photoUrl || undefined,
-                    }),
-                  )
-              : next.team.members,
-          },
-        };
-        break;
-      case "contactSection":
-        next = {
-          ...next,
-          contact: {
-            eyebrow: str(section.eyebrow, next.contact.eyebrow),
-            title: str(section.title, next.contact.title),
-            intro: str(section.intro, next.contact.intro),
-            formNameLabel: str(
-              section.formNameLabel,
-              next.contact.formNameLabel,
-            ),
-            formPhoneLabel: str(
-              section.formPhoneLabel,
-              next.contact.formPhoneLabel,
-            ),
-            formEmailLabel: str(
-              section.formEmailLabel,
-              next.contact.formEmailLabel,
-            ),
-            formMessageLabel: str(
-              section.formMessageLabel,
-              next.contact.formMessageLabel,
-            ),
-            formSubmitLabel: str(
-              section.formSubmitLabel,
-              next.contact.formSubmitLabel,
-            ),
-            formSendingLabel: str(
-              section.formSendingLabel,
-              next.contact.formSendingLabel,
-            ),
-            formSuccessMessage: str(
-              section.formSuccessMessage,
-              next.contact.formSuccessMessage,
-            ),
-            formErrorMessage: str(
-              section.formErrorMessage,
-              next.contact.formErrorMessage,
-            ),
-          },
-        };
-        break;
-      default:
-        break;
-    }
-  }
+  const mapped = rows
+    .map((row, index) =>
+      mapSanitySection(row, allProjects, content.sections[index]),
+    )
+    .filter((s): s is PageSection => Boolean(s));
 
   return {
-    ...next,
-    sectionOrder: order.length ? order : DEFAULT_SECTION_ORDER,
+    ...content,
+    sections: mapped.length ? mapped : content.sections,
   };
+}
+
+async function loadEditSnapshot(): Promise<SiteContent | null> {
+  try {
+    const row = await client.fetch<{ content?: string } | null>(
+      `*[_id == "siteEditState"][0]{ content }`,
+    );
+    if (!row?.content) return null;
+    const parsed = JSON.parse(row.content) as SiteContent;
+    if (!parsed?.sections?.length) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
 }
 
 export async function getPageContent(language = "en"): Promise<SiteContent> {
@@ -460,10 +630,13 @@ export async function getPageContent(language = "en"): Promise<SiteContent> {
   if (!hasSanityConfig()) return seedContent;
 
   try {
+    const snapshot = await loadEditSnapshot();
+    if (snapshot) return snapshot;
+
     const [settings, projects, home] = await Promise.all([
       client.fetch<SanitySettings | null>(siteSettingsQuery),
       client.fetch<SanityProject[] | null>(projectsQuery),
-      client.fetch<SanityHomePage | null>(homePageQuery),
+      client.fetch<{ sections?: SanitySection[] | null } | null>(homePageQuery),
     ]);
 
     const mappedProjects = mapProjects(projects);

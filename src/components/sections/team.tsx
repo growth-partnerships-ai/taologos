@@ -1,6 +1,6 @@
-import type { SiteContent } from "@/lib/content/types";
+import type { TeamData } from "@/lib/content/types";
 
-export function Team({ content }: { content: SiteContent["team"] }) {
+export function Team({ content }: { content: TeamData }) {
   if (!content.members.length) return null;
 
   return (

@@ -1,10 +1,6 @@
-import type { SiteContent } from "@/lib/content/types";
+import type { RecognitionData } from "@/lib/content/types";
 
-export function Recognition({
-  content,
-}: {
-  content: SiteContent["recognition"];
-}) {
+export function Recognition({ content }: { content: RecognitionData }) {
   if (!content.items.length) return null;
 
   return (

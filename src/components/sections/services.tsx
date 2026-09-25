@@ -1,6 +1,6 @@
-import type { SiteContent } from "@/lib/content/types";
+import type { ServicesData } from "@/lib/content/types";
 
-export function Services({ content }: { content: SiteContent["services"] }) {
+export function Services({ content }: { content: ServicesData }) {
   return (
     <section id="services" className="relative isolate overflow-hidden">
       <div className="absolute inset-0 -z-10">

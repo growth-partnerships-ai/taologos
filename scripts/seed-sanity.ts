@@ -8,7 +8,8 @@ import { createClient } from "@sanity/client";
 import { config as loadEnv } from "dotenv";
 import { createReadStream, existsSync } from "node:fs";
 import path from "node:path";
-import { seedContent } from "../src/lib/content/seed";
+import { findSection, seedContent } from "../src/lib/content/seed";
+import { ensureDefaultCmsUsers } from "../src/lib/ensure-cms-users";
 
 loadEnv({ path: ".env.local" });
 
@@ -54,17 +55,26 @@ async function uploadImage(urlPath: string, filename: string) {
 
 async function main() {
   const s = seedContent;
+  const hero = findSection("hero")!;
+  const who = findSection("whoWeAre")!;
+  const mv = findSection("missionVision")!;
+  const values = findSection("values")!;
+  const services = findSection("services")!;
+  const projects = findSection("projects")!;
+  const recognition = findSection("recognition")!;
+  const team = findSection("team")!;
+  const contact = findSection("contact")!;
 
   console.log("Uploading shared images…");
   const logo = await uploadImage(s.brand.logo, "logo-mark.png");
-  const heroImage = await uploadImage(s.hero.image, "hero-cover.jpg");
-  const servicesImage = await uploadImage(s.services.image, "services-bg.jpg");
+  const heroImage = await uploadImage(hero.data.image, "hero-cover.jpg");
+  const servicesImage = await uploadImage(services.data.image, "services-bg.jpg");
   const certImage = await uploadImage(
-    s.recognition.items[0]?.image || "/images/certificate-isspl-un-congo.jpg",
+    recognition.data.items[0]?.image || "/images/certificate-isspl-un-congo.jpg",
     "certificate-isspl.jpg",
   );
   const teamPhoto = await uploadImage(
-    s.team.members[0]?.photo || "/images/card-binyam.jpg",
+    team.data.members[0]?.photo || "/images/card-binyam.jpg",
     "binyam-card.jpg",
   );
 
@@ -100,7 +110,7 @@ async function main() {
   const projectIds: string[] = [];
   const imageCache = new Map<string, Awaited<ReturnType<typeof uploadImage>>>();
 
-  for (const project of s.projects.items) {
+  for (const project of projects.data.items) {
     const id = `project-${project.id}`;
     let images: Array<{
       _type: "image";
@@ -140,7 +150,6 @@ async function main() {
       scope: project.scope,
       group: project.group,
       featured: Boolean(project.featured),
-      // Always set so every project has editable photo + testimonial fields
       images,
       testimonial: {
         _type: "testimonial",
@@ -160,72 +169,70 @@ async function main() {
     sections: [
       {
         _type: "heroSection",
-        _key: "hero",
-        enabled: true,
-        eyebrow: s.hero.eyebrow,
-        headline: s.hero.headline,
-        supporting: s.hero.supporting,
+        _key: hero.key,
+        enabled: hero.enabled,
+        eyebrow: hero.data.eyebrow,
+        headline: hero.data.headline,
+        supporting: hero.data.supporting,
         image: heroImage,
-        primaryCtaLabel: s.hero.primaryCtaLabel,
-        primaryCtaHref: s.hero.primaryCtaHref,
-        secondaryCtaLabel: s.hero.secondaryCtaLabel,
-        secondaryCtaHref: s.hero.secondaryCtaHref,
+        primaryCtaLabel: hero.data.primaryCtaLabel,
+        primaryCtaHref: hero.data.primaryCtaHref,
+        secondaryCtaLabel: hero.data.secondaryCtaLabel,
+        secondaryCtaHref: hero.data.secondaryCtaHref,
       },
       {
         _type: "whoWeAreSection",
-        _key: "who",
-        enabled: true,
-        eyebrow: s.whoWeAre.eyebrow,
-        title: s.whoWeAre.title,
-        body: s.whoWeAre.body,
-        credentials: s.whoWeAre.credentials,
+        _key: who.key,
+        enabled: who.enabled,
+        eyebrow: who.data.eyebrow,
+        title: who.data.title,
+        body: who.data.body,
+        credentials: who.data.credentials,
       },
       {
         _type: "missionVisionSection",
-        _key: "mv",
-        enabled: true,
-        missionTitle: s.mission.title,
-        missionBody: s.mission.body,
-        visionTitle: s.vision.title,
-        visionBody: s.vision.body,
+        _key: mv.key,
+        enabled: mv.enabled,
+        missionTitle: mv.data.missionTitle,
+        missionBody: mv.data.missionBody,
+        visionTitle: mv.data.visionTitle,
+        visionBody: mv.data.visionBody,
       },
       {
         _type: "valuesSection",
-        _key: "values",
-        enabled: true,
-        eyebrow: s.values.eyebrow,
-        title: s.values.title,
-        intro: s.values.intro,
-        items: s.values.items.map(({ title, description }) => ({
+        _key: values.key,
+        enabled: values.enabled,
+        eyebrow: values.data.eyebrow,
+        title: values.data.title,
+        intro: values.data.intro,
+        items: values.data.items.map(({ title, description }) => ({
           title,
           description,
         })),
       },
       {
         _type: "servicesSection",
-        _key: "services",
-        enabled: true,
-        eyebrow: s.services.eyebrow,
-        title: s.services.title,
+        _key: services.key,
+        enabled: services.enabled,
+        eyebrow: services.data.eyebrow,
+        title: services.data.title,
         image: servicesImage,
-        items: s.services.items.map(({ title, description }) => ({
+        items: services.data.items.map(({ title, description }) => ({
           title,
           description,
         })),
       },
       {
         _type: "projectsSection",
-        _key: "projects",
-        enabled: true,
-        eyebrow: s.projects.eyebrow,
-        title: s.projects.title,
-        intro: s.projects.intro,
-        locationLabel: s.projects.locationLabel,
-        typeLabel: s.projects.typeLabel,
-        scopeLabel: s.projects.scopeLabel,
-        projectSingular: s.projects.projectSingular,
-        projectPlural: s.projects.projectPlural,
-        groups: s.projects.groups.map(({ id, label, blurb }) => ({
+        _key: projects.key,
+        enabled: projects.enabled,
+        title: projects.data.title,
+        locationLabel: projects.data.locationLabel,
+        typeLabel: projects.data.typeLabel,
+        scopeLabel: projects.data.scopeLabel,
+        projectSingular: projects.data.projectSingular,
+        projectPlural: projects.data.projectPlural,
+        groups: projects.data.groups.map(({ id, label, blurb }) => ({
           id,
           label,
           blurb,
@@ -237,13 +244,13 @@ async function main() {
       },
       {
         _type: "recognitionSection",
-        _key: "recognition",
-        enabled: true,
-        eyebrow: s.recognition.eyebrow,
-        title: s.recognition.title,
-        intro: s.recognition.intro,
-        presentedToLabel: s.recognition.presentedToLabel,
-        items: s.recognition.items.map((item) => ({
+        _key: recognition.key,
+        enabled: recognition.enabled,
+        eyebrow: recognition.data.eyebrow,
+        title: recognition.data.title,
+        intro: recognition.data.intro,
+        presentedToLabel: recognition.data.presentedToLabel,
+        items: recognition.data.items.map((item) => ({
           title: item.title,
           issuer: item.issuer,
           recipient: item.recipient,
@@ -255,12 +262,12 @@ async function main() {
       },
       {
         _type: "teamSection",
-        _key: "team",
-        enabled: false,
-        eyebrow: s.team.eyebrow,
-        title: s.team.title,
-        intro: s.team.intro,
-        members: s.team.members.map(({ name, role, bio }) => ({
+        _key: team.key,
+        enabled: team.enabled,
+        eyebrow: team.data.eyebrow,
+        title: team.data.title,
+        intro: team.data.intro,
+        members: team.data.members.map(({ name, role, bio }) => ({
           name,
           role,
           bio,
@@ -269,24 +276,28 @@ async function main() {
       },
       {
         _type: "contactSection",
-        _key: "contact",
-        enabled: true,
-        eyebrow: s.contact.eyebrow,
-        title: s.contact.title,
-        intro: s.contact.intro,
-        formNameLabel: s.contact.formNameLabel,
-        formPhoneLabel: s.contact.formPhoneLabel,
-        formEmailLabel: s.contact.formEmailLabel,
-        formMessageLabel: s.contact.formMessageLabel,
-        formSubmitLabel: s.contact.formSubmitLabel,
-        formSendingLabel: s.contact.formSendingLabel,
-        formSuccessMessage: s.contact.formSuccessMessage,
-        formErrorMessage: s.contact.formErrorMessage,
+        _key: contact.key,
+        enabled: contact.enabled,
+        eyebrow: contact.data.eyebrow,
+        title: contact.data.title,
+        intro: contact.data.intro,
+        formNameLabel: contact.data.formNameLabel,
+        formPhoneLabel: contact.data.formPhoneLabel,
+        formEmailLabel: contact.data.formEmailLabel,
+        formMessageLabel: contact.data.formMessageLabel,
+        formSubmitLabel: contact.data.formSubmitLabel,
+        formSendingLabel: contact.data.formSendingLabel,
+        formSuccessMessage: contact.data.formSuccessMessage,
+        formErrorMessage: contact.data.formErrorMessage,
       },
     ],
   });
   console.log("✓ Home page with sections + images");
-  console.log("\nDone. In /studio you can replace any image (click the image → Upload / Select).");
+
+  const users = await ensureDefaultCmsUsers();
+  console.log("✓ CMS users", users);
+
+  console.log("\nDone. Open /edit to manage the site. /studio remains for advanced use.");
 }
 
 main().catch((err) => {

@@ -1,21 +1,10 @@
 import { createClient } from "@sanity/client";
 import { NextRequest, NextResponse } from "next/server";
-import { seedContent } from "@/lib/content/seed";
+import { findSection, seedContent } from "@/lib/content/seed";
+import { ensureDefaultCmsUsers } from "@/lib/ensure-cms-users";
 
 export const runtime = "nodejs";
 
-/**
- * One-time CMS seed for people who only have Vercel (no local terminal).
- *
- * Setup in Vercel → Project → Settings → Environment Variables:
- *   SANITY_API_WRITE_TOKEN = Editor token from Sanity Manage → API → Tokens
- *   SEED_SECRET            = any long random string you invent
- *
- * Then open once:
- *   https://YOUR-SITE.vercel.app/api/seed?secret=YOUR_SEED_SECRET
- *
- * Delete SEED_SECRET from Vercel (or change it) after seeding.
- */
 export async function GET(request: NextRequest) {
   const secret = request.nextUrl.searchParams.get("secret");
   const expected = process.env.SEED_SECRET;
@@ -48,6 +37,15 @@ export async function GET(request: NextRequest) {
   });
 
   const s = seedContent;
+  const hero = findSection("hero")!;
+  const who = findSection("whoWeAre")!;
+  const mv = findSection("missionVision")!;
+  const values = findSection("values")!;
+  const services = findSection("services")!;
+  const projects = findSection("projects")!;
+  const recognition = findSection("recognition")!;
+  const team = findSection("team")!;
+  const contact = findSection("contact")!;
 
   try {
     await client.createOrReplace({
@@ -78,7 +76,7 @@ export async function GET(request: NextRequest) {
     });
 
     const projectIds: string[] = [];
-    for (const project of s.projects.items) {
+    for (const project of projects.data.items) {
       const id = `project-${project.id}`;
       await client.createOrReplace({
         _id: id,
@@ -104,74 +102,57 @@ export async function GET(request: NextRequest) {
       sections: [
         {
           _type: "heroSection",
-          _key: "hero",
-          enabled: true,
-          eyebrow: s.hero.eyebrow,
-          headline: s.hero.headline,
-          supporting: s.hero.supporting,
-          primaryCtaLabel: s.hero.primaryCtaLabel,
-          primaryCtaHref: s.hero.primaryCtaHref,
-          secondaryCtaLabel: s.hero.secondaryCtaLabel,
-          secondaryCtaHref: s.hero.secondaryCtaHref,
+          _key: hero.key,
+          enabled: hero.enabled,
+          ...hero.data,
+          image: undefined,
         },
         {
           _type: "whoWeAreSection",
-          _key: "who",
-          enabled: true,
-          eyebrow: s.whoWeAre.eyebrow,
-          title: s.whoWeAre.title,
-          body: s.whoWeAre.body,
-          credentials: s.whoWeAre.credentials,
+          _key: who.key,
+          enabled: who.enabled,
+          ...who.data,
         },
         {
           _type: "missionVisionSection",
-          _key: "mv",
-          enabled: true,
-          missionTitle: s.mission.title,
-          missionBody: s.mission.body,
-          visionTitle: s.vision.title,
-          visionBody: s.vision.body,
+          _key: mv.key,
+          enabled: mv.enabled,
+          ...mv.data,
         },
         {
           _type: "valuesSection",
-          _key: "values",
-          enabled: true,
-          eyebrow: s.values.eyebrow,
-          title: s.values.title,
-          intro: s.values.intro,
-          items: s.values.items.map(({ title, description }) => ({
+          _key: values.key,
+          enabled: values.enabled,
+          eyebrow: values.data.eyebrow,
+          title: values.data.title,
+          intro: values.data.intro,
+          items: values.data.items.map(({ title, description }) => ({
             title,
             description,
           })),
         },
         {
           _type: "servicesSection",
-          _key: "services",
-          enabled: true,
-          eyebrow: s.services.eyebrow,
-          title: s.services.title,
-          items: s.services.items.map(({ title, description }) => ({
+          _key: services.key,
+          enabled: services.enabled,
+          eyebrow: services.data.eyebrow,
+          title: services.data.title,
+          items: services.data.items.map(({ title, description }) => ({
             title,
             description,
           })),
         },
         {
           _type: "projectsSection",
-          _key: "projects",
-          enabled: true,
-          eyebrow: s.projects.eyebrow,
-          title: s.projects.title,
-          intro: s.projects.intro,
-          locationLabel: s.projects.locationLabel,
-          typeLabel: s.projects.typeLabel,
-          scopeLabel: s.projects.scopeLabel,
-          projectSingular: s.projects.projectSingular,
-          projectPlural: s.projects.projectPlural,
-          groups: s.projects.groups.map(({ id, label, blurb }) => ({
-            id,
-            label,
-            blurb,
-          })),
+          _key: projects.key,
+          enabled: projects.enabled,
+          title: projects.data.title,
+          locationLabel: projects.data.locationLabel,
+          typeLabel: projects.data.typeLabel,
+          scopeLabel: projects.data.scopeLabel,
+          projectSingular: projects.data.projectSingular,
+          projectPlural: projects.data.projectPlural,
+          groups: projects.data.groups,
           projectRefs: projectIds.map((id) => ({
             _type: "reference",
             _ref: id,
@@ -179,13 +160,13 @@ export async function GET(request: NextRequest) {
         },
         {
           _type: "recognitionSection",
-          _key: "recognition",
-          enabled: true,
-          eyebrow: s.recognition.eyebrow,
-          title: s.recognition.title,
-          intro: s.recognition.intro,
-          presentedToLabel: s.recognition.presentedToLabel,
-          items: s.recognition.items.map((item) => ({
+          _key: recognition.key,
+          enabled: recognition.enabled,
+          eyebrow: recognition.data.eyebrow,
+          title: recognition.data.title,
+          intro: recognition.data.intro,
+          presentedToLabel: recognition.data.presentedToLabel,
+          items: recognition.data.items.map((item) => ({
             title: item.title,
             issuer: item.issuer,
             recipient: item.recipient,
@@ -196,12 +177,12 @@ export async function GET(request: NextRequest) {
         },
         {
           _type: "teamSection",
-          _key: "team",
-          enabled: false,
-          eyebrow: s.team.eyebrow,
-          title: s.team.title,
-          intro: s.team.intro,
-          members: s.team.members.map(({ name, role, bio }) => ({
+          _key: team.key,
+          enabled: team.enabled,
+          eyebrow: team.data.eyebrow,
+          title: team.data.title,
+          intro: team.data.intro,
+          members: team.data.members.map(({ name, role, bio }) => ({
             name,
             role,
             bio,
@@ -209,29 +190,22 @@ export async function GET(request: NextRequest) {
         },
         {
           _type: "contactSection",
-          _key: "contact",
-          enabled: true,
-          eyebrow: s.contact.eyebrow,
-          title: s.contact.title,
-          intro: s.contact.intro,
-          formNameLabel: s.contact.formNameLabel,
-          formPhoneLabel: s.contact.formPhoneLabel,
-          formEmailLabel: s.contact.formEmailLabel,
-          formMessageLabel: s.contact.formMessageLabel,
-          formSubmitLabel: s.contact.formSubmitLabel,
-          formSendingLabel: s.contact.formSendingLabel,
-          formSuccessMessage: s.contact.formSuccessMessage,
-          formErrorMessage: s.contact.formErrorMessage,
+          _key: contact.key,
+          enabled: contact.enabled,
+          ...contact.data,
         },
       ],
     });
 
+    const users = await ensureDefaultCmsUsers();
+
     return NextResponse.json({
       ok: true,
       message:
-        "CMS seeded. Open /studio to edit. Remove SEED_SECRET from Vercel env when done.",
-      studio: "/studio",
+        "CMS seeded. Open /edit to manage the site. /studio remains for advanced use.",
+      edit: "/edit",
       projects: projectIds.length,
+      users,
     });
   } catch (error) {
     console.error("[seed]", error);

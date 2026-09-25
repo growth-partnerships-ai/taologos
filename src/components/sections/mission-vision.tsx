@@ -1,11 +1,9 @@
-import type { SiteContent } from "@/lib/content/types";
-
 export function MissionVision({
   mission,
   vision,
 }: {
-  mission: SiteContent["mission"];
-  vision: SiteContent["vision"];
+  mission: { title: string; body: string };
+  vision: { title: string; body: string };
 }) {
   return (
     <section id="mission" className="section-pad bg-surface">

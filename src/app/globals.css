@@ -125,6 +125,39 @@ textarea:focus-visible {
   --group-accent: #7eb6ff;
 }
 
+@keyframes marquee-rtl {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-ltr {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.marquee-rtl {
+  animation: marquee-rtl 35s linear infinite;
+}
+
+.marquee-ltr {
+  animation: marquee-ltr 35s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-rtl,
+  .marquee-ltr {
+    animation: none;
+  }
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

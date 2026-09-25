@@ -7,22 +7,32 @@ import {
   valueItem,
 } from "./objects";
 import {
+  clientsMarqueeSection,
   contactSection,
+  gallerySection,
   heroSection,
+  imageTextSection,
   missionVisionSection,
   projectsSection,
   recognitionSection,
   servicesSection,
+  simpleTextSection,
+  statsSection,
   teamSection,
+  testimonialsSection,
   valuesSection,
   whoWeAreSection,
 } from "./sections";
 import { homePage, project, siteSettings } from "./documents";
+import { cmsUser } from "./cmsUser";
+import { siteEditState } from "./siteEditState";
 
 export const schemaTypes = [
   siteSettings,
   homePage,
   project,
+  cmsUser,
+  siteEditState,
   contactEntry,
   valueItem,
   serviceItem,
@@ -38,4 +48,10 @@ export const schemaTypes = [
   recognitionSection,
   contactSection,
   teamSection,
+  gallerySection,
+  clientsMarqueeSection,
+  testimonialsSection,
+  statsSection,
+  simpleTextSection,
+  imageTextSection,
 ];

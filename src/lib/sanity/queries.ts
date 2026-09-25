@@ -37,6 +37,7 @@ export const projectsQuery = `*[_type == "project"] | order(number asc){
 
 export const homePageQuery = `*[_id == "homePage"][0]{
   sections[]{
+    _key,
     _type,
     enabled,
     eyebrow,
@@ -70,11 +71,24 @@ export const homePageQuery = `*[_id == "homePage"][0]{
     formSendingLabel,
     formSuccessMessage,
     formErrorMessage,
+    autoplay,
+    direction,
+    imagePosition,
+    images[]{
+      _key,
+      alt,
+      "imageUrl": asset->url
+    },
+    logos[]{
+      _key,
+      "imageUrl": asset->url
+    },
     items[]{
       ...,
       ${imageUrl},
       ${photoUrl},
-      "imageUrl": image.asset->url
+      "imageUrl": image.asset->url,
+      "photoUrl": photo.asset->url
     },
     members[]{
       name,

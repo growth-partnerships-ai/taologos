@@ -1,6 +1,6 @@
-import type { SiteContent } from "@/lib/content/types";
+import type { ValuesData } from "@/lib/content/types";
 
-export function Values({ content }: { content: SiteContent["values"] }) {
+export function Values({ content }: { content: ValuesData }) {
   return (
     <section id="values" className="section-pad">
       <div className="mx-auto max-w-7xl">

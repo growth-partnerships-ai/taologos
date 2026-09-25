@@ -94,16 +94,8 @@ export const projectGroupMeta = defineType({
   fields: [
     defineField({
       name: "id",
-      title: "Group id",
+      title: "Group id (stable key, e.g. apartment)",
       type: "string",
-      options: {
-        list: [
-          { title: "Apartment & cooperative", value: "apartment" },
-          { title: "Residential", value: "residential" },
-          { title: "Interior & renovation", value: "interior" },
-          { title: "Institutional", value: "institutional" },
-        ],
-      },
       validation: (r) => r.required(),
     }),
     defineField({ name: "label", type: "string", validation: (r) => r.required() }),

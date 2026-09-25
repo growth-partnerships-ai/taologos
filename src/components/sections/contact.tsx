@@ -1,12 +1,12 @@
 import { ContactForm } from "@/components/contact-form";
-import type { SiteContent } from "@/lib/content/types";
+import type { ContactData, ContactEntry } from "@/lib/content/types";
 
 export function Contact({
   content,
   contacts,
 }: {
-  content: SiteContent["contact"];
-  contacts: SiteContent["contacts"];
+  content: ContactData;
+  contacts: ContactEntry[];
 }) {
   return (
     <section id="contact" className="section-pad bg-surface border-t border-line">

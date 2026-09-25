@@ -1,7 +1,8 @@
 import type { StructureResolver } from "sanity/structure";
 
 /**
- * Left sidebar of /studio — click these to edit the website.
+ * Left sidebar of /studio — power users only.
+ * Clients should use /edit instead.
  */
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -30,4 +31,9 @@ export const structure: StructureResolver = (S) =>
         .title("Projects")
         .schemaType("project")
         .child(S.documentTypeList("project").title("All projects")),
+      S.divider(),
+      S.listItem()
+        .title("CMS users (/edit logins)")
+        .schemaType("cmsUser")
+        .child(S.documentTypeList("cmsUser").title("CMS users")),
     ]);

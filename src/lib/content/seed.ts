@@ -1,195 +1,10 @@
-import { DEFAULT_SECTION_ORDER } from "./sections";
-import type { SiteContent } from "./types";
+import type {
+  PageSection,
+  ProjectItem,
+  SiteContent,
+} from "./types";
 
-export const seedContent: SiteContent = {
-  brand: {
-    name: "TAOLOGOS",
-    legalName: "Taologos Construction",
-    tagline: "Your Vision, Our Construction",
-    subtitle: "CONSTRUCTION",
-    logo: "/images/logo-mark-official.png",
-  },
-  nav: {
-    links: [
-      { id: "about", label: "About", href: "#who-we-are" },
-      { id: "services", label: "Services", href: "#services" },
-      { id: "projects", label: "Projects", href: "#projects" },
-      { id: "recognition", label: "Recognition", href: "#recognition" },
-      { id: "contact", label: "Contact", href: "#contact" },
-    ],
-    ctaLabel: "Contact us",
-    ctaHref: "#contact",
-    menuOpenLabel: "Menu",
-    menuCloseLabel: "Close",
-  },
-  seo: {
-    title: "Taologos Construction | Grade Six General Contractor — Addis Ababa",
-    description:
-      "Taologos Construction is a Grade Six general contractor delivering residential, apartment, interior, and institutional building works across Addis Ababa and Oromia.",
-  },
-  contacts: [
-    {
-      id: "phone-1",
-      label: "Phone",
-      value: "+251 910 12 7252",
-      href: "tel:+251910127252",
-      kind: "phone",
-    },
-    {
-      id: "phone-2",
-      label: "Phone",
-      value: "+251 946 61 6172",
-      href: "tel:+251946616172",
-      kind: "phone",
-    },
-    {
-      id: "email-company",
-      label: "Email",
-      value: "taologos04@gmail.com",
-      href: "mailto:taologos04@gmail.com",
-      kind: "email",
-    },
-    {
-      id: "email-gm",
-      label: "General Manager",
-      value: "binyamt3@gmail.com",
-      href: "mailto:binyamt3@gmail.com",
-      kind: "email",
-    },
-    {
-      id: "address",
-      label: "Office",
-      value:
-        "Bole on the way to Bole Micheal, Biselex Building 1st Floor, Office No. B1-G-02-1, Addis Ababa",
-      kind: "address",
-    },
-  ],
-  hero: {
-    eyebrow: "Company profile 2026",
-    headline: "Your Vision, Our Construction",
-    supporting:
-      "Grade Six building and road works contractor serving private clients, housing cooperatives, and institutions across Addis Ababa and Oromia.",
-    image: "/images/hero-cover.jpg",
-    primaryCtaLabel: "View projects",
-    primaryCtaHref: "#projects",
-    secondaryCtaLabel: "Contact us",
-    secondaryCtaHref: "#contact",
-  },
-  whoWeAre: {
-    eyebrow: "Company",
-    title: "Who we are",
-    body: "Taologos Construction (Taologos General Contractor) is an Addis Ababa–based building and road works contractor led by General Manager Binyam Tadesse. Formally licensed and registered in 2022, the company holds a Certificate of Competence as a Grade Six General Contractor from Ethiopia’s Construction Works Regulatory Authority. Since then, Taologos has delivered residential apartment buildings, cooperative housing blocks, and interior renovation and finishing works for private clients, housing cooperatives, and institutional clients across Addis Ababa and Oromia.",
-    credentials: [
-      "Grade Six General Contractor",
-      "Licensed & registered 2022",
-      "General Manager: Binyam Tadesse",
-      "Office: Bole · Biselex Building",
-    ],
-  },
-  mission: {
-    title: "Mission",
-    body: "To deliver durable buildings and finishing works with clear communication, disciplined site practice, and respect for client timelines and budgets—so every project stands as lasting proof of trust.",
-  },
-  vision: {
-    title: "Vision",
-    body: "To be a trusted Ethiopian contractor known for quality structures, safer sites, and spaces communities are proud to live and work in—growing in grade through consistent delivery.",
-  },
-  values: {
-    eyebrow: "How we work",
-    title: "Values",
-    intro:
-      "These principles guide how we plan, build, and finish every project—from excavation to handover.",
-    items: [
-      {
-        id: "creativity",
-        title: "Creativity",
-        description:
-          "Practical solutions on complex sites—adapting methods without compromising the brief.",
-      },
-      {
-        id: "quality",
-        title: "Quality",
-        description:
-          "Sound structural work and careful finishing that hold up under daily use.",
-      },
-      {
-        id: "collaboration",
-        title: "Collaboration",
-        description:
-          "Close coordination with clients, consultants, and trades from first setting-out to completion.",
-      },
-      {
-        id: "integrity",
-        title: "Integrity",
-        description:
-          "Honest scopes, transparent progress, and commitments we stand behind.",
-      },
-      {
-        id: "innovation",
-        title: "Innovation",
-        description:
-          "Better sequencing, materials, and methods that improve speed, safety, and outcome.",
-      },
-      {
-        id: "passion",
-        title: "Passion",
-        description:
-          "Pride in craftsmanship—treating every building as a lasting part of the city.",
-      },
-    ],
-  },
-  services: {
-    eyebrow: "What we deliver",
-    title: "Services",
-    image: "/images/services-bg.jpg",
-    items: [
-      {
-        id: "construction",
-        title: "Construction",
-        description:
-          "Full building works including excavation, foundation, RCC, masonry, plastering, and finishing for apartments and residential structures.",
-      },
-      {
-        id: "interior",
-        title: "Interior design & finishing",
-        description:
-          "Interior renovation, finishing, and fit-out for homes, studios, and commercial interiors—detail-led and schedule-aware.",
-      },
-    ],
-  },
-  projects: {
-    eyebrow: "Portfolio",
-    title: "Selected projects",
-    intro:
-      "A sample of delivered works across apartment, residential, interior, and institutional groups—each with its own character on site.",
-    locationLabel: "Location",
-    typeLabel: "Type",
-    scopeLabel: "Scope",
-    projectSingular: "project",
-    projectPlural: "projects",
-    groups: [
-      {
-        id: "apartment",
-        label: "Apartment & cooperative",
-        blurb: "Multi-storey apartment and housing cooperative buildings.",
-      },
-      {
-        id: "residential",
-        label: "Residential",
-        blurb: "Private residential buildings from G+2 through G+4.",
-      },
-      {
-        id: "interior",
-        label: "Interior & renovation",
-        blurb: "Office and residential interior renovation and finishing.",
-      },
-      {
-        id: "institutional",
-        label: "Institutional",
-        blurb: "Institutional maintenance and assessment support works.",
-      },
-    ],
-    items: [
+const projectItems: ProjectItem[] = [
       {
         id: "p01",
         number: "01",
@@ -397,65 +212,303 @@ export const seedContent: SiteContent = {
           attribution: "ISSPL Limited — Certificate of Appreciation",
         },
       },
+    ];
+
+const projectGroups = [
+  {
+    id: "apartment",
+    label: "Apartment & cooperative",
+    blurb: "Multi-storey apartment and housing cooperative buildings.",
+  },
+  {
+    id: "residential",
+    label: "Residential",
+    blurb: "Private residential buildings from G+2 through G+4.",
+  },
+  {
+    id: "interior",
+    label: "Interior & renovation",
+    blurb: "Office and residential interior renovation and finishing.",
+  },
+  {
+    id: "institutional",
+    label: "Institutional",
+    blurb: "Institutional maintenance and assessment support works.",
+  },
+];
+
+const sections: PageSection[] = [
+  {
+    key: "hero",
+    type: "hero",
+    enabled: true,
+    data: {
+      eyebrow: "Company profile 2026",
+      headline: "Your Vision, Our Construction",
+      supporting:
+        "Grade Six building and road works contractor serving private clients, housing cooperatives, and institutions across Addis Ababa and Oromia.",
+      image: "/images/hero-cover.jpg",
+      primaryCtaLabel: "View projects",
+      primaryCtaHref: "#projects",
+      secondaryCtaLabel: "Contact us",
+      secondaryCtaHref: "#contact",
+    },
+  },
+  {
+    key: "who",
+    type: "whoWeAre",
+    enabled: true,
+    data: {
+      eyebrow: "Company",
+      title: "Who we are",
+      body: "Taologos Construction (Taologos General Contractor) is an Addis Ababa–based building and road works contractor led by General Manager Binyam Tadesse. Formally licensed and registered in 2022, the company holds a Certificate of Competence as a Grade Six General Contractor from Ethiopia’s Construction Works Regulatory Authority. Since then, Taologos has delivered residential apartment buildings, cooperative housing blocks, and interior renovation and finishing works for private clients, housing cooperatives, and institutional clients across Addis Ababa and Oromia.",
+      credentials: [
+        "Grade Six General Contractor",
+        "Licensed & registered 2022",
+        "General Manager: Binyam Tadesse",
+        "Office: Bole · Biselex Building",
+      ],
+    },
+  },
+  {
+    key: "mv",
+    type: "missionVision",
+    enabled: true,
+    data: {
+      missionTitle: "Mission",
+      missionBody:
+        "To deliver durable buildings and finishing works with clear communication, disciplined site practice, and respect for client timelines and budgets—so every project stands as lasting proof of trust.",
+      visionTitle: "Vision",
+      visionBody:
+        "To be a trusted Ethiopian contractor known for quality structures, safer sites, and spaces communities are proud to live and work in—growing in grade through consistent delivery.",
+    },
+  },
+  {
+    key: "values",
+    type: "values",
+    enabled: true,
+    data: {
+      eyebrow: "How we work",
+      title: "Values",
+      intro:
+        "These principles guide how we plan, build, and finish every project—from excavation to handover.",
+      items: [
+        {
+          id: "creativity",
+          title: "Creativity",
+          description:
+            "Practical solutions on complex sites—adapting methods without compromising the brief.",
+        },
+        {
+          id: "quality",
+          title: "Quality",
+          description:
+            "Sound structural work and careful finishing that hold up under daily use.",
+        },
+        {
+          id: "collaboration",
+          title: "Collaboration",
+          description:
+            "Close coordination with clients, consultants, and trades from first setting-out to completion.",
+        },
+        {
+          id: "integrity",
+          title: "Integrity",
+          description:
+            "Honest scopes, transparent progress, and commitments we stand behind.",
+        },
+        {
+          id: "innovation",
+          title: "Innovation",
+          description:
+            "Better sequencing, materials, and methods that improve speed, safety, and outcome.",
+        },
+        {
+          id: "passion",
+          title: "Passion",
+          description:
+            "Pride in craftsmanship—treating every building as a lasting part of the city.",
+        },
+      ],
+    },
+  },
+  {
+    key: "services",
+    type: "services",
+    enabled: true,
+    data: {
+      eyebrow: "What we deliver",
+      title: "Services",
+      image: "/images/services-bg.jpg",
+      items: [
+        {
+          id: "construction",
+          title: "Construction",
+          description:
+            "Full building works including excavation, foundation, RCC, masonry, plastering, and finishing for apartments and residential structures.",
+        },
+        {
+          id: "interior",
+          title: "Interior design & finishing",
+          description:
+            "Interior renovation, finishing, and fit-out for homes, studios, and commercial interiors—detail-led and schedule-aware.",
+        },
+      ],
+    },
+  },
+  {
+    key: "projects",
+    type: "projects",
+    enabled: true,
+    data: {
+      title: "Selected Projects",
+      locationLabel: "Location",
+      typeLabel: "Type",
+      scopeLabel: "Scope",
+      projectSingular: "project",
+      projectPlural: "projects",
+      groups: projectGroups,
+      projectIds: projectItems.map((p) => p.id),
+      items: projectItems,
+    },
+  },
+  {
+    key: "recognition",
+    type: "recognition",
+    enabled: true,
+    data: {
+      eyebrow: "Trust",
+      title: "Recognition",
+      intro:
+        "Independent appreciation for institutional work delivered to a high standard of professionalism and safety.",
+      presentedToLabel: "Presented to",
+      items: [
+        {
+          id: "cert-isspl-un-congo",
+          title: "Certificate of Appreciation",
+          issuer: "ISSPL Limited",
+          recipient: "Taologos Construction",
+          projectLabel: "UN Office Congo Building Assessment — Addis Ababa",
+          summary:
+            "Presented for valuable contribution, professional support, and successful execution of works associated with the UN Office Congo Building Assessment Project in Addis Ababa, Ethiopia.",
+          highlights: [
+            "Selective demolition for structural assessment and testing",
+            "Technical support during building assessment and specialized testing",
+            "Foundation excavation and exposure at designated locations",
+            "Re-filling, leveling, and site restoration",
+            "Replastering and repainting after testing",
+            "HSE management, barricading, housekeeping, and debris removal",
+            "Skilled manpower, supervision, equipment, and safety protocols",
+          ],
+          image: "/images/certificate-isspl-un-congo.jpg",
+        },
+      ],
+    },
+  },
+  {
+    key: "team",
+    type: "team",
+    enabled: false,
+    data: {
+      eyebrow: "People",
+      title: "Team",
+      intro: "Leadership behind Taologos Construction.",
+      members: [
+        {
+          id: "binyam",
+          name: "Binyam Tadesse",
+          role: "General Manager",
+          bio: "Leads Taologos Construction operations and client delivery across Addis Ababa and Oromia.",
+          photo: "/images/card-binyam.jpg",
+        },
+      ],
+    },
+  },
+  {
+    key: "contact",
+    type: "contact",
+    enabled: true,
+    data: {
+      eyebrow: "Get in touch",
+      title: "Contact",
+      intro:
+        "Tell us about your site or renovation. We respond by phone or email—your message also reaches our team instantly.",
+      formNameLabel: "Name",
+      formPhoneLabel: "Phone",
+      formEmailLabel: "Email",
+      formMessageLabel: "Message",
+      formSubmitLabel: "Send message",
+      formSendingLabel: "Sending…",
+      formSuccessMessage:
+        "Thank you — we received your message and will follow up soon.",
+      formErrorMessage: "Could not send message. Please call us instead.",
+    },
+  },
+];
+
+export const seedContent: SiteContent = {
+  brand: {
+    name: "TAOLOGOS",
+    legalName: "Taologos Construction",
+    tagline: "Your Vision, Our Construction",
+    subtitle: "CONSTRUCTION",
+    logo: "/images/logo-mark-official.png",
+  },
+  nav: {
+    links: [
+      { id: "about", label: "About", href: "#who-we-are" },
+      { id: "services", label: "Services", href: "#services" },
+      { id: "projects", label: "Projects", href: "#projects" },
+      { id: "recognition", label: "Recognition", href: "#recognition" },
+      { id: "contact", label: "Contact", href: "#contact" },
     ],
+    ctaLabel: "Contact us",
+    ctaHref: "#contact",
+    menuOpenLabel: "Menu",
+    menuCloseLabel: "Close",
   },
-  recognition: {
-    eyebrow: "Trust",
-    title: "Recognition",
-    intro:
-      "Independent appreciation for institutional work delivered to a high standard of professionalism and safety.",
-    presentedToLabel: "Presented to",
-    items: [
-      {
-        id: "cert-isspl-un-congo",
-        title: "Certificate of Appreciation",
-        issuer: "ISSPL Limited",
-        recipient: "Taologos Construction",
-        projectLabel: "UN Office Congo Building Assessment — Addis Ababa",
-        summary:
-          "Presented for valuable contribution, professional support, and successful execution of works associated with the UN Office Congo Building Assessment Project in Addis Ababa, Ethiopia.",
-        highlights: [
-          "Selective demolition for structural assessment and testing",
-          "Technical support during building assessment and specialized testing",
-          "Foundation excavation and exposure at designated locations",
-          "Re-filling, leveling, and site restoration",
-          "Replastering and repainting after testing",
-          "HSE management, barricading, housekeeping, and debris removal",
-          "Skilled manpower, supervision, equipment, and safety protocols",
-        ],
-        image: "/images/certificate-isspl-un-congo.jpg",
-      },
-    ],
+  seo: {
+    title: "Taologos Construction | Grade Six General Contractor — Addis Ababa",
+    description:
+      "Taologos Construction is a Grade Six general contractor delivering residential, apartment, interior, and institutional building works across Addis Ababa and Oromia.",
   },
-  team: {
-    eyebrow: "People",
-    title: "Team",
-    intro: "Leadership behind Taologos Construction.",
-    members: [
-      {
-        id: "binyam",
-        name: "Binyam Tadesse",
-        role: "General Manager",
-        bio: "Leads Taologos Construction operations and client delivery across Addis Ababa and Oromia.",
-        photo: "/images/card-binyam.jpg",
-      },
-    ],
-  },
-  contact: {
-    eyebrow: "Get in touch",
-    title: "Contact",
-    intro:
-      "Tell us about your site or renovation. We respond by phone or email—your message also reaches our team instantly.",
-    formNameLabel: "Name",
-    formPhoneLabel: "Phone",
-    formEmailLabel: "Email",
-    formMessageLabel: "Message",
-    formSubmitLabel: "Send message",
-    formSendingLabel: "Sending…",
-    formSuccessMessage:
-      "Thank you — we received your message and will follow up soon.",
-    formErrorMessage: "Could not send message. Please call us instead.",
-  },
+  contacts: [
+    {
+      id: "phone-1",
+      label: "Phone",
+      value: "+251 910 12 7252",
+      href: "tel:+251910127252",
+      kind: "phone",
+    },
+    {
+      id: "phone-2",
+      label: "Phone",
+      value: "+251 946 61 6172",
+      href: "tel:+251946616172",
+      kind: "phone",
+    },
+    {
+      id: "email-company",
+      label: "Email",
+      value: "taologos04@gmail.com",
+      href: "mailto:taologos04@gmail.com",
+      kind: "email",
+    },
+    {
+      id: "email-gm",
+      label: "General Manager",
+      value: "binyamt3@gmail.com",
+      href: "mailto:binyamt3@gmail.com",
+      kind: "email",
+    },
+    {
+      id: "address",
+      label: "Office",
+      value:
+        "Bole on the way to Bole Micheal, Biselex Building 1st Floor, Office No. B1-G-02-1, Addis Ababa",
+      kind: "address",
+    },
+  ],
   footer: {
     note: "Taologos Construction · Bole, Addis Ababa, Ethiopia",
   },
@@ -464,5 +517,12 @@ export const seedContent: SiteContent = {
     primaryNavLabel: "Primary",
     mobileNavLabel: "Mobile",
   },
-  sectionOrder: DEFAULT_SECTION_ORDER,
+  sections,
 };
+
+/** Helpers used by seed scripts and templates */
+export function findSection<T extends PageSection["type"]>(
+  type: T,
+): Extract<PageSection, { type: T }> | undefined {
+  return sections.find((s): s is Extract<PageSection, { type: T }> => s.type === type);
+}

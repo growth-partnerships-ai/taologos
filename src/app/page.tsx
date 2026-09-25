@@ -1,61 +1,89 @@
 import { Contact } from "@/components/sections/contact";
+import { ClientsMarquee } from "@/components/sections/clients-marquee";
+import { Gallery } from "@/components/sections/gallery";
 import { Hero } from "@/components/sections/hero";
+import { ImageText } from "@/components/sections/image-text";
 import { MissionVision } from "@/components/sections/mission-vision";
 import { Projects } from "@/components/sections/projects";
 import { Recognition } from "@/components/sections/recognition";
 import { Services } from "@/components/sections/services";
+import { SimpleText } from "@/components/sections/simple-text";
 import { SiteFooter } from "@/components/sections/footer";
+import { Stats } from "@/components/sections/stats";
 import { Team } from "@/components/sections/team";
+import { Testimonials } from "@/components/sections/testimonials";
 import { Values } from "@/components/sections/values";
 import { WhoWeAre } from "@/components/sections/who-we-are";
 import { SiteHeader } from "@/components/site-header";
 import { getPageContent } from "@/lib/content/get-page-content";
-import type { SectionId } from "@/lib/content/sections";
-import type { SiteContent } from "@/lib/content/types";
+import type { PageSection, SiteContent } from "@/lib/content/types";
 
 /** Refresh CMS content periodically */
 export const revalidate = 30;
 
-function renderSection(id: SectionId, content: SiteContent) {
-  switch (id) {
+function renderSection(
+  section: PageSection,
+  content: SiteContent,
+) {
+  if (!section.enabled) return null;
+
+  switch (section.type) {
     case "hero":
       return (
         <Hero
-          key={id}
-          content={content.hero}
+          key={section.key}
+          content={section.data}
           tagline={content.brand.tagline}
           brandName={content.brand.name}
           brandSubtitle={content.brand.subtitle}
         />
       );
     case "whoWeAre":
-      return <WhoWeAre key={id} content={content.whoWeAre} />;
+      return <WhoWeAre key={section.key} content={section.data} />;
     case "missionVision":
       return (
         <MissionVision
-          key={id}
-          mission={content.mission}
-          vision={content.vision}
+          key={section.key}
+          mission={{
+            title: section.data.missionTitle,
+            body: section.data.missionBody,
+          }}
+          vision={{
+            title: section.data.visionTitle,
+            body: section.data.visionBody,
+          }}
         />
       );
     case "values":
-      return <Values key={id} content={content.values} />;
+      return <Values key={section.key} content={section.data} />;
     case "services":
-      return <Services key={id} content={content.services} />;
+      return <Services key={section.key} content={section.data} />;
     case "projects":
-      return <Projects key={id} content={content.projects} />;
+      return <Projects key={section.key} content={section.data} />;
     case "recognition":
-      return <Recognition key={id} content={content.recognition} />;
+      return <Recognition key={section.key} content={section.data} />;
     case "team":
-      return <Team key={id} content={content.team} />;
+      return <Team key={section.key} content={section.data} />;
     case "contact":
       return (
         <Contact
-          key={id}
-          content={content.contact}
+          key={section.key}
+          content={section.data}
           contacts={content.contacts}
         />
       );
+    case "gallery":
+      return <Gallery key={section.key} content={section.data} />;
+    case "clientsMarquee":
+      return <ClientsMarquee key={section.key} content={section.data} />;
+    case "testimonials":
+      return <Testimonials key={section.key} content={section.data} />;
+    case "stats":
+      return <Stats key={section.key} content={section.data} />;
+    case "simpleText":
+      return <SimpleText key={section.key} content={section.data} />;
+    case "imageText":
+      return <ImageText key={section.key} content={section.data} />;
     default:
       return null;
   }
@@ -77,7 +105,7 @@ export default async function HomePage() {
         a11y={content.a11y}
       />
       <main>
-        {content.sectionOrder.map((id) => renderSection(id, content))}
+        {content.sections.map((section) => renderSection(section, content))}
       </main>
       <SiteFooter note={content.footer.note} tagline={content.brand.tagline} />
     </>

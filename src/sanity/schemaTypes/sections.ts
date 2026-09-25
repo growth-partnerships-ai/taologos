@@ -108,13 +108,7 @@ export const projectsSection = defineType({
   type: "object",
   fields: [
     ...sectionCommon,
-    defineField({
-      name: "eyebrow",
-      type: "string",
-      initialValue: "Portfolio",
-    }),
-    defineField({ name: "title", type: "string" }),
-    defineField({ name: "intro", type: "text", rows: 3 }),
+    defineField({ name: "title", type: "string", initialValue: "Selected Projects" }),
     defineField({
       name: "locationLabel",
       title: "Location field label",
@@ -279,6 +273,157 @@ export const teamSection = defineType({
           },
         }),
       ],
+    }),
+  ],
+});
+
+export const gallerySection = defineType({
+  name: "gallerySection",
+  title: "Image gallery",
+  type: "object",
+  fields: [
+    ...sectionCommon,
+    defineField({ name: "eyebrow", type: "string" }),
+    defineField({ name: "title", type: "string" }),
+    defineField({
+      name: "autoplay",
+      type: "boolean",
+      initialValue: true,
+    }),
+    defineField({
+      name: "images",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "image",
+          options: { hotspot: true },
+          fields: [defineField({ name: "alt", type: "string" })],
+        }),
+      ],
+      options: { layout: "grid" },
+    }),
+  ],
+});
+
+export const clientsMarqueeSection = defineType({
+  name: "clientsMarqueeSection",
+  title: "Clients marquee",
+  type: "object",
+  fields: [
+    ...sectionCommon,
+    defineField({ name: "eyebrow", type: "string" }),
+    defineField({ name: "title", type: "string" }),
+    defineField({
+      name: "direction",
+      type: "string",
+      options: {
+        list: [
+          { title: "Right to left", value: "rtl" },
+          { title: "Left to right", value: "ltr" },
+        ],
+      },
+      initialValue: "rtl",
+    }),
+    defineField({
+      name: "logos",
+      type: "array",
+      of: [defineArrayMember({ type: "image", options: { hotspot: true } })],
+      options: { layout: "grid" },
+    }),
+  ],
+});
+
+export const testimonialsSection = defineType({
+  name: "testimonialsSection",
+  title: "Testimonials",
+  type: "object",
+  fields: [
+    ...sectionCommon,
+    defineField({ name: "eyebrow", type: "string" }),
+    defineField({ name: "title", type: "string" }),
+    defineField({ name: "intro", type: "text", rows: 2 }),
+    defineField({
+      name: "items",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "object",
+          fields: [
+            defineField({ name: "quote", type: "text", rows: 3 }),
+            defineField({ name: "name", type: "string" }),
+            defineField({ name: "role", type: "string" }),
+            defineField({ name: "company", type: "string" }),
+            defineField({
+              name: "photo",
+              type: "image",
+              options: { hotspot: true },
+            }),
+          ],
+          preview: { select: { title: "name", subtitle: "company" } },
+        }),
+      ],
+    }),
+  ],
+});
+
+export const statsSection = defineType({
+  name: "statsSection",
+  title: "Stats",
+  type: "object",
+  fields: [
+    ...sectionCommon,
+    defineField({ name: "eyebrow", type: "string" }),
+    defineField({ name: "title", type: "string" }),
+    defineField({
+      name: "items",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "object",
+          fields: [
+            defineField({ name: "number", type: "string" }),
+            defineField({ name: "label", type: "string" }),
+            defineField({ name: "detail", type: "string" }),
+          ],
+          preview: { select: { title: "number", subtitle: "label" } },
+        }),
+      ],
+    }),
+  ],
+});
+
+export const simpleTextSection = defineType({
+  name: "simpleTextSection",
+  title: "Simple text",
+  type: "object",
+  fields: [
+    ...sectionCommon,
+    defineField({ name: "eyebrow", type: "string" }),
+    defineField({ name: "title", type: "string" }),
+    defineField({ name: "body", type: "text", rows: 8 }),
+  ],
+});
+
+export const imageTextSection = defineType({
+  name: "imageTextSection",
+  title: "Image + text",
+  type: "object",
+  fields: [
+    ...sectionCommon,
+    defineField({ name: "eyebrow", type: "string" }),
+    defineField({ name: "title", type: "string" }),
+    defineField({ name: "body", type: "text", rows: 6 }),
+    defineField({ name: "image", type: "image", options: { hotspot: true } }),
+    defineField({
+      name: "imagePosition",
+      type: "string",
+      options: {
+        list: [
+          { title: "Image left", value: "left" },
+          { title: "Image right", value: "right" },
+        ],
+      },
+      initialValue: "left",
     }),
   ],
 });
