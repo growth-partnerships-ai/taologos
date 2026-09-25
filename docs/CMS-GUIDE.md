@@ -30,8 +30,8 @@ Passwords are stored in Sanity as **bcrypt hashes** on `cmsUser` documents (neve
 
 In Vercel:
 
-- `SANITY_API_WRITE_TOKEN` — Editor token
-- `EDIT_SESSION_SECRET` — long random string
+- `SANITY_API_WRITE_TOKEN` — Editor token (so `/edit` can save content and manage users)
+- `EDIT_SESSION_SECRET` — long random string used to **sign** the login cookie (not a user password). Without it, someone could forge a “logged in” cookie. Generate any long random value, e.g. a password manager string.
 - `EDIT_SESSION_MAX_AGE_SECONDS` — default `604800` (7 days)
 - `SEED_SECRET` — for `/api/seed` and backup user ensure
 
