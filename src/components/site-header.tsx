@@ -9,22 +9,26 @@ export function SiteHeader({
   logo,
   nav,
   a11y,
+  /** When true, sit in document flow (e.g. below the /edit toolbar) instead of fixed overlay. */
+  embedded = false,
 }: {
   brandName: string;
   brandSubtitle: string;
   logo: string;
   nav: SiteContent["nav"];
   a11y: SiteContent["a11y"];
+  embedded?: boolean;
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    if (embedded) return;
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [embedded]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -33,13 +37,16 @@ export function SiteHeader({
     };
   }, [open]);
 
+  const surface =
+    embedded || scrolled || open
+      ? "border-b border-line bg-background/90 backdrop-blur-md"
+      : "bg-transparent";
+
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled || open
-          ? "border-b border-line bg-background/90 backdrop-blur-md"
-          : "bg-transparent"
-      }`}
+      className={`${
+        embedded ? "relative z-10" : "fixed inset-x-0 top-0 z-50"
+      } transition-colors duration-300 ${surface}`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
         <a href="#top" className="group flex items-center gap-3">

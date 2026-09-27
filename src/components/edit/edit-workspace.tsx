@@ -179,7 +179,7 @@ export function EditWorkspace({
   return (
     <div className="min-h-screen bg-background">
       <EditDesktopWarning />
-      <header className="sticky top-0 z-40 border-b border-line bg-background/95 px-4 py-3 backdrop-blur md:px-6">
+      <header className="sticky top-0 z-50 border-b border-line bg-background/95 px-4 py-3 backdrop-blur md:px-6">
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-3">
           <div>
             <p className="eyebrow">Editing website</p>
@@ -247,6 +247,7 @@ export function EditWorkspace({
             logo={content.brand.logo}
             nav={content.nav}
             a11y={content.a11y}
+            embedded
           />
         </div>
 
