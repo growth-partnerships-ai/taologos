@@ -30,11 +30,11 @@ export async function POST(request: NextRequest) {
     const results = await ensureDefaultCmsUsers();
     return NextResponse.json({ ok: true, results });
   } catch (error) {
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : "Failed to seed users",
-      },
-      { status: 500 },
-    );
+    const message =
+      error instanceof Error ? error.message : "Failed to seed users";
+    const hint = /unauthorized|session not found/i.test(message)
+      ? " Create a new Editor token in Sanity Manage → API → Tokens for project k8clerei, set SANITY_API_WRITE_TOKEN in Vercel, redeploy."
+      : "";
+    return NextResponse.json({ error: message + hint }, { status: 500 });
   }
 }
