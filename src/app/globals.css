@@ -105,6 +105,62 @@ textarea:focus-visible {
   outline-offset: 3px;
 }
 
+/* /edit interactive affordances */
+.edit-shell button:not(:disabled),
+.edit-shell a[href],
+.edit-shell [role="button"],
+.edit-shell label:has(input[type="checkbox"]),
+.edit-shell summary {
+  cursor: pointer;
+}
+
+.edit-shell button:disabled {
+  cursor: not-allowed;
+}
+
+.edit-btn {
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.edit-btn:hover:not(:disabled) {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--accent) 55%, transparent),
+    0 0 14px rgba(240, 120, 24, 0.28);
+}
+
+.edit-btn:active:not(:disabled) {
+  transform: translateY(0.5px);
+}
+
+.edit-btn-danger:hover:not(:disabled) {
+  box-shadow:
+    0 0 0 1px rgba(248, 113, 113, 0.55),
+    0 0 14px rgba(248, 113, 113, 0.22);
+}
+
+.edit-btn-danger-solid {
+  cursor: pointer;
+  border: 1px solid rgba(248, 113, 113, 0.55);
+  background: rgba(185, 28, 28, 0.18);
+  color: #fecaca;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.edit-btn-danger-solid:hover:not(:disabled) {
+  background: rgba(185, 28, 28, 0.32);
+  border-color: rgba(248, 113, 113, 0.85);
+  box-shadow: 0 0 16px rgba(248, 113, 113, 0.25);
+}
+
 .group-apartment {
   --group-tint: #1b2435;
   --group-accent: #f07818;

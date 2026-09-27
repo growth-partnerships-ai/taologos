@@ -429,17 +429,17 @@ export function SectionFields({
                     }}
                   />
                   <div className="flex gap-2">
-                    <button
-                      type="button"
-                      className="edit-btn edit-btn-danger text-xs text-red-300"
-                      onClick={() =>
+                    <RemoveButton
+                      title="Remove this contact method?"
+                      description="This removes it from the Contact section. You can undo for a few seconds after."
+                      toastMessage="Contact method removed."
+                      onRemove={() =>
                         onChangeContacts?.(
                           content.contacts.filter((_, i) => i !== index),
                         )
                       }
-                    >
-                      Remove
-                    </button>
+                      onUndo={() => onChangeContacts?.(content.contacts)}
+                    />
                     <button
                       type="button"
                       className="edit-btn text-xs text-muted"

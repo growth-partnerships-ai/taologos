@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { useEditActions } from "@/components/edit/edit-actions";
 
 type CmsUserRow = {
   id: string;
@@ -11,6 +12,7 @@ type CmsUserRow = {
 };
 
 export function UsersPanel({ onClose }: { onClose: () => void }) {
+  const { confirm } = useEditActions();
   const [users, setUsers] = useState<CmsUserRow[]>([]);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
@@ -53,7 +55,14 @@ export function UsersPanel({ onClose }: { onClose: () => void }) {
   }
 
   async function resetPassword(id: string) {
-    if (!window.confirm("Reset this user’s password to the default?")) return;
+    const ok = await confirm({
+      title: "Reset this user’s password?",
+      description:
+        "Their password will be reset to the default. They’ll need to change it on next sign-in.",
+      danger: true,
+      confirmLabel: "Reset password",
+    });
+    if (!ok) return;
     setBusy(true);
     try {
       const res = await fetch("/api/edit/users", {
@@ -70,6 +79,16 @@ export function UsersPanel({ onClose }: { onClose: () => void }) {
   }
 
   async function toggleActive(id: string, active: boolean) {
+    if (!active) {
+      const ok = await confirm({
+        title: "Deactivate this account?",
+        description:
+          "They won’t be able to sign in until an admin activates the account again.",
+        danger: true,
+        confirmLabel: "Deactivate",
+      });
+      if (!ok) return;
+    }
     setBusy(true);
     try {
       const res = await fetch("/api/edit/users", {
@@ -94,7 +113,7 @@ export function UsersPanel({ onClose }: { onClose: () => void }) {
           </h2>
           <button
             type="button"
-            className="text-xs text-muted"
+            className="edit-btn text-xs text-muted"
             onClick={onClose}
           >
             Close
@@ -121,7 +140,7 @@ export function UsersPanel({ onClose }: { onClose: () => void }) {
           <button
             type="submit"
             disabled={busy}
-            className="rounded-sm bg-accent px-3 py-2 text-xs font-semibold text-background"
+            className="edit-btn rounded-sm bg-accent px-3 py-2 text-xs font-semibold text-background"
           >
             Create
           </button>
@@ -139,7 +158,7 @@ export function UsersPanel({ onClose }: { onClose: () => void }) {
               <div className="mt-2 flex flex-wrap gap-2">
                 <button
                   type="button"
-                  className="text-xs text-accent"
+                  className="edit-btn text-xs text-accent"
                   disabled={busy}
                   onClick={() => void resetPassword(row.id)}
                 >
@@ -147,7 +166,7 @@ export function UsersPanel({ onClose }: { onClose: () => void }) {
                 </button>
                 <button
                   type="button"
-                  className="text-xs text-muted"
+                  className="edit-btn text-xs text-muted"
                   disabled={busy}
                   onClick={() => void toggleActive(row.id, !row.active)}
                 >

@@ -25,7 +25,7 @@ export function EditSidePanel({
       <button
         type="button"
         aria-label="Close panel"
-        className="fixed inset-0 z-40 bg-black/50 md:hidden"
+        className="edit-btn fixed inset-0 z-40 bg-black/50 md:hidden"
         onClick={onClose}
       />
       <aside
@@ -41,7 +41,7 @@ export function EditSidePanel({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-sm border border-line px-2 py-1 text-xs text-cream"
+            className="edit-btn rounded-sm border border-line px-2 py-1 text-xs text-cream"
           >
             Close
           </button>

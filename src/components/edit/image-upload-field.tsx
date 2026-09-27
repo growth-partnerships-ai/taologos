@@ -69,7 +69,7 @@ export function ImageUploadField({ label, value, onChange }: Props) {
         </p>
         <button
           type="button"
-          className="mt-2 text-xs text-accent"
+          className="edit-btn mt-2 text-xs text-accent"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
         >
