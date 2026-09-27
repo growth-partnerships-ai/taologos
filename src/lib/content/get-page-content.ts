@@ -7,6 +7,7 @@ import {
   siteSettingsQuery,
 } from "@/lib/sanity/queries";
 import { seedContent } from "./seed";
+import { resolveBrandLogo } from "./logo";
 import { SECTION_TYPE_TO_ID } from "./sections";
 import type {
   ContactEntry,
@@ -129,7 +130,7 @@ function applySettings(
       legalName: settings.legalName || content.brand.legalName,
       tagline: settings.tagline || content.brand.tagline,
       subtitle: settings.brandSubtitle || content.brand.subtitle,
-      logo: settings.logoUrl || content.brand.logo,
+      logo: resolveBrandLogo(settings.logoUrl || content.brand.logo),
     },
     nav: {
       links: navLinks,
@@ -640,7 +641,15 @@ export async function getPageContent(language = "en"): Promise<SiteContent> {
 
   try {
     const snapshot = await loadEditSnapshot();
-    if (snapshot) return snapshot;
+    if (snapshot) {
+      return {
+        ...snapshot,
+        brand: {
+          ...snapshot.brand,
+          logo: resolveBrandLogo(snapshot.brand.logo),
+        },
+      };
+    }
 
     const [settings, projects, home] = await Promise.all([
       client.fetch<SanitySettings | null>(siteSettingsQuery, {}, CONTENT_FETCH),

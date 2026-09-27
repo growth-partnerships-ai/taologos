@@ -8,9 +8,11 @@ export function Services({ content }: { content: ServicesData }) {
         <img
           src={content.image}
           alt=""
-          className="h-full w-full object-cover opacity-45"
+          /* Poster asset has burned-in copy on the left — bias to the photo side and dim hard. */
+          className="h-full w-full scale-105 object-cover object-[78%_center] opacity-35"
         />
-        <div className="absolute inset-0 bg-background/80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/75" />
+        <div className="absolute inset-0 bg-background/55" />
       </div>
       <div className="section-pad mx-auto max-w-7xl">
         <p className="eyebrow">{content.eyebrow}</p>
@@ -21,7 +23,7 @@ export function Services({ content }: { content: ServicesData }) {
           {content.items.map((service) => (
             <article
               key={service.id}
-              className="border border-line bg-background/70 p-8 backdrop-blur-sm transition hover:border-accent"
+              className="border border-line bg-background/80 p-8 backdrop-blur-sm transition hover:border-accent"
             >
               <h3 className="font-[family-name:var(--font-display)] text-3xl text-accent">
                 {service.title}
