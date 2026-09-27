@@ -1,0 +1,21 @@
+name: Auto Sync to Account B
+
+on:
+  push:
+  delete:
+  workflow_dispatch:
+
+jobs:
+  sync:
+    if: github.repository_owner != 'matiows'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest code from Account A
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Copy everything to Account B
+        run: |
+          git push --prune https://x-access-token:${{ secrets.TARGET_TOKEN }}@github.com/matiows/taologos-construction.git +refs/heads/*:refs/heads/* +refs/tags/*:refs/tags/*
