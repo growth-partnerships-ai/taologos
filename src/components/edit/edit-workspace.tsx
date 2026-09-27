@@ -113,6 +113,17 @@ export function EditWorkspace({
     }
   }
 
+  function discardChanges() {
+    if (!savedJson) return;
+    try {
+      setContent(JSON.parse(savedJson) as SiteContent);
+      setToast("Changes discarded");
+      window.setTimeout(() => setToast(""), 1600);
+    } catch {
+      setToast("Could not discard changes");
+    }
+  }
+
   function requestLeave(action: () => void) {
     if (!dirty) {
       action();
@@ -205,6 +216,16 @@ export function EditWorkspace({
             >
               Preview
             </a>
+            {dirty ? (
+              <button
+                type="button"
+                disabled={saving}
+                className="rounded-sm border border-line px-3 py-2 text-xs font-semibold text-cream disabled:opacity-50"
+                onClick={discardChanges}
+              >
+                Discard changes
+              </button>
+            ) : null}
             <button
               type="button"
               disabled={saving || !dirty}
