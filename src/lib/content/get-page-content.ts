@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { client } from "@/lib/sanity/client";
 import { hasSanityConfig } from "@/lib/sanity/env";
 import {
@@ -14,6 +15,10 @@ import type {
   ProjectItem,
   SiteContent,
 } from "./types";
+
+const CONTENT_FETCH = {
+  next: { tags: ["site-content"] as string[] },
+};
 
 type SanitySettings = {
   brandName?: string;
@@ -615,6 +620,8 @@ async function loadEditSnapshot(): Promise<SiteContent | null> {
   try {
     const row = await client.fetch<{ content?: string } | null>(
       `*[_id == "siteEditState"][0]{ content }`,
+      {},
+      CONTENT_FETCH,
     );
     if (!row?.content) return null;
     const parsed = JSON.parse(row.content) as SiteContent;
@@ -627,6 +634,8 @@ async function loadEditSnapshot(): Promise<SiteContent | null> {
 
 export async function getPageContent(language = "en"): Promise<SiteContent> {
   void language;
+  // Always read current CMS state — never serve a multi-minute ISR shell.
+  await connection();
   if (!hasSanityConfig()) return seedContent;
 
   try {
@@ -634,9 +643,13 @@ export async function getPageContent(language = "en"): Promise<SiteContent> {
     if (snapshot) return snapshot;
 
     const [settings, projects, home] = await Promise.all([
-      client.fetch<SanitySettings | null>(siteSettingsQuery),
-      client.fetch<SanityProject[] | null>(projectsQuery),
-      client.fetch<{ sections?: SanitySection[] | null } | null>(homePageQuery),
+      client.fetch<SanitySettings | null>(siteSettingsQuery, {}, CONTENT_FETCH),
+      client.fetch<SanityProject[] | null>(projectsQuery, {}, CONTENT_FETCH),
+      client.fetch<{ sections?: SanitySection[] | null } | null>(
+        homePageQuery,
+        {},
+        CONTENT_FETCH,
+      ),
     ]);
 
     const mappedProjects = mapProjects(projects);

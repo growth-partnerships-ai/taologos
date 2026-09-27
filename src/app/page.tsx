@@ -18,8 +18,8 @@ import { SiteHeader } from "@/components/site-header";
 import { getPageContent } from "@/lib/content/get-page-content";
 import type { PageSection, SiteContent } from "@/lib/content/types";
 
-/** Refresh CMS content periodically */
-export const revalidate = 30;
+/** CMS-driven — always render from current Sanity /edit snapshot */
+export const dynamic = "force-dynamic";
 
 function renderSection(
   section: PageSection,

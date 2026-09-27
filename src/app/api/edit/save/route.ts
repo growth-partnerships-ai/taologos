@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSessionFromRequest } from "@/lib/edit-auth";
 import { getEditWriteClient } from "@/lib/edit-users";
 import type { SiteContent } from "@/lib/content/types";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function POST(request: NextRequest) {
   const session = getSessionFromRequest(request);
@@ -79,11 +79,13 @@ export async function POST(request: NextRequest) {
       /* siteSettings may be missing until seed */
     });
 
-  revalidatePath("/");
+  // expire: 0 → next request blocks for fresh data (not stale-while-revalidate).
+  revalidateTag("site-content", { expire: 0 });
+  revalidatePath("/", "layout");
   revalidatePath("/edit");
 
   return NextResponse.json({
     ok: true,
-    message: "Saved — live site updates in about 30 seconds.",
+    message: "Saved — live site is updated. Hard-refresh if a tab was already open.",
   });
 }

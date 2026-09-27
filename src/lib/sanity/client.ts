@@ -1,11 +1,12 @@
 import { createClient } from "next-sanity";
 import { apiVersion, dataset, projectId } from "./env";
 
+/** Live site + /edit reads — skip Sanity CDN so CMS saves show up immediately. */
 export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true,
+  useCdn: false,
 });
 
 /** Write client — only when SANITY_API_WRITE_TOKEN is set (seed scripts / drafts). */
