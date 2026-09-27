@@ -3,6 +3,16 @@
 import { FormEvent, useState } from "react";
 import type { ContactData, ContactEntry } from "@/lib/content/types";
 
+function displayContactLabel(entry: ContactEntry, all: ContactEntry[]) {
+  const duplicates = all.filter((row) => row.label === entry.label);
+  if (duplicates.length < 2) return entry.label;
+  const order = duplicates.findIndex((row) => row.id === entry.id) + 1;
+  if (/^phone$/i.test(entry.label.trim())) {
+    return order === 1 ? "Phone" : "Mobile";
+  }
+  return `${entry.label} ${order}`;
+}
+
 export function ContactForm({
   contacts,
   labels,
@@ -47,6 +57,9 @@ export function ContactForm({
     }
   }
 
+  const fieldClass =
+    "mt-2 w-full border border-line bg-surface-2 px-3 py-3 text-cream outline-none transition placeholder:text-muted/60 focus:border-accent";
+
   return (
     <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
       <div>
@@ -54,7 +67,7 @@ export function ContactForm({
           {contacts.map((entry) => (
             <li key={entry.id}>
               <p className="text-xs uppercase tracking-[0.16em] text-accent">
-                {entry.label}
+                {displayContactLabel(entry, contacts)}
               </p>
               {entry.href ? (
                 <a
@@ -83,7 +96,7 @@ export function ContactForm({
               required
               name="name"
               autoComplete="name"
-              className="mt-2 w-full border border-line bg-background px-3 py-3 outline-none transition focus:border-accent"
+              className={fieldClass}
             />
           </label>
           <label className="block text-sm" htmlFor="contact-phone">
@@ -93,7 +106,7 @@ export function ContactForm({
               name="phone"
               type="tel"
               autoComplete="tel"
-              className="mt-2 w-full border border-line bg-background px-3 py-3 outline-none transition focus:border-accent"
+              className={fieldClass}
             />
           </label>
         </div>
@@ -105,7 +118,7 @@ export function ContactForm({
             type="email"
             name="email"
             autoComplete="email"
-            className="mt-2 w-full border border-line bg-background px-3 py-3 outline-none transition focus:border-accent"
+            className={fieldClass}
           />
         </label>
         <label className="block text-sm" htmlFor="contact-message">
@@ -115,7 +128,7 @@ export function ContactForm({
             required
             name="message"
             rows={5}
-            className="mt-2 w-full border border-line bg-background px-3 py-3 outline-none transition focus:border-accent"
+            className={fieldClass}
           />
         </label>
         <button
@@ -132,6 +145,7 @@ export function ContactForm({
             className={`text-sm ${
               status === "error" ? "text-red-300" : "text-cream"
             }`}
+            role="status"
           >
             {message}
           </p>

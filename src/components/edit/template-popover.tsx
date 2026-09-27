@@ -26,7 +26,7 @@ export function TemplatePopover({
         </p>
         <button
           type="button"
-          className="text-xs text-muted"
+          className="edit-btn text-xs text-muted"
           onClick={onClose}
         >
           Close
@@ -42,7 +42,7 @@ export function TemplatePopover({
                 type="button"
                 disabled={blocked}
                 onClick={() => onPick(template.type)}
-                className="w-full border border-line bg-background/60 p-3 text-left transition hover:border-accent disabled:cursor-not-allowed disabled:opacity-40"
+                className="edit-btn w-full border border-line bg-background/60 p-3 text-left transition hover:border-accent disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <p className="text-sm font-semibold text-cream">
                   {template.name}

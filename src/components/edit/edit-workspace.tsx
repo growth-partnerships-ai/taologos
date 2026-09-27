@@ -18,6 +18,11 @@ import { Testimonials } from "@/components/sections/testimonials";
 import { Values } from "@/components/sections/values";
 import { WhoWeAre } from "@/components/sections/who-we-are";
 import { SiteHeader } from "@/components/site-header";
+import {
+  EditActionsProvider,
+  useEditActions,
+  RemoveButton,
+} from "@/components/edit/edit-actions";
 import { EditDesktopWarning } from "@/components/edit/desktop-warning";
 import { EditSidePanel } from "@/components/edit/side-panel";
 import { SectionInserter } from "@/components/edit/section-inserter";
@@ -48,6 +53,21 @@ export function EditWorkspace({
   user: EditUser;
   onSignOut: () => void;
 }) {
+  return (
+    <EditActionsProvider>
+      <EditWorkspaceInner user={user} onSignOut={onSignOut} />
+    </EditActionsProvider>
+  );
+}
+
+function EditWorkspaceInner({
+  user,
+  onSignOut,
+}: {
+  user: EditUser;
+  onSignOut: () => void;
+}) {
+  const { removeWithUndo } = useEditActions();
   const [content, setContent] = useState<SiteContent | null>(null);
   const [savedJson, setSavedJson] = useState("");
   const [selection, setSelection] = useState<Selection>(null);
@@ -89,6 +109,17 @@ export function EditWorkspace({
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
   }, [dirty]);
+
+  function discardChanges() {
+    if (!savedJson) return;
+    try {
+      setContent(JSON.parse(savedJson) as SiteContent);
+      setToast("Changes discarded");
+      window.setTimeout(() => setToast(""), 2000);
+    } catch {
+      setToast("Could not discard changes");
+    }
+  }
 
   async function saveAll() {
     if (!content) return;
@@ -147,6 +178,43 @@ export function EditWorkspace({
     setSelection({ kind: "section", key: created.key });
   }
 
+  async function deleteSection(section: PageSection) {
+    if (!content || section.type === "hero") return;
+    const previousSections = content.sections;
+    const previousSelection = selection;
+    const name =
+      SECTION_TEMPLATES.find((t) => t.type === section.type)?.name ||
+      section.type;
+
+    await removeWithUndo({
+      title: "Remove the whole section?",
+      description: `This removes the “${name}” section from the page. You can undo for a few seconds after.`,
+      confirmLabel: "Remove section",
+      toastMessage: "Section removed.",
+      apply: () => {
+        setContent((current) =>
+          current
+            ? {
+                ...current,
+                sections: current.sections.filter((s) => s.key !== section.key),
+              }
+            : current,
+        );
+        setSelection((current) =>
+          current?.kind === "section" && current.key === section.key
+            ? null
+            : current,
+        );
+      },
+      undo: () => {
+        setContent((current) =>
+          current ? { ...current, sections: previousSections } : current,
+        );
+        setSelection(previousSelection);
+      },
+    });
+  }
+
   const selectedSection =
     content && selection?.kind === "section"
       ? content.sections.find((s) => s.key === selection.key)
@@ -177,7 +245,7 @@ export function EditWorkspace({
           : "Edit";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="edit-shell min-h-screen bg-background">
       <EditDesktopWarning />
       <header className="sticky top-0 z-50 border-b border-line bg-background/95 px-4 py-3 backdrop-blur md:px-6">
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-3">
@@ -191,7 +259,7 @@ export function EditWorkspace({
             {user.role === "superadmin" ? (
               <button
                 type="button"
-                className="rounded-sm border border-line px-3 py-2 text-xs font-semibold text-cream"
+                className="edit-btn rounded-sm border border-line px-3 py-2 text-xs font-semibold text-cream"
                 onClick={() => setUsersOpen(true)}
               >
                 Users
@@ -201,21 +269,30 @@ export function EditWorkspace({
               href="/"
               target="_blank"
               rel="noreferrer"
-              className="rounded-sm border border-line px-3 py-2 text-xs font-semibold text-cream"
+              className="edit-btn rounded-sm border border-line px-3 py-2 text-xs font-semibold text-cream"
             >
               Preview
             </a>
+            {dirty ? (
+              <button
+                type="button"
+                className="edit-btn rounded-sm border border-line px-3 py-2 text-xs font-semibold text-cream"
+                onClick={discardChanges}
+              >
+                Discard changes
+              </button>
+            ) : null}
             <button
               type="button"
               disabled={saving || !dirty}
-              className="rounded-sm bg-accent px-3 py-2 text-xs font-semibold text-background disabled:opacity-50"
+              className="edit-btn rounded-sm bg-accent px-3 py-2 text-xs font-semibold text-background disabled:opacity-50"
               onClick={() => void saveAll()}
             >
               {saving ? "Saving…" : saveFlash ? "Saved" : "Save all"}
             </button>
             <button
               type="button"
-              className="rounded-sm border border-line px-3 py-2 text-xs font-semibold text-cream"
+              className="edit-btn rounded-sm border border-line px-3 py-2 text-xs font-semibold text-cream"
               onClick={() =>
                 requestLeave(async () => {
                   await fetch("/api/edit/logout", { method: "POST" });
@@ -236,7 +313,7 @@ export function EditWorkspace({
         className={`mx-auto max-w-[1600px] ${panelOpen ? "md:pr-[400px]" : ""}`}
       >
         <div
-          className={`relative border border-transparent transition ${
+          className={`relative cursor-pointer border border-transparent transition ${
             selection?.kind === "header" ? "ring-2 ring-accent" : ""
           }`}
           onClick={() => setSelection({ kind: "header" })}
@@ -255,7 +332,7 @@ export function EditWorkspace({
           {content.sections.map((section, index) => (
             <div key={section.key}>
               <div
-                className={`relative ${
+                className={`relative cursor-pointer ${
                   selection?.kind === "section" &&
                   selection.key === section.key
                     ? "ring-2 ring-accent"
@@ -270,7 +347,7 @@ export function EditWorkspace({
                   </span>
                   <button
                     type="button"
-                    className="pointer-events-auto rounded-sm border border-line bg-background/90 px-2 py-1 text-[10px] text-cream"
+                    className="pointer-events-auto edit-btn rounded-sm border border-line bg-background/90 px-2 py-1 text-[10px] text-cream"
                     onClick={(e) => {
                       e.stopPropagation();
                       updateSection({ ...section, enabled: !section.enabled });
@@ -278,6 +355,18 @@ export function EditWorkspace({
                   >
                     {section.enabled ? "Hide" : "Show"}
                   </button>
+                  {section.type !== "hero" ? (
+                    <button
+                      type="button"
+                      className="pointer-events-auto edit-btn-danger-solid rounded-sm px-2 py-1 text-[10px] font-semibold"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        void deleteSection(section);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  ) : null}
                 </div>
                 <div className="pointer-events-none">
                   {renderPreview(section, content)}
@@ -309,7 +398,7 @@ export function EditWorkspace({
         </main>
 
         <div
-          className={`relative ${
+          className={`relative cursor-pointer ${
             selection?.kind === "footer" ? "ring-2 ring-accent" : ""
           }`}
           onClick={() => setSelection({ kind: "footer" })}
@@ -329,10 +418,10 @@ export function EditWorkspace({
           <button
             type="button"
             disabled={saving || !dirty}
-            className="w-full rounded-sm bg-accent px-3 py-2 text-sm font-semibold text-background disabled:opacity-50"
+            className="edit-btn w-full rounded-sm bg-accent px-3 py-2 text-sm font-semibold text-background disabled:opacity-50"
             onClick={() => void saveAll()}
           >
-            {saving ? "Saving…" : saveFlash ? "Saved" : "Save section"}
+            {saving ? "Saving…" : saveFlash ? "Saved" : "Save all"}
           </button>
         }
       >
@@ -391,20 +480,7 @@ export function EditWorkspace({
               selectedSection.type === "hero"
                 ? undefined
                 : () => {
-                    if (
-                      !window.confirm(
-                        "Remove this section from the page?",
-                      )
-                    ) {
-                      return;
-                    }
-                    setContent({
-                      ...content,
-                      sections: content.sections.filter(
-                        (s) => s.key !== selectedSection.key,
-                      ),
-                    });
-                    setSelection(null);
+                    void deleteSection(selectedSection);
                   }
             }
           />
@@ -505,7 +581,7 @@ function HeaderFields({
           <p className="text-sm text-muted">Nav links</p>
           <button
             type="button"
-            className="text-xs text-accent"
+            className="edit-btn text-xs text-accent"
             onClick={() =>
               onChange({
                 ...content,
@@ -527,45 +603,53 @@ function HeaderFields({
           </button>
         </div>
         <ul className="space-y-2">
-          {content.nav.links.map((link, index) => (
-            <li key={link.id} className="space-y-2 border border-line p-2">
-              <input
-                className="w-full border border-line bg-background px-2 py-1 text-sm"
-                value={link.label}
-                onChange={(e) => {
-                  const links = content.nav.links.map((row, i) =>
-                    i === index ? { ...row, label: e.target.value } : row,
-                  );
-                  onChange({ ...content, nav: { ...content.nav, links } });
-                }}
-              />
-              <input
-                className="w-full border border-line bg-background px-2 py-1 text-sm"
-                value={link.href}
-                onChange={(e) => {
-                  const links = content.nav.links.map((row, i) =>
-                    i === index ? { ...row, href: e.target.value } : row,
-                  );
-                  onChange({ ...content, nav: { ...content.nav, links } });
-                }}
-              />
-              <button
-                type="button"
-                className="text-xs text-red-300"
-                onClick={() =>
-                  onChange({
-                    ...content,
-                    nav: {
-                      ...content.nav,
-                      links: content.nav.links.filter((_, i) => i !== index),
-                    },
-                  })
-                }
-              >
-                Remove
-              </button>
-            </li>
-          ))}
+          {content.nav.links.map((link, index) => {
+            const snapshotLinks = content.nav.links;
+            return (
+              <li key={link.id} className="space-y-2 border border-line p-2">
+                <input
+                  className="w-full border border-line bg-background px-2 py-1 text-sm"
+                  value={link.label}
+                  onChange={(e) => {
+                    const links = content.nav.links.map((row, i) =>
+                      i === index ? { ...row, label: e.target.value } : row,
+                    );
+                    onChange({ ...content, nav: { ...content.nav, links } });
+                  }}
+                />
+                <input
+                  className="w-full border border-line bg-background px-2 py-1 text-sm"
+                  value={link.href}
+                  onChange={(e) => {
+                    const links = content.nav.links.map((row, i) =>
+                      i === index ? { ...row, href: e.target.value } : row,
+                    );
+                    onChange({ ...content, nav: { ...content.nav, links } });
+                  }}
+                />
+                <RemoveButton
+                  title="Remove this nav link?"
+                  description={`This removes “${link.label || "Link"}” from the header menu. You can undo for a few seconds after.`}
+                  toastMessage="Nav link removed."
+                  onRemove={() =>
+                    onChange({
+                      ...content,
+                      nav: {
+                        ...content.nav,
+                        links: content.nav.links.filter((_, i) => i !== index),
+                      },
+                    })
+                  }
+                  onUndo={() =>
+                    onChange({
+                      ...content,
+                      nav: { ...content.nav, links: snapshotLinks },
+                    })
+                  }
+                />
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>

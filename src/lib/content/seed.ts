@@ -339,7 +339,7 @@ const sections: PageSection[] = [
     data: {
       eyebrow: "What we deliver",
       title: "Services",
-      image: "/images/services-bg.jpg",
+      image: "/images/hero-cover.jpg",
       items: [
         {
           id: "construction",

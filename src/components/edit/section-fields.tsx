@@ -11,6 +11,10 @@ import type {
   TeamMember,
   TestimonialItem,
 } from "@/lib/content/types";
+import {
+  RemoveButton,
+  useEditActions,
+} from "@/components/edit/edit-actions";
 import { ImageUploadField } from "@/components/edit/image-upload-field";
 
 function Field({
@@ -157,7 +161,7 @@ export function SectionFields({
               <p className="text-sm text-muted">Credentials</p>
               <button
                 type="button"
-                className="text-xs text-accent"
+                className="edit-btn text-xs text-accent"
                 onClick={() =>
                   patchData({
                     credentials: [...section.data.credentials, "New credential"],
@@ -168,7 +172,9 @@ export function SectionFields({
               </button>
             </div>
             <ul className="space-y-2">
-              {section.data.credentials.map((item, index) => (
+              {section.data.credentials.map((item, index) => {
+                const previous = section.data.credentials;
+                return (
                 <li key={index} className="flex gap-2">
                   <input
                     className={inputClass}
@@ -179,22 +185,20 @@ export function SectionFields({
                       patchData({ credentials: next });
                     }}
                   />
-                  <button
-                    type="button"
-                    className="text-xs text-red-300"
-                    onClick={() =>
+                  <RemoveButton
+                    title="Remove this credential?"
+                    description="This removes it from Who we are. You can undo for a few seconds after."
+                    toastMessage="Credential removed."
+                    onRemove={() =>
                       patchData({
-                        credentials: section.data.credentials.filter(
-                          (_, i) => i !== index,
-                        ),
+                        credentials: previous.filter((_, i) => i !== index),
                       })
                     }
-                  >
-                    Remove
-                  </button>
+                    onUndo={() => patchData({ credentials: previous })}
+                  />
                   <button
                     type="button"
-                    className="text-xs text-muted"
+                    className="edit-btn text-xs text-muted"
                     disabled={index === 0}
                     onClick={() => {
                       if (index === 0) return;
@@ -210,7 +214,7 @@ export function SectionFields({
                   </button>
                   <button
                     type="button"
-                    className="text-xs text-muted"
+                    className="edit-btn text-xs text-muted"
                     disabled={index === section.data.credentials.length - 1}
                     onClick={() => {
                       if (index >= section.data.credentials.length - 1) return;
@@ -225,7 +229,8 @@ export function SectionFields({
                     ↓
                   </button>
                 </li>
-              ))}
+                );
+              })}
             </ul>
           </div>
         </>
@@ -371,7 +376,7 @@ export function SectionFields({
               <p className="text-sm text-muted">Contact methods</p>
               <button
                 type="button"
-                className="text-xs text-accent"
+                className="edit-btn text-xs text-accent"
                 onClick={() =>
                   onChangeContacts?.([
                     ...content.contacts,
@@ -424,20 +429,20 @@ export function SectionFields({
                     }}
                   />
                   <div className="flex gap-2">
-                    <button
-                      type="button"
-                      className="text-xs text-red-300"
-                      onClick={() =>
+                    <RemoveButton
+                      title="Remove this contact method?"
+                      description="This removes it from the Contact section. You can undo for a few seconds after."
+                      toastMessage="Contact method removed."
+                      onRemove={() =>
                         onChangeContacts?.(
                           content.contacts.filter((_, i) => i !== index),
                         )
                       }
-                    >
-                      Remove
-                    </button>
+                      onUndo={() => onChangeContacts?.(content.contacts)}
+                    />
                     <button
                       type="button"
-                      className="text-xs text-muted"
+                      className="edit-btn text-xs text-muted"
                       disabled={index === 0}
                       onClick={() => {
                         if (index === 0) return;
@@ -453,7 +458,7 @@ export function SectionFields({
                     </button>
                     <button
                       type="button"
-                      className="text-xs text-muted"
+                      className="edit-btn text-xs text-muted"
                       disabled={index === content.contacts.length - 1}
                       onClick={() => {
                         if (index >= content.contacts.length - 1) return;
@@ -750,10 +755,10 @@ export function SectionFields({
       {canDelete && onDelete ? (
         <button
           type="button"
-          className="mt-4 w-full border border-red-400/40 px-3 py-2 text-sm text-red-300"
+          className="edit-btn-danger-solid mt-6 w-full rounded-sm px-3 py-3 text-sm font-semibold"
           onClick={onDelete}
         >
-          Remove this section from the page?
+          Remove the whole section
         </button>
       ) : null}
     </div>
@@ -777,7 +782,7 @@ function ListEditor({
         <p className="text-sm text-muted">{label}</p>
         <button
           type="button"
-          className="text-xs text-accent"
+          className="edit-btn text-xs text-accent"
           onClick={() =>
             onChange([
               ...items,
@@ -793,7 +798,9 @@ function ListEditor({
         </button>
       </div>
       <ul className="space-y-3">
-        {items.map((item, index) => (
+        {items.map((item, index) => {
+          const previous = items;
+          return (
           <li key={item.id} className="space-y-2 border border-line p-3">
             <input
               className={inputClass}
@@ -817,16 +824,18 @@ function ListEditor({
               }}
             />
             <div className="flex gap-2">
+              <RemoveButton
+                title="Remove this item?"
+                description="This removes it from the list. You can undo for a few seconds after."
+                toastMessage="Item removed."
+                onRemove={() =>
+                  onChange(previous.filter((_, i) => i !== index))
+                }
+                onUndo={() => onChange(previous)}
+              />
               <button
                 type="button"
-                className="text-xs text-red-300"
-                onClick={() => onChange(items.filter((_, i) => i !== index))}
-              >
-                Remove
-              </button>
-              <button
-                type="button"
-                className="text-xs text-muted"
+                className="edit-btn text-xs text-muted"
                 disabled={index === 0}
                 onClick={() => {
                   if (index === 0) return;
@@ -839,7 +848,7 @@ function ListEditor({
               </button>
               <button
                 type="button"
-                className="text-xs text-muted"
+                className="edit-btn text-xs text-muted"
                 disabled={index === items.length - 1}
                 onClick={() => {
                   if (index >= items.length - 1) return;
@@ -852,7 +861,8 @@ function ListEditor({
               </button>
             </div>
           </li>
-        ))}
+          );
+        })}
       </ul>
     </div>
   );
@@ -866,6 +876,7 @@ function ProjectsEditor({
   onChange: (section: PageSection) => void;
 }) {
   const data = section.data;
+  const { removeWithUndo } = useEditActions();
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null,
   );
@@ -888,7 +899,7 @@ function ProjectsEditor({
         <p className="text-sm text-muted">Categories</p>
         <button
           type="button"
-          className="text-xs text-accent"
+          className="edit-btn text-xs text-accent"
           onClick={() => {
             const id = `cat-${Date.now()}`;
             patch({
@@ -907,7 +918,7 @@ function ProjectsEditor({
           <li key={group.id} className="border border-line p-2">
             <button
               type="button"
-              className="w-full text-left text-sm font-semibold text-cream"
+              className="edit-btn w-full text-left text-sm font-semibold text-cream"
               onClick={() => setSelectedProjectId(null)}
             >
               {group.label}
@@ -937,7 +948,7 @@ function ProjectsEditor({
             <div className="mt-2 flex flex-wrap gap-2">
               <button
                 type="button"
-                className="text-xs text-accent"
+                className="edit-btn text-xs text-accent"
                 onClick={() => {
                   const id = `p-${Date.now()}`;
                   patch({
@@ -964,7 +975,7 @@ function ProjectsEditor({
               </button>
               <button
                 type="button"
-                className="text-xs text-muted"
+                className="edit-btn text-xs text-muted"
                 disabled={index === 0}
                 onClick={() => {
                   if (index === 0) return;
@@ -980,7 +991,7 @@ function ProjectsEditor({
               </button>
               <button
                 type="button"
-                className="text-xs text-muted"
+                className="edit-btn text-xs text-muted"
                 disabled={index === data.groups.length - 1}
                 onClick={() => {
                   if (index >= data.groups.length - 1) return;
@@ -996,31 +1007,57 @@ function ProjectsEditor({
               </button>
               <button
                 type="button"
-                className="text-xs text-red-300"
+                className="edit-btn edit-btn-danger text-xs text-red-300"
                 onClick={() => {
                   const inGroup = data.items.filter((p) => p.group === group.id);
+                  const previousGroups = data.groups;
+                  const previousItems = data.items;
+                  const previousProjectIds = data.projectIds;
                   if (inGroup.length) {
-                    const names = inGroup.map((p) => p.title).join("\\n");
-                    const first = window.confirm(
-                      "Remove this category? All projects in it will be removed too.",
-                    );
-                    if (!first) return;
-                    const list = inGroup.map((p) => `• ${p.title}`).join("\n");
-                    const second = window.confirm(
-                      `Delete permanently\n\nThe below projects will be deleted:\n${list}`,
-                    );
-                    if (!second) return;
-                    patch({
-                      groups: data.groups.filter((g) => g.id !== group.id),
-                      items: data.items.filter((p) => p.group !== group.id),
-                      projectIds: data.projectIds.filter(
-                        (id) => !inGroup.some((p) => p.id === id),
-                      ),
+                    const projectList = inGroup
+                      .map((p) => `• ${p.title}`)
+                      .join("\n");
+                    void removeWithUndo({
+                      title: "Remove this category and its projects?",
+                      description: `The following projects will be removed:\n\n${projectList}\n\nYou can undo for a few seconds after.`,
+                      toastMessage: "Category and projects removed.",
+                      apply: () => {
+                        patch({
+                          groups: previousGroups.filter(
+                            (g) => g.id !== group.id,
+                          ),
+                          items: previousItems.filter(
+                            (p) => p.group !== group.id,
+                          ),
+                          projectIds: previousProjectIds.filter(
+                            (id) => !inGroup.some((p) => p.id === id),
+                          ),
+                        });
+                      },
+                      undo: () => {
+                        patch({
+                          groups: previousGroups,
+                          items: previousItems,
+                          projectIds: previousProjectIds,
+                        });
+                      },
                     });
                   } else {
-                    if (!window.confirm("Remove this category?")) return;
-                    patch({
-                      groups: data.groups.filter((g) => g.id !== group.id),
+                    void removeWithUndo({
+                      title: "Remove this category?",
+                      description:
+                        "This removes the empty category. You can undo for a few seconds after.",
+                      toastMessage: "Category removed.",
+                      apply: () => {
+                        patch({
+                          groups: previousGroups.filter(
+                            (g) => g.id !== group.id,
+                          ),
+                        });
+                      },
+                      undo: () => {
+                        patch({ groups: previousGroups });
+                      },
                     });
                   }
                 }}
@@ -1035,7 +1072,7 @@ function ProjectsEditor({
                   <li key={project.id}>
                     <button
                       type="button"
-                      className={`text-left text-sm ${
+                      className={`edit-btn text-left text-sm ${
                         selectedProjectId === project.id
                           ? "text-accent"
                           : "text-muted"
@@ -1053,7 +1090,7 @@ function ProjectsEditor({
 
       <button
         type="button"
-        className="text-xs text-accent"
+        className="edit-btn text-xs text-accent"
         onClick={() => {
           const id = `p-${Date.now()}`;
           const other =
@@ -1211,14 +1248,33 @@ function ProjectsEditor({
           />
           <button
             type="button"
-            className="text-xs text-red-300"
+            className="edit-btn edit-btn-danger text-xs text-red-300"
             onClick={() => {
-              if (!window.confirm("Remove this project?")) return;
-              patch({
-                items: data.items.filter((p) => p.id !== selected.id),
-                projectIds: data.projectIds.filter((id) => id !== selected.id),
+              const previousItems = data.items;
+              const previousProjectIds = data.projectIds;
+              const removedId = selected.id;
+              void removeWithUndo({
+                title: "Remove this project?",
+                description:
+                  "This removes the project from the portfolio. You can undo for a few seconds after.",
+                toastMessage: "Project removed.",
+                apply: () => {
+                  patch({
+                    items: previousItems.filter((p) => p.id !== removedId),
+                    projectIds: previousProjectIds.filter(
+                      (id) => id !== removedId,
+                    ),
+                  });
+                  setSelectedProjectId(null);
+                },
+                undo: () => {
+                  patch({
+                    items: previousItems,
+                    projectIds: previousProjectIds,
+                  });
+                  setSelectedProjectId(removedId);
+                },
               });
-              setSelectedProjectId(null);
             }}
           >
             Remove project
@@ -1242,7 +1298,7 @@ function StatsEditor({
         <p className="text-sm text-muted">Stats</p>
         <button
           type="button"
-          className="text-xs text-accent"
+          className="edit-btn text-xs text-accent"
           onClick={() =>
             onChange([
               ...items,
@@ -1259,7 +1315,9 @@ function StatsEditor({
         </button>
       </div>
       <ul className="space-y-2">
-        {items.map((item, index) => (
+        {items.map((item, index) => {
+          const previous = items;
+          return (
           <li key={item.id} className="space-y-2 border border-line p-2">
             <input
               className={inputClass}
@@ -1295,15 +1353,18 @@ function StatsEditor({
                 )
               }
             />
-            <button
-              type="button"
-              className="text-xs text-red-300"
-              onClick={() => onChange(items.filter((_, i) => i !== index))}
-            >
-              Remove
-            </button>
+            <RemoveButton
+              title="Remove this stat?"
+              description="This removes it from the stats section. You can undo for a few seconds after."
+              toastMessage="Stat removed."
+              onRemove={() =>
+                onChange(previous.filter((_, i) => i !== index))
+              }
+              onUndo={() => onChange(previous)}
+            />
           </li>
-        ))}
+          );
+        })}
       </ul>
     </div>
   );
@@ -1332,20 +1393,24 @@ function GalleryImagesEditor({
         />
       </div>
       <ul className="space-y-2">
-        {images.map((img, index) => (
+        {images.map((img, index) => {
+          const previous = images;
+          return (
           <li key={img.id} className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={img.src} alt="" className="h-12 w-16 object-cover" />
+            <RemoveButton
+              title="Remove this image?"
+              description="This removes it from the gallery. You can undo for a few seconds after."
+              toastMessage="Image removed."
+              onRemove={() =>
+                onChange(previous.filter((_, i) => i !== index))
+              }
+              onUndo={() => onChange(previous)}
+            />
             <button
               type="button"
-              className="text-xs text-red-300"
-              onClick={() => onChange(images.filter((_, i) => i !== index))}
-            >
-              Remove
-            </button>
-            <button
-              type="button"
-              className="text-xs text-muted"
+              className="edit-btn text-xs text-muted"
               disabled={index === 0}
               onClick={() => {
                 if (index === 0) return;
@@ -1358,7 +1423,7 @@ function GalleryImagesEditor({
             </button>
             <button
               type="button"
-              className="text-xs text-muted"
+              className="edit-btn text-xs text-muted"
               disabled={index === images.length - 1}
               onClick={() => {
                 if (index >= images.length - 1) return;
@@ -1370,7 +1435,8 @@ function GalleryImagesEditor({
               ↓
             </button>
           </li>
-        ))}
+          );
+        })}
       </ul>
     </div>
   );
@@ -1393,19 +1459,24 @@ function LogosEditor({
         }
       />
       <ul className="mt-2 space-y-2">
-        {logos.map((logo, index) => (
+        {logos.map((logo, index) => {
+          const previous = logos;
+          return (
           <li key={logo.id} className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={logo.image} alt="" className="h-10 w-auto object-contain" />
-            <button
-              type="button"
-              className="text-xs text-red-300"
-              onClick={() => onChange(logos.filter((_, i) => i !== index))}
-            >
-              Remove
-            </button>
+            <RemoveButton
+              title="Remove this logo?"
+              description="This removes it from the client marquee. You can undo for a few seconds after."
+              toastMessage="Logo removed."
+              onRemove={() =>
+                onChange(previous.filter((_, i) => i !== index))
+              }
+              onUndo={() => onChange(previous)}
+            />
           </li>
-        ))}
+          );
+        })}
       </ul>
     </div>
   );
@@ -1422,7 +1493,7 @@ function TestimonialsEditor({
     <div>
       <button
         type="button"
-        className="mb-2 text-xs text-accent"
+        className="edit-btn mb-2 text-xs text-accent"
         onClick={() =>
           onChange([
             ...items,
@@ -1439,7 +1510,9 @@ function TestimonialsEditor({
         Add testimonial
       </button>
       <ul className="space-y-3">
-        {items.map((item, index) => (
+        {items.map((item, index) => {
+          const previous = items;
+          return (
           <li key={item.id} className="space-y-2 border border-line p-2">
             <textarea
               className={inputClass}
@@ -1499,15 +1572,18 @@ function TestimonialsEditor({
                 )
               }
             />
-            <button
-              type="button"
-              className="text-xs text-red-300"
-              onClick={() => onChange(items.filter((_, i) => i !== index))}
-            >
-              Remove
-            </button>
+            <RemoveButton
+              title="Remove this testimonial?"
+              description="This removes it from the testimonials section. You can undo for a few seconds after."
+              toastMessage="Testimonial removed."
+              onRemove={() =>
+                onChange(previous.filter((_, i) => i !== index))
+              }
+              onUndo={() => onChange(previous)}
+            />
           </li>
-        ))}
+          );
+        })}
       </ul>
     </div>
   );
@@ -1540,7 +1616,7 @@ function RecognitionEditor({
       </Field>
       <button
         type="button"
-        className="text-xs text-accent"
+        className="edit-btn text-xs text-accent"
         onClick={() => {
           const id = `cert-${Date.now()}`;
           onChange([
@@ -1565,7 +1641,7 @@ function RecognitionEditor({
           <li key={item.id}>
             <button
               type="button"
-              className={`text-sm ${
+              className={`edit-btn text-sm ${
                 selectedId === item.id ? "text-accent" : "text-muted"
               }`}
               onClick={() => setSelectedId(item.id)}
@@ -1575,73 +1651,81 @@ function RecognitionEditor({
           </li>
         ))}
       </ul>
-      {selected ? (
-        <div className="space-y-2 border border-line p-2">
-          <input
-            className={inputClass}
-            value={selected.title}
-            onChange={(e) =>
-              onChange(
-                items.map((row) =>
-                  row.id === selected.id
-                    ? { ...row, title: e.target.value }
-                    : row,
-                ),
-              )
-            }
-          />
-          <input
-            className={inputClass}
-            placeholder="Issuer"
-            value={selected.issuer}
-            onChange={(e) =>
-              onChange(
-                items.map((row) =>
-                  row.id === selected.id
-                    ? { ...row, issuer: e.target.value }
-                    : row,
-                ),
-              )
-            }
-          />
-          <input
-            className={inputClass}
-            placeholder="Recipient"
-            value={selected.recipient}
-            onChange={(e) =>
-              onChange(
-                items.map((row) =>
-                  row.id === selected.id
-                    ? { ...row, recipient: e.target.value }
-                    : row,
-                ),
-              )
-            }
-          />
-          <ImageUploadField
-            label="Certificate image"
-            value={selected.image}
-            onChange={(url) =>
-              onChange(
-                items.map((row) =>
-                  row.id === selected.id ? { ...row, image: url } : row,
-                ),
-              )
-            }
-          />
-          <button
-            type="button"
-            className="text-xs text-red-300"
-            onClick={() => {
-              if (!window.confirm("Remove this certificate?")) return;
-              onChange(items.filter((row) => row.id !== selected.id));
-              setSelectedId(null);
-            }}
-          >
-            Remove
-          </button>
-        </div>
-      ) : null}
+      {selected
+        ? (() => {
+            const previous = items;
+            const removedId = selected.id;
+            return (
+              <div className="space-y-2 border border-line p-2">
+                <input
+                  className={inputClass}
+                  value={selected.title}
+                  onChange={(e) =>
+                    onChange(
+                      items.map((row) =>
+                        row.id === selected.id
+                          ? { ...row, title: e.target.value }
+                          : row,
+                      ),
+                    )
+                  }
+                />
+                <input
+                  className={inputClass}
+                  placeholder="Issuer"
+                  value={selected.issuer}
+                  onChange={(e) =>
+                    onChange(
+                      items.map((row) =>
+                        row.id === selected.id
+                          ? { ...row, issuer: e.target.value }
+                          : row,
+                      ),
+                    )
+                  }
+                />
+                <input
+                  className={inputClass}
+                  placeholder="Recipient"
+                  value={selected.recipient}
+                  onChange={(e) =>
+                    onChange(
+                      items.map((row) =>
+                        row.id === selected.id
+                          ? { ...row, recipient: e.target.value }
+                          : row,
+                      ),
+                    )
+                  }
+                />
+                <ImageUploadField
+                  label="Certificate image"
+                  value={selected.image}
+                  onChange={(url) =>
+                    onChange(
+                      items.map((row) =>
+                        row.id === selected.id ? { ...row, image: url } : row,
+                      ),
+                    )
+                  }
+                />
+                <RemoveButton
+                  title="Remove this certificate?"
+                  description="This removes it from recognition. You can undo for a few seconds after."
+                  toastMessage="Certificate removed."
+                  onRemove={() => {
+                    onChange(previous.filter((row) => row.id !== removedId));
+                    setSelectedId(null);
+                  }}
+                  onUndo={() => {
+                    onChange(previous);
+                    setSelectedId(removedId);
+                  }}
+                />
+              </div>
+            );
+          })()
+        : null}
     </div>
   );
 }
@@ -1657,7 +1741,7 @@ function TeamEditor({
     <div>
       <button
         type="button"
-        className="mb-2 text-xs text-accent"
+        className="edit-btn mb-2 text-xs text-accent"
         onClick={() =>
           onChange([
             ...members,
@@ -1673,7 +1757,9 @@ function TeamEditor({
         Add member
       </button>
       <ul className="space-y-2">
-        {members.map((member, index) => (
+        {members.map((member, index) => {
+          const previous = members;
+          return (
           <li key={member.id} className="space-y-2 border border-line p-2">
             <input
               className={inputClass}
@@ -1708,15 +1794,18 @@ function TeamEditor({
                 )
               }
             />
-            <button
-              type="button"
-              className="text-xs text-red-300"
-              onClick={() => onChange(members.filter((_, i) => i !== index))}
-            >
-              Remove
-            </button>
+            <RemoveButton
+              title="Remove this team member?"
+              description="This removes them from the team section. You can undo for a few seconds after."
+              toastMessage="Team member removed."
+              onRemove={() =>
+                onChange(previous.filter((_, i) => i !== index))
+              }
+              onUndo={() => onChange(previous)}
+            />
           </li>
-        ))}
+          );
+        })}
       </ul>
     </div>
   );

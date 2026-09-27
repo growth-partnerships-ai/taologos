@@ -50,6 +50,39 @@ body {
   padding-block: clamp(4rem, 10vw, 7.5rem);
 }
 
+/* Clear the fixed header when jumping to in-page anchors */
+#top,
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+/* Public site click affordances */
+a[href],
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+a[href].rounded-sm,
+button.rounded-sm {
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+
+a[href].rounded-sm:hover,
+button.rounded-sm:hover:not(:disabled) {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--accent) 45%, transparent),
+    0 0 14px rgba(240, 120, 24, 0.22);
+}
+
 .eyebrow {
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -103,6 +136,62 @@ input:focus-visible,
 textarea:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
+}
+
+/* /edit interactive affordances */
+.edit-shell button:not(:disabled),
+.edit-shell a[href],
+.edit-shell [role="button"],
+.edit-shell label:has(input[type="checkbox"]),
+.edit-shell summary {
+  cursor: pointer;
+}
+
+.edit-shell button:disabled {
+  cursor: not-allowed;
+}
+
+.edit-btn {
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.edit-btn:hover:not(:disabled) {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--accent) 55%, transparent),
+    0 0 14px rgba(240, 120, 24, 0.28);
+}
+
+.edit-btn:active:not(:disabled) {
+  transform: translateY(0.5px);
+}
+
+.edit-btn-danger:hover:not(:disabled) {
+  box-shadow:
+    0 0 0 1px rgba(248, 113, 113, 0.55),
+    0 0 14px rgba(248, 113, 113, 0.22);
+}
+
+.edit-btn-danger-solid {
+  cursor: pointer;
+  border: 1px solid rgba(248, 113, 113, 0.55);
+  background: rgba(185, 28, 28, 0.18);
+  color: #fecaca;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.edit-btn-danger-solid:hover:not(:disabled) {
+  background: rgba(185, 28, 28, 0.32);
+  border-color: rgba(248, 113, 113, 0.85);
+  box-shadow: 0 0 16px rgba(248, 113, 113, 0.25);
 }
 
 .group-apartment {

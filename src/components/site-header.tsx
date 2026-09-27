@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { SiteContent } from "@/lib/content/types";
+import { resolveBrandLogo } from "@/lib/content/logo";
 
 export function SiteHeader({
   brandName,
@@ -21,6 +22,7 @@ export function SiteHeader({
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const logoSrc = resolveBrandLogo(logo);
 
   useEffect(() => {
     if (embedded) return;
@@ -51,7 +53,11 @@ export function SiteHeader({
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
         <a href="#top" className="group flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logo} alt="" className="h-10 w-10 object-contain" />
+          <img
+            src={logoSrc}
+            alt=""
+            className="h-11 w-11 object-contain"
+          />
           <span className="font-[family-name:var(--font-display)] text-sm tracking-[0.2em] text-foreground md:text-base">
             {brandName}
             <span className="mt-0.5 block text-[0.65rem] tracking-[0.28em] text-muted">
@@ -99,7 +105,9 @@ export function SiteHeader({
           className="border-t border-line bg-background px-5 py-4 md:hidden"
         >
           <ul className="space-y-3">
-            {nav.links.map((link) => (
+            {nav.links
+              .filter((link) => link.href !== nav.ctaHref)
+              .map((link) => (
               <li key={link.id}>
                 <a
                   href={link.href}
@@ -113,7 +121,7 @@ export function SiteHeader({
             <li>
               <a
                 href={nav.ctaHref}
-                className="block py-2 text-base text-accent"
+                className="mt-1 inline-flex rounded-sm bg-accent px-4 py-2 text-sm font-semibold text-background"
                 onClick={() => setOpen(false)}
               >
                 {nav.ctaLabel}
