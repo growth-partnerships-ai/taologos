@@ -102,7 +102,7 @@ export function ChangePasswordForm({ email, forced, onSuccess }: Props) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-sm bg-accent px-4 py-3 text-sm font-semibold text-background hover:bg-accent-deep disabled:opacity-60"
+        className="edit-btn w-full rounded-sm bg-accent px-4 py-3 text-sm font-semibold text-background hover:bg-accent-deep disabled:opacity-60"
       >
         {loading ? "Saving…" : "Save new password"}
       </button>

@@ -189,6 +189,7 @@ function EditWorkspaceInner({
     await removeWithUndo({
       title: "Remove the whole section?",
       description: `This removes the “${name}” section from the page. You can undo for a few seconds after.`,
+      confirmLabel: "Remove section",
       toastMessage: "Section removed.",
       apply: () => {
         setContent((current) =>
@@ -312,7 +313,7 @@ function EditWorkspaceInner({
         className={`mx-auto max-w-[1600px] ${panelOpen ? "md:pr-[400px]" : ""}`}
       >
         <div
-          className={`relative border border-transparent transition ${
+          className={`relative cursor-pointer border border-transparent transition ${
             selection?.kind === "header" ? "ring-2 ring-accent" : ""
           }`}
           onClick={() => setSelection({ kind: "header" })}
@@ -331,7 +332,7 @@ function EditWorkspaceInner({
           {content.sections.map((section, index) => (
             <div key={section.key}>
               <div
-                className={`relative ${
+                className={`relative cursor-pointer ${
                   selection?.kind === "section" &&
                   selection.key === section.key
                     ? "ring-2 ring-accent"
@@ -397,7 +398,7 @@ function EditWorkspaceInner({
         </main>
 
         <div
-          className={`relative ${
+          className={`relative cursor-pointer ${
             selection?.kind === "footer" ? "ring-2 ring-accent" : ""
           }`}
           onClick={() => setSelection({ kind: "footer" })}
@@ -420,7 +421,7 @@ function EditWorkspaceInner({
             className="edit-btn w-full rounded-sm bg-accent px-3 py-2 text-sm font-semibold text-background disabled:opacity-50"
             onClick={() => void saveAll()}
           >
-            {saving ? "Saving…" : saveFlash ? "Saved" : "Save section"}
+            {saving ? "Saving…" : saveFlash ? "Saved" : "Save all"}
           </button>
         }
       >
